@@ -18,7 +18,7 @@
             <StreamGeometry x:Key="ItalicGlyph">M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z</StreamGeometry>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid ColumnDefinitions="Auto, Auto, *" RowDefinitions="Auto, Auto, *">
+    <Grid ColumnDefinitions="Auto, Auto, Auto, *" RowDefinitions="Auto, Auto, Auto, *">
         <u:EnumSelector Name="Orientation" EnumType="Orientation" />
         <u:ToolBar
             DockPanel.Dock="Top"
@@ -26,10 +26,10 @@
             Orientation="{Binding #Orientation.Value}">
             <Button u:ToolBar.OverflowMode="Never" Content="Button 1" />
             <u:ToolBarSeparator />
-            <TextBox Width="100" VerticalAlignment="Center"></TextBox>
+            <TextBox Width="100" VerticalAlignment="Center" />
             <StackPanel Orientation="Horizontal">
-                <RadioButton Content="A" VerticalAlignment="Center"></RadioButton>
-                <RadioButton Content="B" VerticalAlignment="Center"></RadioButton>
+                <RadioButton VerticalAlignment="Center" Content="A" />
+                <RadioButton VerticalAlignment="Center" Content="B" />
             </StackPanel>
             <Button u:ToolBar.OverflowMode="AsNeeded" Content="Button 2" />
             <Button u:ToolBar.OverflowMode="AsNeeded" Content="Button 3" />
@@ -71,8 +71,31 @@
                 </Style>
             </u:ToolBar.Styles>
         </u:ToolBar>
+        <u:ToolBar
+            DockPanel.Dock="Top"
+            Header="Buttons"
+            Orientation="{Binding #Orientation.Value}">
+            <u:ToolBar.Styles>
+                <Style Selector="u|ToolBar[Orientation=Vertical]">
+                    <Setter Property="Grid.Row" Value="2" />
+                    <Setter Property="Grid.Column" Value="2" />
+                    <Setter Property="Grid.RowSpan" Value="2" />
+                    <Setter Property="Grid.ColumnSpan" Value="1" />
+                </Style>
+                <Style Selector="u|ToolBar[Orientation=Horizontal]">
+                    <Setter Property="Grid.Row" Value="2" />
+                    <Setter Property="Grid.Column" Value="2" />
+                    <Setter Property="Grid.RowSpan" Value="1" />
+                    <Setter Property="Grid.ColumnSpan" Value="3" />
+                </Style>
+            </u:ToolBar.Styles>
+            <Button Command="{Binding AddItemCommand}" Content="Add" />
+            <Button Command="{Binding RemoveItemCommand}" Content="Remove" />
+            <Button Command="{Binding ClearItemsCommand}" Content="Clear" />
+            <Button Command="{Binding RevertItemsCommand}" Content="恢复" />
+        </u:ToolBar>
         <Grid
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="2"
             RowDefinitions="Auto, *">
             <u:ToolBar Margin="16">
