@@ -74,4 +74,16 @@ public class BreadcrumbItem: ContentControl
             Command?.Execute(CommandParameter);
         }
     }
+    
+    internal void SetPseudoClassLast(bool isLast)
+    {
+        PseudoClasses.Set(PC_Last, isLast);
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        var parent = this.Parent as Breadcrumb;
+        parent?.InvalidateContainers();
+    }
 }

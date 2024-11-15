@@ -1,9 +1,11 @@
+using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 using Avalonia.Metadata;
+using Avalonia.VisualTree;
 
 namespace Ursa.Controls;
 
@@ -85,7 +87,6 @@ public class Breadcrumb: ItemsControl
 
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
-        // base.PrepareContainerForItemOverride(container, item, index);
         if (container is not BreadcrumbItem breadcrumbItem) return;
         if (!breadcrumbItem.IsSet(BreadcrumbItem.SeparatorProperty))
         {
@@ -99,8 +100,6 @@ public class Breadcrumb: ItemsControl
                     breadcrumbItem.Separator = b;
             });
         }
-
-        PseudolassesExtensions.Set(container.Classes, BreadcrumbItem.PC_Last, index == ItemCount - 1);
 
         if (container == item) return;
         if(!breadcrumbItem.IsSet(ContentControl.ContentProperty))
@@ -140,4 +139,13 @@ public class Breadcrumb: ItemsControl
         ITemplate<Control?> t => t.Build(),
         _ => separator.ToString()
     };
+
+    internal void InvalidateContainers()
+    {
+        var breadcrumbItems = this.GetVisualDescendants().OfType<BreadcrumbItem>().ToList();
+        for (var i = 0; i < breadcrumbItems.Count; i++)
+        {
+            breadcrumbItems[i].SetPseudoClassLast(i == breadcrumbItems.Count - 1);
+        }
+    }
 }
