@@ -18,6 +18,7 @@ public class MenuViewModel : ViewModelBase
             new() { MenuHeader = "Banner", Key = MenuKeys.MenuKeyBanner },
             new() { MenuHeader = "Breadcrumb", Key = MenuKeys.MenuKeyBreadcrumb },
             new() { MenuHeader = "Button Group", Key = MenuKeys.MenuKeyButtonGroup },
+            new() { MenuHeader = "CanvasImageViewer", Key = MenuKeys.MenuKeyCanvasImageViewer , Status = "NEW"},
             new() { MenuHeader = "Class Input", Key = MenuKeys.MenuKeyClassInput },
             new() { MenuHeader = "Clock", Key = MenuKeys.MenuKeyClock, Status = "Updated" },
             new() { MenuHeader = "Date Picker", Key = MenuKeys.MenuKeyDatePicker, Status = "New" },
@@ -72,6 +73,7 @@ public static class MenuKeys
     public const string MenuKeyBanner = "Banner";
     public const string MenuKeyBreadcrumb = "Breadcrumb";
     public const string MenuKeyButtonGroup = "ButtonGroup";
+    public const string MenuKeyCanvasImageViewer = "CanvasImageViewer";
     public const string MenuKeyClassInput = "Class Input";
     public const string MenuKeyClock = "Clock";
     public const string MenuKeyDatePicker = "DatePicker";

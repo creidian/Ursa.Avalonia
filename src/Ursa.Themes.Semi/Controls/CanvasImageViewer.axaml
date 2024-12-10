@@ -1,0 +1,33 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:u="https://irihi.tech/ursa">
+    <!--  Add Resources Here  -->
+    <ControlTheme x:Key="{x:Type u:CanvasImageViewer}" TargetType="u:CanvasImageViewer">
+        <Setter Property="Background" Value="LightGray" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type u:CanvasImageViewer}">
+                <VisualLayerManager Name="{x:Static u:CanvasImageViewer.PART_Layer}">
+                    <Border Background="{TemplateBinding Background}" ClipToBounds="True">
+                        <Canvas Name="{x:Static u:CanvasImageViewer.PART_Canvas}">
+                            <Canvas.Background>
+                                <ImageBrush Source="{TemplateBinding Source}" Stretch="Fill" />
+                            </Canvas.Background>
+                            <!--<Image Source="{TemplateBinding Source}" Stretch="Uniform" />-->
+                            <Canvas.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="{Binding Scale, RelativeSource={RelativeSource TemplatedParent}}" ScaleY="{Binding Scale, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <TranslateTransform X="{Binding TranslateX, RelativeSource={RelativeSource TemplatedParent}}" Y="{Binding TranslateY, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    <RotateTransform Angle="0" />
+                                </TransformGroup>
+                            </Canvas.RenderTransform>
+                        </Canvas>
+                    </Border>
+                </VisualLayerManager>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:moving">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

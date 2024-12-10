@@ -11,20 +11,21 @@ namespace Ursa.Themes.Semi;
 /// </summary>
 public class SemiTheme: Styles
 {
+#if false
     public static ThemeVariant Aquatic => new ThemeVariant(nameof(Aquatic), ThemeVariant.Dark);
     public static ThemeVariant Desert => new ThemeVariant(nameof(Desert), ThemeVariant.Light);
     public static ThemeVariant Dust => new ThemeVariant(nameof(Dust), ThemeVariant.Dark);
     public static ThemeVariant NightSky => new ThemeVariant(nameof(NightSky), ThemeVariant.Dark);
-    
+
     private static readonly Lazy<Dictionary<CultureInfo, ResourceDictionary>> _localeToResource = new Lazy<Dictionary<CultureInfo, ResourceDictionary>>(
         () => new Dictionary<CultureInfo, ResourceDictionary>
         {
             { new CultureInfo("zh-CN"), new zh_cn() },
             { new CultureInfo("en-US"), new en_us() },
         });
-    
+
     private static readonly ResourceDictionary _defaultResource = new zh_cn();
-    
+
     private readonly IServiceProvider? _sp;
     public SemiTheme(IServiceProvider? provider = null)
     {
@@ -52,10 +53,10 @@ public class SemiTheme: Styles
             {
                 _locale = CultureInfo.InvariantCulture;
             }
-            
+
         }
     }
-    
+
     private static ResourceDictionary? TryGetLocaleResource(CultureInfo? locale)
     {
         if (Equals(locale, CultureInfo.InvariantCulture))
@@ -72,4 +73,5 @@ public class SemiTheme: Styles
         }
         return _localeToResource.Value[new CultureInfo("zh-CN")];
     }
+#endif
 }

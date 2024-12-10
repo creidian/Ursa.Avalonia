@@ -37,6 +37,7 @@ public partial class MainViewViewModel : ViewModelBase
             MenuKeys.MenuKeyBanner => new BannerDemoViewModel(),
             MenuKeys.MenuKeyBreadcrumb => new BreadcrumbDemoViewModel(),
             MenuKeys.MenuKeyButtonGroup => new ButtonGroupDemoViewModel(),
+            MenuKeys.MenuKeyCanvasImageViewer => new CanvasImageViewerDemoViewModel(),
             MenuKeys.MenuKeyClassInput => new ClassInputDemoViewModel(),
             MenuKeys.MenuKeyClock => new ClockDemoViewModel(),
             MenuKeys.MenuKeyDatePicker => new DatePickerDemoViewModel(),

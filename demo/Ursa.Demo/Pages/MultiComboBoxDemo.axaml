@@ -43,5 +43,6 @@
             </u:MultiComboBox.ContextFlyout>
         </u:MultiComboBox>
         <ListBox ItemsSource="{Binding SelectedItems}" />
+		<Button Command="{Binding AddSourceItemCommand}">Add Source Item</Button>
     </StackPanel>
 </UserControl>

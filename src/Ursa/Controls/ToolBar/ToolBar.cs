@@ -5,6 +5,8 @@ using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
+using System.Collections.Specialized;
 
 namespace Ursa.Controls;
 
@@ -14,12 +16,12 @@ public class ToolBar: HeaderedItemsControl
 {
     public const string PART_OverflowPanel = "PART_OverflowPanel";
     public const string PC_Overflow = ":overflow";
-    
+
     internal Panel? OverflowPanel { get; private set; }
-    
+
     private static readonly ITemplate<Panel?> DefaultTemplate =
         new FuncTemplate<Panel?>(() => new ToolBarPanel() { Orientation = Orientation.Horizontal });
-    
+
     public static readonly StyledProperty<Orientation> OrientationProperty =
         StackPanel.OrientationProperty.AddOwner<ToolBar>();
 
@@ -66,13 +68,17 @@ public class ToolBar: HeaderedItemsControl
         IsTabStopProperty.OverrideDefaultValue<ToolBar>(false);
         ItemsPanelProperty.OverrideDefaultValue<ToolBar>(DefaultTemplate);
         OrientationProperty.OverrideDefaultValue<ToolBar>(Orientation.Horizontal);
-        // TODO: use helper method after merged and upgrade helper dependency. 
+        // TODO: use helper method after merged and upgrade helper dependency.
         IsOverflowItemProperty.Changed.AddClassHandler<Control, bool>((o, e) =>
         {
             PseudolassesExtensions.Set(o.Classes, PC_Overflow, e.NewValue.Value);
         });
+        HeaderProperty.Changed.AddClassHandler<ToolBar>((o, e) =>
+        {
+            o.HeaderChanged(e);
+        });
     }
-    
+
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
         return NeedsContainer<Control>(item, out recycleKey);
@@ -95,5 +101,30 @@ public class ToolBar: HeaderedItemsControl
     {
         base.OnApplyTemplate(e);
         OverflowPanel = e.NameScope.Find<Panel>(PART_OverflowPanel);
+    }
+
+    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        try
+        {
+            base.LogicalChildrenCollectionChanged(sender, e);
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private void HeaderChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        var ll = LogicalChildren;
+        if (e.OldValue is ILogical oldChild)
+        {
+            //LogicalChildren.Remove(oldChild);
+        }
+
+        if (e.NewValue is ILogical newChild)
+        {
+            //LogicalChildren.Add(newChild);
+        }
     }
 }

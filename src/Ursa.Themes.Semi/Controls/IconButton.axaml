@@ -36,9 +36,7 @@
                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                         ColumnDefinitions="Auto, Auto"
                         RowDefinitions="Auto, Auto">
-                        <Panel
-                            Name="PART_IconRoot"
-                            Grid.Column="0">
+                        <Panel Name="PART_IconRoot" Grid.Column="0">
                             <Panel.IsVisible>
                                 <MultiBinding Converter="{x:Static BoolConverters.Or}">
                                     <Binding Path="IsLoading" RelativeSource="{RelativeSource TemplatedParent}" />
@@ -59,12 +57,14 @@
                         </Panel>
                         <ContentPresenter
                             Name="PART_ContentPresenter"
-                            Grid.Row="0" Grid.Column="1"
-                            Margin="8 0 0 0"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="8,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}"
-                            Content="{TemplateBinding Content}" />
+                            Content="{TemplateBinding Content}"
+                            IsVisible="{TemplateBinding Content,
+                                                        Converter={x:Static ObjectConverters.IsNotNull}}" />
                     </Grid>
                 </Border>
             </ControlTemplate>
@@ -107,7 +107,7 @@
             <Setter Property="BorderBrush" Value="{DynamicResource ButtonDefaultDisabledBorderBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ButtonDefaultDisabledForeground}" />
         </Style>
-        
+
         <Style Selector="^:empty[IsLoading=False] /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Margin" Value="0" />
         </Style>
@@ -284,7 +284,7 @@
         </Style>
 
     </ControlTheme>
-    
+
     <ControlTheme
         x:Key="OutlineIconButton"
         BasedOn="{StaticResource {x:Type u:IconButton}}"

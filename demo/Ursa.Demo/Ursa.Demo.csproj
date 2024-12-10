@@ -30,4 +30,8 @@
     <ItemGroup>
       <Folder Include="Models\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Pages\CanvasImageViewerDemo.axaml" />
+    </ItemGroup>
 </Project>
