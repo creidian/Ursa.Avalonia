@@ -9,9 +9,8 @@ namespace Ursa.Themes.Semi;
 /// <summary>
 /// Notice: Don't set Locale if your app is in InvariantGlobalization mode.
 /// </summary>
-public class SemiTheme: Styles
+public class SemiTheme : Styles
 {
-#if false
     public static ThemeVariant Aquatic => new ThemeVariant(nameof(Aquatic), ThemeVariant.Dark);
     public static ThemeVariant Desert => new ThemeVariant(nameof(Desert), ThemeVariant.Light);
     public static ThemeVariant Dust => new ThemeVariant(nameof(Dust), ThemeVariant.Dark);
@@ -73,5 +72,4 @@ public class SemiTheme: Styles
         }
         return _localeToResource.Value[new CultureInfo("zh-CN")];
     }
-#endif
 }
