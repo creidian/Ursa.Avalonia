@@ -16,7 +16,7 @@ public class ImageViewer: TemplatedControl
     public const string PART_Image = "PART_Image";
     public const string PART_Layer = "PART_Layer";
     public const string PC_Moving = ":moving";
-
+    
     private Image? _image;
     private Point? _lastClickPoint;
     private Point? _lastLocation;
@@ -163,9 +163,9 @@ public class ImageViewer: TemplatedControl
 
     private void OnStretchChanged(AvaloniaPropertyChangedEventArgs args)
     {
-        if (!IsLoaded) return;
+        if (_image is null) return;
         var stretch = args.GetNewValue<Stretch>();
-        Scale = GetScaleRatio(Width / _image!.Width, Height / _image!.Height, stretch);
+        Scale = GetScaleRatio(Width / _image.Width, Height / _image.Height, stretch);
         _sourceMinScale = _image is not null ? Math.Min(Width * MinScale / _image.Width, Height * MinScale / _image.Height) : MinScale;
     }
 
@@ -205,7 +205,7 @@ public class ImageViewer: TemplatedControl
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        if (Source is { } i && _image is { })
+        if (Source is { } i && _image is { })    
         {
             Size size = i.Size;
             double width = Bounds.Width;
