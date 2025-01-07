@@ -5,11 +5,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:u="https://irihi.tech/ursa"
+    xmlns:vm="using:Ursa.Demo.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    x:DataType="vm:ImageViewerDemoViewModel"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="MaskBackground" Opacity="0.2" Color="Red" />
+        <SolidColorBrush
+            x:Key="MaskBackground"
+            Opacity="0.2"
+            Color="Red" />
         <SolidColorBrush x:Key="MaskBorder" Color="Red" />
     </UserControl.Resources>
     <StackPanel>
@@ -20,9 +25,10 @@
         <u:ImageViewer
             Name="viewer"
             Width="600"
-            Height="300" 
+            Height="300"
             MinScale="0.5"
-            Source="../Assets/3x.png">
+            Source="../Assets/3x.png"
+            Stretch="{Binding Stretch}">
             <u:ImageViewer.Overlayer>
                 <Grid
                     HorizontalAlignment="Stretch"
@@ -55,7 +61,7 @@
             </u:ImageViewer.Overlayer>
         </u:ImageViewer>
 
-        <Grid ColumnDefinitions="Auto, Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
+        <Grid ColumnDefinitions="Auto, Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto">
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="0"
@@ -117,6 +123,16 @@
                 Grid.Row="3"
                 Grid.Column="1"
                 Theme="{DynamicResource SimpleToggleSwitch}" />
+
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Text="Streth：" />
+            <u:EnumSelector
+                Grid.Row="4"
+                Grid.Column="1"
+                EnumType="{Binding StrethType}"
+                Value="{Binding Stretch}" />
         </Grid>
     </StackPanel>
 </UserControl>
