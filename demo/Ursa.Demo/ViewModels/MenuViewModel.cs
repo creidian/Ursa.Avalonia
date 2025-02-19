@@ -90,6 +90,15 @@ public class MenuViewModel : ViewModelBase
                     new() { MenuHeader = "TwoTonePathIcon", Key = MenuKeys.MenuKeyTwoTonePathIcon }
                 }
             },
+            new()
+            {
+                MenuHeader = "其它-月影",
+                Children = new ObservableCollection<MenuItemViewModel>
+                {
+                    new() { MenuHeader = "CanvasImageViewer", Key = MenuKeys.MenuKeyCanvasImageViewer, Status = "不实用" },
+                    new() { MenuHeader = "Cron Picker", Key = MenuKeys.MenuKeyCronPicker, Status = "New" },
+                }
+            },
         };
     }
 
