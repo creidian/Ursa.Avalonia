@@ -105,8 +105,10 @@ public static class MenuKeys
     public const string MenuKeyBanner = "Banner";
     public const string MenuKeyBreadcrumb = "Breadcrumb";
     public const string MenuKeyButtonGroup = "ButtonGroup";
+    public const string MenuKeyCanvasImageViewer = "CanvasImageViewer";
     public const string MenuKeyClassInput = "Class Input";
     public const string MenuKeyClock = "Clock";
+    public const string MenuKeyCronPicker = "CronPicker";
     public const string MenuKeyDatePicker = "DatePicker";
     public const string MenuKeyDateTimePicker = "DateTimePicker";
     public const string MenuKeyDialog = "Dialog";
