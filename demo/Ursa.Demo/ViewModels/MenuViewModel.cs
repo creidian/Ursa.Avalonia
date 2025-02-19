@@ -22,6 +22,7 @@ public class MenuViewModel : ViewModelBase
             new() { MenuHeader = "CanvasImageViewer", Key = MenuKeys.MenuKeyCanvasImageViewer , Status = "NEW"},
             new() { MenuHeader = "Class Input", Key = MenuKeys.MenuKeyClassInput },
             new() { MenuHeader = "Clock", Key = MenuKeys.MenuKeyClock, Status = "Updated" },
+            new() { MenuHeader = "Cron Picker", Key = MenuKeys.MenuKeyCronPicker, Status = "New" },
             new() { MenuHeader = "Date Picker", Key = MenuKeys.MenuKeyDatePicker, Status = "New" },
             new() { MenuHeader = "Date Time Picker", Key = MenuKeys.MenuKeyDateTimePicker, Status = "New" },
             new() { MenuHeader = "Dialog", Key = MenuKeys.MenuKeyDialog },
@@ -79,6 +80,7 @@ public static class MenuKeys
     public const string MenuKeyCanvasImageViewer = "CanvasImageViewer";
     public const string MenuKeyClassInput = "Class Input";
     public const string MenuKeyClock = "Clock";
+    public const string MenuKeyCronPicker = "CronPicker";
     public const string MenuKeyDatePicker = "DatePicker";
     public const string MenuKeyDateTimePicker = "DateTimePicker";
     public const string MenuKeyDialog = "Dialog";

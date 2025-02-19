@@ -41,6 +41,7 @@ public partial class MainViewViewModel : ViewModelBase
             MenuKeys.MenuKeyCanvasImageViewer => new CanvasImageViewerDemoViewModel(),
             MenuKeys.MenuKeyClassInput => new ClassInputDemoViewModel(),
             MenuKeys.MenuKeyClock => new ClockDemoViewModel(),
+            MenuKeys.MenuKeyCronPicker => new CronPickerDemoViewModel(),
             MenuKeys.MenuKeyDatePicker => new DatePickerDemoViewModel(),
             MenuKeys.MenuKeyDateTimePicker => new DateTimePickerDemoViewModel(),
             MenuKeys.MenuKeyDialog => new DialogDemoViewModel(),

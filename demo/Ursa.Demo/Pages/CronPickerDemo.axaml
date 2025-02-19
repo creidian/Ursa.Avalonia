@@ -1,0 +1,66 @@
+<UserControl
+    d:DesignHeight="600"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Ursa.Demo.Pages.CronPickerDemo"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <TabControl>
+        <TabItem Header="Cron Picker">
+            <ScrollViewer>
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    Margin="20"
+                    Spacing="20">
+                    <u:Form>
+                        <u:CronPicker u:FormItem.NoLabel="True" />
+                    </u:Form>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="s">
+            <StackPanel>
+                <TextBlock Text="Radio Button as Card" />
+                <StackPanel Orientation="Vertical">
+                    <RadioButton
+                        Content="Avalonia"
+                        IsChecked="True"
+                        Theme="{DynamicResource CardRadioButton}"
+                        Width="300" />
+                    <RadioButton
+                        Content="WPF"
+                        IsChecked="True"
+                        Theme="{DynamicResource CardRadioButton}"
+                        Width="300" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton
+                            Content="Avalonia_"
+                            IsChecked="True"
+                            Theme="{DynamicResource CardRadioButton}"
+                            Width="300" />
+                        <RadioButton
+                            Content="WPF_"
+                            IsChecked="True"
+                            Theme="{DynamicResource CardRadioButton}"
+                            Width="300" />
+                    </StackPanel>
+                    <RadioButton
+                        Content="WCF"
+                        IsChecked="True"
+                        Theme="{DynamicResource CardRadioButton}"
+                        Width="300" />
+                </StackPanel>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="MS">
+            <u:MultiComboBox>
+                <u:MultiComboBoxItem>Avalonia</u:MultiComboBoxItem>
+                <u:MultiComboBoxItem>WPF</u:MultiComboBoxItem>
+                <u:MultiComboBoxItem>WCF</u:MultiComboBoxItem>
+            </u:MultiComboBox>
+        </TabItem>
+    </TabControl>
+</UserControl>

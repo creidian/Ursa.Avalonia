@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\src\Ursa.Controls.CronPicker\Ursa.Controls.CronPicker.csproj" />
         <ProjectReference Include="..\..\src\Ursa.Themes.Semi\Ursa.Themes.Semi.csproj" />
         <ProjectReference Include="..\..\src\Ursa\Ursa.csproj" />
     </ItemGroup>

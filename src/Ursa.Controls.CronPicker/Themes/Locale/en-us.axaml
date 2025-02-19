@@ -1,0 +1,6 @@
+﻿<ResourceDictionary
+    x:Class="Ursa.Themes.Semi.Locale.CronPicker.en_us"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Add Resources Here  -->
+</ResourceDictionary>
