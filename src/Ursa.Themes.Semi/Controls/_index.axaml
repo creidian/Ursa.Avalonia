@@ -8,7 +8,6 @@
         <ResourceInclude Source="ButtonGroup.axaml" />
         <ResourceInclude Source="Breadcrumb.axaml" />
         <ResourceInclude Source="Calendar.axaml" />
-        <ResourceInclude Source="CanvasImageViewer.axaml" />
         <ResourceInclude Source="ControlClassesInput.axaml" />
         <ResourceInclude Source="Clock.axaml" />
         <ResourceInclude Source="DatePicker.axaml" />
@@ -47,15 +46,16 @@
         <ResourceInclude Source="TimePicker.axaml" />
         <ResourceInclude Source="TimeRangePicker.axaml" />
         <ResourceInclude Source="Timeline.axaml" />
-        <ResourceInclude Source="TreeComboBox.axaml" />
+        <ResourceInclude Source="TreeComboBox.axaml"/>
         <ResourceInclude Source="Skeleton.axaml" />
         <ResourceInclude Source="TwoTonePathIcon.axaml" />
         <ResourceInclude Source="Toast.axaml" />
         <ResourceInclude Source="ToolBar.axaml" />
-        <ResourceInclude Source="TimeBox.axaml" />
+        <ResourceInclude Source="TimeBox.axaml"/>
         <ResourceInclude Source="UrsaView.axaml" />
-        <ResourceInclude Source="UrsaWindow.axaml" />
+        <ResourceInclude Source="UrsaWindow.axaml"/>
         <ResourceInclude Source="PinCode.axaml" />
-        <ResourceInclude Source="PathPicker.axaml" />
+        <ResourceInclude Source="PathPicker.axaml"/>
+        <ResourceInclude Source="SplashWindow.axaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
