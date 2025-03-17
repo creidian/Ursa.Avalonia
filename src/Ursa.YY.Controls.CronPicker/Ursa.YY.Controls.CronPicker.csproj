@@ -7,7 +7,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <PackageId>Irihi.Ursa.Controls.CronPicker</PackageId>
+        <PackageId>Irihi.YY.Ursa.Controls.CronPicker</PackageId>
         <PackageIcon>irihi.png</PackageIcon>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
