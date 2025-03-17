@@ -18,7 +18,7 @@
                         IsVisible="False"
                         Name="TestButton" />
                     <u:CronPicker
-                        Classes="DefaultCronRulers2"
+                        Classes="DefaultCronRulers"
                         Name="TestCronPicker"
                         Width="850">
                         <u:CronPicker.Styles>

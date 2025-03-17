@@ -668,14 +668,33 @@ public class TwoInt32ParamsCronPickerRulerBoxItem : WithParamsCronPickerRulerBox
         else if (change.Property == MinValueParam1Property || change.Property == MaxValueParam1Property)
         {
             this.Param1Value = Math.Min(MinValueParam1, MaxValueParam1);
+            InnerRefreshParam2Value();
         }
         else if (change.Property == MinValueParam2Property || change.Property == MaxValueParam2Property)
         {
-            this.Param2Value = Math.Min(MinValueParam2, MaxValueParam2);
+            InnerRefreshParam2Value();
+        }
+        else if (change.Property == LegalOffsetValueProperty)
+        {
+            InnerRefreshParam2Value();
         }
     }
     
     protected override void RefreshCurrentValue() => this.RefreshValue(("param1", Param1Value), ("param2", Param2Value), ("symbol", Symbol));
+
+    private void InnerRefreshParam2Value()
+    {
+        int param2 = Param1Value + LegalOffsetValue;
+        int minValue = Math.Min(MinValueParam2, MaxValueParam2);
+        if (param2 >= minValue && param2 <= MaxValueParam2)
+        {
+            Param2Value = param2;
+        }
+        else
+        {
+            this.Param2Value = minValue;
+        }
+    }
 }
 
 public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem

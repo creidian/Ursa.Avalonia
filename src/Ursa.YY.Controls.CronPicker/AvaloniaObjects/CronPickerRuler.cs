@@ -85,6 +85,7 @@ public class CronPickerRulerRangeExpression : CronPickerRulerFormatExpression
     public static readonly StyledProperty<int> MaxEndValueProperty = AvaloniaProperty.Register<CronPickerRulerRangeExpression, int>(nameof(MaxEndValue));
     public static readonly StyledProperty<string> ParamName_StartProperty = AvaloniaProperty.Register<CronPickerRulerRangeExpression, string>(nameof(ParamName_Start));
     public static readonly StyledProperty<string> ParamName_EndProperty = AvaloniaProperty.Register<CronPickerRulerRangeExpression, string>(nameof(ParamName_End));
+    public static readonly StyledProperty<int> OffsetValueProperty = AvaloniaProperty.Register<CronPickerRulerRangeExpression, int>(nameof(OffsetValue), 1);
     
     /// <summary>
     /// 参数名称_开始 
@@ -126,6 +127,15 @@ public class CronPickerRulerRangeExpression : CronPickerRulerFormatExpression
     {
         get => GetValue(MaxEndValueProperty);
         set => SetValue(MaxEndValueProperty, value);
+    }
+    
+    /// <summary>
+    /// 起始与结束值偏移量
+    /// </summary>
+    public int OffsetValue
+    {
+        get => GetValue(OffsetValueProperty);
+        set => SetValue(OffsetValueProperty, value);
     }
     
     public string Combine(int start, int end) => Symbol;
