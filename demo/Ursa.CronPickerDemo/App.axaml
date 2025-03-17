@@ -1,0 +1,16 @@
+<Application
+    RequestedThemeVariant="Default"
+    x:Class="Ursa.CronPickerDemo.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:semi="https://irihi.tech/semi"
+    xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
+    xmlns:u-semi-cronpicker="https://irihi.tech/ursa/themes/semi/cronpicker"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+    <Application.Styles>
+        <semi:SemiTheme Locale="zh-CN" />
+        <semi:SemiPopupAnimations />
+        <u-semi:SemiTheme Locale="zh-CN" />
+        <u-semi-cronpicker:SemiTheme Locale="zh-CN" />
+    </Application.Styles>
+</Application>

@@ -11,6 +11,7 @@
         <PackageIcon>irihi.png</PackageIcon>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <RootNamespace>Ursa.Controls.CronPicker</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

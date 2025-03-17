@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Ursa", "tests\Test.Urs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessTest.Ursa", "tests\HeadlessTest.Ursa\HeadlessTest.Ursa.csproj", "{2D1C279E-7FFF-4630-92CC-CB2C33C3F80F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ursa.Controls.CronPicker", "src\Ursa.Controls.CronPicker\Ursa.Controls.CronPicker.csproj", "{43F9BD3F-3814-4803-91E9-A72FB00E0393}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ursa.YY.Controls.CronPicker", "src\Ursa.YY.Controls.CronPicker\Ursa.YY.Controls.CronPicker.csproj", "{43F9BD3F-3814-4803-91E9-A72FB00E0393}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ursa.CronPickerDemo", "demo\Ursa.CronPickerDemo\Ursa.CronPickerDemo.csproj", "{091B9663-2352-426A-9B8C-4508674E3D8B}"
 EndProject

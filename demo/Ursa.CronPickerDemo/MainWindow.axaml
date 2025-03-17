@@ -1,0 +1,58 @@
+<Window
+    Title="Ursa.CronPickerDemo"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Ursa.CronPickerDemo.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer>
+        <TabControl Theme="{DynamicResource ScrollTabControl}">
+            <TabItem Header="Tab 1">
+                <StackPanel>
+                    <Button
+                        Content="Test"
+                        IsVisible="False"
+                        Name="TestButton" />
+                    <u:CronPicker
+                        Classes="DefaultCronRulers2"
+                        Name="TestCronPicker"
+                        Width="850">
+                        <u:CronPicker.Styles>
+                            <Style Selector="u|CronPickerFieldTabItem">
+                                <!-- <Setter Property="Background" Value="Red" /> -->
+                            </Style>
+                        </u:CronPicker.Styles>
+                    </u:CronPicker>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Tab 2">
+                <ListBox Name="ListBox1" />
+            </TabItem>
+            <TabItem Header="Tab 2">
+                <StackPanel Orientation="Vertical">
+                    <ListBox Name="ListBox2" />
+                    <TabControl>
+                        <TabItem Header="Sub Tab 1">
+                            <ListBox>
+                                <ListBoxItem>Sub Item 1</ListBoxItem>
+                                <ListBoxItem>Sub Item 2</ListBoxItem>
+                                <ListBoxItem>Sub Item 3</ListBoxItem>
+                            </ListBox>
+                        </TabItem>
+                        <TabItem Header="Sub Tab 2">
+                            <ListBox>
+                                <ListBoxItem>Sub Item 1</ListBoxItem>
+                                <ListBoxItem>Sub Item 2</ListBoxItem>
+                                <ListBoxItem>Sub Item 3</ListBoxItem>
+                            </ListBox>
+                        </TabItem>
+                    </TabControl>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </ScrollViewer>
+</Window>
