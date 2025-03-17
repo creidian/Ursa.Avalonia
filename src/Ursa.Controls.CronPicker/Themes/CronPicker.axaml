@@ -4,162 +4,311 @@
     xmlns:u="https://irihi.tech/ursa"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <TabControl Height="400" Width="800">
+        <TabControl
+            Height="400"
+            Theme="{DynamicResource CronPickerRulerItemTabControl}"
+            Width="800">
+            <TabItem Header="WarpPanelText">
+                <ScrollViewer>
+
+                    <StackPanel Spacing="10">
+                        <Border
+                            Background="Aquamarine"
+                            Height="100"
+                            Width="100">
+                            <WrapPanel Orientation="Vertical">
+                                <Button Background="Aquamarine">1</Button>
+                                <Button Background="Azure">2</Button>
+                                <Button Background="Blue">3</Button>
+                                <Button Background="Chocolate">4</Button>
+                                <Button Background="Chocolate">5</Button>
+                                <Button Background="Chocolate">6</Button>
+                                <Button Background="Chocolate">7</Button>
+                            </WrapPanel>
+                        </Border>
+                        <Grid Background="Aquamarine" Height="100">
+                            <WrapPanel Orientation="Vertical">
+                                <Button Background="Aquamarine">1</Button>
+                                <Button Background="Azure">2</Button>
+                                <Button Background="Blue">3</Button>
+                                <Button Background="Chocolate">4</Button>
+                                <Button Background="Chocolate">5</Button>
+                                <Button Background="Chocolate">6</Button>
+                                <Button Background="Chocolate">7</Button>
+                            </WrapPanel>
+                        </Grid>
+                        <u:WrapPanelWithSpacing
+                            Background="Bisque"
+                            ColumnSpacing="5"
+                            Height="120"
+                            Orientation="Vertical"
+                            RowSpacing="5"
+                            Width="100">
+                            <Button Background="Aquamarine">1</Button>
+                            <Button Background="Azure">2</Button>
+                            <Button Background="Blue">3</Button>
+                            <Button Background="Chocolate">4</Button>
+                            <Button Background="Chocolate">5</Button>
+                            <Button Background="Chocolate">6</Button>
+                            <Button Background="Chocolate" Height="88">7</Button>
+                            <Button Background="Chocolate">8</Button>
+                        </u:WrapPanelWithSpacing>
+                        <Grid Height="120">
+                            <u:WrapPanelWithSpacing
+                                Background="Bisque"
+                                ColumnSpacing="5"
+                                Orientation="Vertical"
+                                RowSpacing="5">
+                                <Button Background="Aquamarine">1</Button>
+                                <Button Background="Azure">2</Button>
+                                <Button Background="Blue">3</Button>
+                                <Button Background="Chocolate">4</Button>
+                                <Button Background="Chocolate">5</Button>
+                                <Button Background="Chocolate">6</Button>
+                                <Button Background="Chocolate" Height="88">7</Button>
+                                <Button Background="Chocolate">8</Button>
+                            </u:WrapPanelWithSpacing>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
             <TabItem Header="ALL">
                 <ScrollViewer>
-                    <u:CronPicker />
+                    <u:CronPicker>
+                        <!--<u:CronPicker.SecondsRulerItems>
+                            <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="*" />
+                            <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="?" />
+                        </u:CronPicker.SecondsRulerItems>-->
+                        <!--~1~  -秒-  @1@
+                        <u:CronPickerRulerContentSecondCollection>
+                            ~1~  -每秒-  @1@
+                            <u:CronPickerRulerContent RulerName="{DynamicResource CronFieldModeName_All_Second}" Theme="{DynamicResource CronPickerRulerContent_All}" />
+                            ~1~  -周期-  @1@
+                            <u:CronPickerRulerParamsContent
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Range_Second}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Second}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="58"
+                                        Minimum="1"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Second}"
+                                        Position="0"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Second}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Second}"
+                                        Position="1"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Second}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -间隔循环-  @1@
+                            <u:CronPickerRulerParamsContent
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Interval_Second}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Second}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Second}"
+                                        Position="0"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Second}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Second}"
+                                        Position="1"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Second}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -列表选择-  @1@
+                            <u:CronPickerRulerSelectingItemsContent
+                                HeaderPosition="Top"
+                                ItemsSource="{x:Static u:CronPickerRulerContent.SecondList}"
+                                MaxWidth="780"
+                                MinWidth="100"
+                                RulerName="{DynamicResource CronFieldModeName_List_Second}">
+                                <u:CronPickerRulerSelectingItemsContent.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Width" Value="50" />
+                                        <Setter Property="Height" Value="50" />
+                                        <Setter Property="Padding" Value="0" />
+                                    </Style>
+                                </u:CronPickerRulerSelectingItemsContent.Styles>
+                            </u:CronPickerRulerSelectingItemsContent>
+                        </u:CronPickerRulerContentSecondCollection>
+                        ~1~  -分-  @1@
+                        <u:CronPickerRulerContentMinuteCollection>
+                            ~1~  -每分-  @1@
+                            <u:CronPickerRulerContent RulerName="{DynamicResource CronFieldModeName_All_Minute}" Theme="{DynamicResource CronPickerRulerContent_All}" />
+                            ~1~  -周期-  @1@
+                            <u:CronPickerRulerParamsContent
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Range_Minute}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Minute}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="58"
+                                        Minimum="1"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Minute}"
+                                        Position="0"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Minute}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Minute}"
+                                        Position="1"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Minute}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -间隔循环-  @1@
+                            <u:CronPickerRulerParamsContent
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Interval_Minute}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Minute}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Minute}"
+                                        Position="0"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Minute}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="59"
+                                        Minimum="1"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Minute}"
+                                        Position="1"
+                                        Value="1" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Minute}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -列表选择-  @1@
+                            <u:CronPickerRulerSelectingItemsContent
+                                HeaderPosition="Top"
+                                ItemsSource="{x:Static u:CronPickerRulerContent.MinuteList}"
+                                MaxWidth="780"
+                                MinWidth="100"
+                                RulerName="{DynamicResource CronFieldModeName_List_Minute}">
+                                <u:CronPickerRulerSelectingItemsContent.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Width" Value="50" />
+                                        <Setter Property="Height" Value="50" />
+                                        <Setter Property="Padding" Value="0" />
+                                    </Style>
+                                </u:CronPickerRulerSelectingItemsContent.Styles>
+                            </u:CronPickerRulerSelectingItemsContent>
+                        </u:CronPickerRulerContentMinuteCollection>
+                        ~1~  -时-  @1@
+                        <u:CronPickerRulerContentHourCollection>
+                            ~1~  -每时-  @1@
+                            <u:CronPickerRulerContent
+                                FieldType="Hour"
+                                RulerName="{DynamicResource CronFieldModeName_All_Hour}"
+                                Theme="{DynamicResource CronPickerRulerContent_All}" />
+                            ~1~  -周期-  @1@
+                            <u:CronPickerRulerParamsContent
+                                FieldType="Hour"
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Range_Hour}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Hour}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="23"
+                                        Minimum="0"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Hour}"
+                                        Position="0"
+                                        Value="0" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Hour}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="23"
+                                        Minimum="0"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Hour}"
+                                        Position="1"
+                                        Value="0" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Hour}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -间隔循环-  @1@
+                            <u:CronPickerRulerParamsContent
+                                FieldType="Hour"
+                                HeaderPosition="Left"
+                                RulerName="{DynamicResource CronFieldModeName_Interval_Hour}"
+                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
+                                <u:CronPickerRulerParamsContent.Items>
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Hour}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="23"
+                                        Minimum="0"
+                                        ParamKey="startValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Hour}"
+                                        Position="0"
+                                        Value="0" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Hour}" VerticalAlignment="Center" />
+                                    <u:CronPickerRulerParamByte
+                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
+                                        Maximum="23"
+                                        Minimum="0"
+                                        ParamKey="endValue"
+                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Hour}"
+                                        Position="1"
+                                        Value="0" />
+                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Hour}" VerticalAlignment="Center" />
+                                </u:CronPickerRulerParamsContent.Items>
+                            </u:CronPickerRulerParamsContent>
+                            ~1~  -列表选择-  @1@
+                            <u:CronPickerRulerSelectingItemsContent
+                                FieldType="Hour"
+                                HeaderPosition="Top"
+                                ItemsSource="{x:Static u:CronPickerRulerContent.HourList}"
+                                MaxWidth="600"
+                                MinWidth="100"
+                                RulerName="{DynamicResource CronFieldModeName_List_Hour}">
+                                <u:CronPickerRulerSelectingItemsContent.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="Width" Value="50" />
+                                        <Setter Property="Height" Value="50" />
+                                        <Setter Property="Padding" Value="0" />
+                                    </Style>
+                                </u:CronPickerRulerSelectingItemsContent.Styles>
+                            </u:CronPickerRulerSelectingItemsContent>
+                        </u:CronPickerRulerContentHourCollection>-->
+                    </u:CronPicker>
                 </ScrollViewer>
-            </TabItem>
-            <TabItem Header="秒">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #SecondsField.Value}" Width="100" />
-                        <u:SecondsCronPickerFieldItem Name="SecondsField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="分">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #MinutesField.Value}" Width="100" />
-                        <u:MinutesCronPickerFieldItem Name="MinutesField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="时">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #HoursField.Value}" Width="100" />
-                        <u:HoursCronPickerFieldItem Name="HoursField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="日">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #DaysOfMonthField.Value}" Width="100" />
-                        <u:DaysOfMonthCronPickerFieldItem Name="DaysOfMonthField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="月">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #MonthsField.Value}" Width="100" />
-                        <u:MonthsCronPickerFieldItem Name="MonthsField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="周">
-                <ScrollViewer>
-                    <StackPanel>
-                        <TextBox Text="{Binding #DaysOfWeekField.Value}" Width="100" />
-                        <u:DaysOfWeekCronPickerFieldItem Name="DaysOfWeekField" />
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="年">
-                <StackPanel>
-                    <TextBox Text="{Binding #YearsField.Value}" Width="100" />
-                    <u:YearsCronPickerFieldItem Name="YearsField" />
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="测试">
-                <StackPanel>
-                    <ListBox
-                        Name="MyListBox"
-                        SelectionMode="Multiple"
-                        Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                        <ListBox.Styles>
-                            <Style Selector="ListBoxItem">
-                                <Setter Property="Width" Value="80" />
-                                <Setter Property="Height" Value="80" />
-                                <Setter Property="Padding" Value="0" />
-                            </Style>
-                        </ListBox.Styles>
-                        <ListBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                                <!-- <u:OverflowStackPanel Orientation="Horizontal" Spacing="8" /> -->
-                            </ItemsPanelTemplate>
-                        </ListBox.ItemsPanel>
-                        <ListBoxItem>
-                            1
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            2
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            3
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            4
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            5
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            6
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            7
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            8
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            9
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            10
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            11
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            12
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            13
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            14
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            15
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            16
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            17
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            18
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            19
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            20
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            21
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            22
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            23
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            24
-                        </ListBoxItem>
-                        <ListBoxItem>
-                            25
-                        </ListBoxItem>
-                    </ListBox>
-                </StackPanel>
             </TabItem>
         </TabControl>
     </Design.PreviewWith>
@@ -167,6 +316,7 @@
     <!--  Add Resources Here  -->
     <converters:TextFormattingConverter x:Key="TextFormattingConverter" />
     <converters:ListDateTimesTextConverter x:Key="ConverterListDateTimesText" />
+    <converters:CronExpressionParseToTimesResultConverter x:Key="ConverterCronExpressionParseToTimesResult" />
     <converters:WeekDayConverter x:Key="WeekDayConverter" />
     <converters:MonthConverter x:Key="MonthConverter" />
     <ControlTheme TargetType="u:CronPicker" x:Key="{x:Type u:CronPicker}">
@@ -174,14 +324,66 @@
         <Setter Property="FailedToGetClipboardMessage" Value="{DynamicResource CronPickerFormatter_FailedToGetClipboard}" />
         <Setter Property="CronExpressionParsedMessage" Value="{DynamicResource CronPickerFormatter_CronExpressionParsed}" />
         <Setter Property="CronExpressionParamsNotEnoughErrorMessage" Value="{DynamicResource CronPickerFormatter_CronExpressionParamsNotEnoughError}" />
-        <Setter Property="SecondsExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_SecondsExpressionParseError}" />
-        <Setter Property="MinutesExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_MinutesExpressionParseError}" />
-        <Setter Property="HoursExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_HoursExpressionParseError}" />
-        <Setter Property="DaysOfMonthExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_DaysOfMonthExpressionParseError}" />
-        <Setter Property="MonthsExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_MonthsExpressionParseError}" />
-        <Setter Property="DaysOfWeekExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_DaysOfWeekExpressionParseError}" />
-        <Setter Property="YearsExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_YearsExpressionParseError}" />
+        <Setter Property="CronPartExpressionParseErrorFormat" Value="{DynamicResource CronPickerFormatter_CronPartExpressionParseError}" />
+        <Setter Property="CronPartVerifyErrorFormat" Value="{DynamicResource CronPickerFormatter_CronPartVerifyError}" />
         <Setter Property="RecentRunTimesTitleFormat" Value="{DynamicResource CronPickerFormatter_RecentRunTimesTitle}" />
+        <Setter Property="Padding" Value="15,5" />
+        <!-- <Setter Property="Background" Value="Aqua" /> -->
+        <Setter Property="CronRulerItemDataTemplates">
+            <DataTemplates>
+                <DataTemplate DataType="u:CronPickerRulerSimpleSymbol" />
+            </DataTemplates>
+        </Setter>
+        <Setter Property="CronRulerItemTemplate">
+            <DataTemplate DataType="u:CronPickerRuler">
+                <u:CronPickerRulerSelector
+                    Content="{Binding}"
+                    CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"
+                    FieldType="{Binding FieldType}"
+                    IsSelected="{Binding $parent[u:CronPickerFieldRulerSelectorContainer].IsSelected, Mode=TwoWay}"
+                    Priority="{Binding Priority}"
+                    RulerCode="{Binding Code}"
+                    StripPlacement="{Binding HeaderPlacement}"
+                    Symbol="{Binding Symbol}" />
+            </DataTemplate>
+        </Setter>
+        <Setter Property="CronFieldContentTemplate">
+            <!--  CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"  -->
+            <DataTemplate DataType="u:CronPickerField">
+                <ListBox ItemsSource="{Binding TestData}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <!-- <ListBox ItemsSource="{Binding RulerItems}" /> -->
+                <!--<u:CronPickerFieldView
+                    FieldType="{Binding FieldType}"
+                    ItemTemplate="{Binding $parent[u:CronPicker].CronRulerItemTemplate}"
+                    ItemsSource="{Binding RulerItems}" />-->
+            </DataTemplate>
+        </Setter>
+        <Setter Property="CronFieldItemTemplate">
+            <DataTemplate DataType="u:CronPickerField">
+                <u:CronPickerFieldTabItem FieldType="{Binding FieldType}">
+                    <u:CronPickerFieldTabItem.Template>
+                        <ControlTemplate TargetType="u:CronPickerFieldTabItem">
+                            <ContentPresenter
+                                Content="{TemplateBinding Header}"
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                FontFamily="{TemplateBinding FontFamily}"
+                                FontWeight="{TemplateBinding FontWeight}"
+                                Foreground="{TemplateBinding Foreground}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Name="PART_ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </ControlTemplate>
+                    </u:CronPickerFieldTabItem.Template>
+                </u:CronPickerFieldTabItem>
+            </DataTemplate>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="u:CronPicker">
                 <Border
@@ -189,995 +391,902 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}"
                     CornerRadius="{TemplateBinding CornerRadius}"
-                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                    VerticalAlignment="{TemplateBinding VerticalAlignment}">
-                    <StackPanel Orientation="Vertical" Spacing="8">
-                        <TabControl Name="PART_TabControl" Padding="10,18,10,5">
-                            <TabControl.Styles>
-                                <Style Selector="u|CronPickerFieldTabItem">
-                                    <Setter Property="Padding" Value="15,5,15,4" />
-                                    <Setter Property="FontSize" Value="16" />
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                </Style>
-                            </TabControl.Styles>
-                        </TabControl>
-                        <u:Divider Content="{DynamicResource CronPicker_PartTitle_CronFieldValues}" FontSize="18" />
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <StackPanel.Styles>
-                                <Style Selector="TextBox">
-                                    <Setter Property="MaxWidth" Value="120" />
-                                    <Setter Property="MinWidth" Value="80" />
-                                </Style>
-                            </StackPanel.Styles>
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_Second}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding Seconds}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_Minute}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding Minutes}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_Hour}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding Hours}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_DayOfMonth}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding DaysOfMonth}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_Month}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding Months}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_DayOfWeek}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding DaysOfWeek}" />
-                            <TextBox
-                                InnerRightContent="{DynamicResource CronFieldHeader_Year}"
-                                IsReadOnly="True"
-                                Text="{TemplateBinding Years}" />
-                        </StackPanel>
-                        <u:Divider Content="{DynamicResource CronPicker_PartTitle_CronExpression}" FontSize="18" />
-                        <TextBox Name="PART_CronExpression" Text="{TemplateBinding CronExpression, Mode=TwoWay}" />
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button
-                                Content="{DynamicResource CronPicker_ButtonText_CronExpressionParse}"
-                                Name="PART_ParseButton"
-                                Theme="{DynamicResource SolidButton}" />
-                            <Button
-                                Content="{DynamicResource CronPicker_ButtonText_CronExpressionCopy}"
-                                Name="PART_CopyButton"
-                                Theme="{DynamicResource SolidButton}" />
-                            <u:Banner
-                                CanClose="True"
-                                Content="{TemplateBinding CurrentOperationResultMessage}"
-                                HorizontalContentAlignment="Left"
-                                IsVisible="{TemplateBinding IsCurrentOperationResultVisible,
-                                                            Mode=TwoWay}"
-                                Type="{TemplateBinding CurrentOperationResultType}">
-                                <u:Banner.Template>
-                                    <ControlTemplate TargetType="u:Banner">
-                                        <Border
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            Name="PART_Container"
-                                            Padding="{TemplateBinding Padding}">
-                                            <DockPanel>
-                                                <!--  Icon Area  -->
-                                                <Panel
-                                                    IsVisible="{TemplateBinding ShowIcon}"
-                                                    Margin="{DynamicResource ToastCardIconMargin}"
-                                                    VerticalAlignment="Top">
-                                                    <ContentPresenter Content="{TemplateBinding Icon}" />
-                                                    <PathIcon
-                                                        Classes="Large"
-                                                        IsVisible="{TemplateBinding Icon,
-                                                                                    Converter={x:Static ObjectConverters.IsNull}}"
-                                                        Name="PART_BuildInIcon"
-                                                        Theme="{DynamicResource InnerPathIcon}" />
-                                                </Panel>
-                                                <ContentControl
-                                                    Content="{TemplateBinding Content}"
-                                                    Margin="{DynamicResource ToastCardContentMargin}"
-                                                    MaxWidth="{DynamicResource ToastCardContentMaxWidth}"
-                                                    VerticalContentAlignment="Center"
-                                                    x:Name="PART_Content">
-                                                    <ContentControl.DataTemplates>
-                                                        <DataTemplate DataType="u:IToast">
-                                                            <SelectableTextBlock
-                                                                FontWeight="{DynamicResource ToastCardContentFontWeight}"
-                                                                Foreground="{DynamicResource ToastCardContentForeground}"
-                                                                Text="{Binding Content}"
-                                                                TextWrapping="Wrap" />
-                                                        </DataTemplate>
-                                                        <DataTemplate DataType="x:String">
-                                                            <SelectableTextBlock
-                                                                FontWeight="{DynamicResource ToastCardContentFontWeight}"
-                                                                Foreground="{DynamicResource ToastCardContentForeground}"
-                                                                Text="{Binding}"
-                                                                TextWrapping="Wrap" />
-                                                        </DataTemplate>
-                                                    </ContentControl.DataTemplates>
-                                                </ContentControl>
-                                                <!--<ContentPresenter
+                    Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,*">
+                        <!--<u:CronPickerFieldsContainer
+                            Grid.Row="0"
+                            Name="{x:Static u:CronPicker.PART_FieldsHost}"
+                            Padding="{DynamicResource CronPickerFieldTabItemContentMargin}">
+                            <u:CronPickerFieldTabItem FieldType="Second">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="Second"
+                                    Name="{x:Static u:CronPicker.PART_SecondsField}"
+                                    SelectedIndex="{TemplateBinding SecondsSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding SecondsSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding SecondsSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="Minute">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="Minute"
+                                    Name="{x:Static u:CronPicker.PART_MinutesField}"
+                                    SelectedIndex="{TemplateBinding MinutesSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding MinutesSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding MinutesSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="Hour">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="Hour"
+                                    Name="{x:Static u:CronPicker.PART_HoursField}"
+                                    SelectedIndex="{TemplateBinding HoursSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding HoursSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding HoursSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="DayOfMonth">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="DayOfMonth"
+                                    Name="{x:Static u:CronPicker.PART_DaysOfMonthField}"
+                                    SelectedIndex="{TemplateBinding DaysOfMonthSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding DaysOfMonthSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding DaysOfMonthSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="Month">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="Month"
+                                    Name="{x:Static u:CronPicker.PART_MonthsField}"
+                                    SelectedIndex="{TemplateBinding MonthsSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding MonthsSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding MonthsSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="DayOfWeek">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="DayOfWeek"
+                                    Name="{x:Static u:CronPicker.PART_DaysOfWeekField}"
+                                    SelectedIndex="{TemplateBinding DaysOfWeekSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding DaysOfWeekSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding DaysOfWeekSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                            <u:CronPickerFieldTabItem FieldType="Year">
+                                <u:CronPickerFieldView
+                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                    FieldType="Year"
+                                    Name="{x:Static u:CronPicker.PART_YearsField}"
+                                    SelectedIndex="{TemplateBinding YearsSelectedIndex,
+                                                                    Mode=TwoWay}"
+                                    SelectedItem="{TemplateBinding YearsSelectedItem,
+                                                                   Mode=TwoWay}"
+                                    SelectedValue="{TemplateBinding YearsSelectedValue,
+                                                                    Mode=TwoWay}" />
+                            </u:CronPickerFieldTabItem>
+                        </u:CronPickerFieldsContainer>-->
+                        <Border
+                            BoxShadow="0 0 10 4 #ccc"
+                            Grid.Row="0"
+                            Margin="0,0,0,20">
+                            <StackPanel>
+                                <u:CronPickerFieldsContainer Name="{x:Static u:CronPicker.PART_FieldsHost}" SelectedIndex="{TemplateBinding SelectedFieldIndex, Mode=TwoWay}">
+                                    <u:CronPickerFieldTabItem FieldType="Second" x:Name="TabItem_Second" />
+                                    <u:CronPickerFieldTabItem FieldType="Minute" x:Name="TabItem_Minute" />
+                                    <u:CronPickerFieldTabItem FieldType="Hour" x:Name="TabItem_Hour" />
+                                    <u:CronPickerFieldTabItem FieldType="DayOfMonth" x:Name="TabItem_DayOfMonth" />
+                                    <u:CronPickerFieldTabItem FieldType="Month" x:Name="TabItem_Month" />
+                                    <u:CronPickerFieldTabItem FieldType="DayOfWeek" x:Name="TabItem_DayOfWeek" />
+                                    <u:CronPickerFieldTabItem FieldType="Year" x:Name="TabItem_Year" />
+                                </u:CronPickerFieldsContainer>
+                                <Border Padding="{DynamicResource CronPickerFieldTabItemContentMargin}">
+                                    <StackPanel Orientation="Vertical">
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_Second.Header}"
+                                            FieldType="Second"
+                                            IsVisible="{TemplateBinding IsSecondEnabled}"
+                                            Name="{x:Static u:CronPicker.PART_SecondsField}"
+                                            SelectedIndex="{TemplateBinding SecondsSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding SecondsSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding SecondsSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_Minute.Header}"
+                                            FieldType="Minute"
+                                            Name="{x:Static u:CronPicker.PART_MinutesField}"
+                                            SelectedIndex="{TemplateBinding MinutesSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding MinutesSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding MinutesSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_Hour.Header}"
+                                            FieldType="Hour"
+                                            Name="{x:Static u:CronPicker.PART_HoursField}"
+                                            SelectedIndex="{TemplateBinding HoursSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding HoursSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding HoursSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_DayOfMonth.Header}"
+                                            FieldType="DayOfMonth"
+                                            Name="{x:Static u:CronPicker.PART_DaysOfMonthField}"
+                                            SelectedIndex="{TemplateBinding DaysOfMonthSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding DaysOfMonthSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding DaysOfMonthSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_Month.Header}"
+                                            FieldType="Month"
+                                            Name="{x:Static u:CronPicker.PART_MonthsField}"
+                                            SelectedIndex="{TemplateBinding MonthsSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding MonthsSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding MonthsSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_DayOfWeek.Header}"
+                                            FieldType="DayOfWeek"
+                                            Name="{x:Static u:CronPicker.PART_DaysOfWeekField}"
+                                            SelectedIndex="{TemplateBinding DaysOfWeekSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding DaysOfWeekSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding DaysOfWeekSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                        <u:CronPickerFieldView
+                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                            FieldName="{Binding #TabItem_Year.Header}"
+                                            FieldType="Year"
+                                            IsVisible="{TemplateBinding IsYearEnabled}"
+                                            Name="{x:Static u:CronPicker.PART_YearsField}"
+                                            SelectedIndex="{TemplateBinding YearsSelectedIndex,
+                                                                            Mode=TwoWay}"
+                                            SelectedItem="{TemplateBinding YearsSelectedItem,
+                                                                           Mode=TwoWay}"
+                                            SelectedValue="{TemplateBinding YearsSelectedValue,
+                                                                            Mode=TwoWay}" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Grid.Row="1" Spacing="10">
+                            <u:Divider
+                                Content="{DynamicResource CronPicker_PartTitle_CronFieldValues}"
+                                FontSize="18"
+                                HorizontalAlignment="Left" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <StackPanel.Styles>
+                                    <Style Selector="TextBox">
+                                        <Setter Property="MaxWidth" Value="120" />
+                                        <Setter Property="MinWidth" Value="80" />
+                                    </Style>
+                                </StackPanel.Styles>
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_Second}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding Seconds}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_Minute}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding Minutes}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_Hour}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding Hours}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_DayOfMonth}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding DaysOfMonth}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_Month}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding Months}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_DayOfWeek}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding DaysOfWeek}" />
+                                <TextBox
+                                    InnerRightContent="{DynamicResource CronFieldHeader_Year}"
+                                    IsReadOnly="True"
+                                    Text="{TemplateBinding Years}" />
+                            </StackPanel>
+                            <u:Divider
+                                Content="{DynamicResource CronPicker_PartTitle_CronExpression}"
+                                FontSize="18"
+                                HorizontalAlignment="Left" />
+                            <TextBox Name="PART_CronExpression" Text="{TemplateBinding CronExpression, Mode=TwoWay}" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button
+                                    Content="{DynamicResource CronPicker_ButtonText_CronExpressionParse}"
+                                    Name="PART_ParseButton"
+                                    Theme="{DynamicResource SolidButton}" />
+                                <Button
+                                    Content="{DynamicResource CronPicker_ButtonText_CronExpressionCopy}"
+                                    Name="PART_CopyButton"
+                                    Theme="{DynamicResource SolidButton}" />
+                                <u:Banner
+                                    CanClose="True"
+                                    Content="{TemplateBinding CurrentOperationResultMessage}"
+                                    HorizontalContentAlignment="Left"
+                                    IsVisible="{TemplateBinding IsCurrentOperationResultVisible,
+                                                                Mode=TwoWay}"
+                                    Type="{TemplateBinding CurrentOperationResultType}">
+                                    <u:Banner.Template>
+                                        <ControlTemplate TargetType="u:Banner">
+                                            <Border
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Name="PART_Container"
+                                                Padding="{TemplateBinding Padding}">
+                                                <DockPanel>
+                                                    <!--  Icon Area  -->
+                                                    <Panel
+                                                        IsVisible="{TemplateBinding ShowIcon}"
+                                                        Margin="{DynamicResource ToastCardIconMargin}"
+                                                        VerticalAlignment="Top">
+                                                        <ContentPresenter Content="{TemplateBinding Icon}" />
+                                                        <PathIcon
+                                                            Classes="Large"
+                                                            IsVisible="{TemplateBinding Icon,
+                                                                                        Converter={x:Static ObjectConverters.IsNull}}"
+                                                            Name="PART_BuildInIcon"
+                                                            Theme="{DynamicResource InnerPathIcon}" />
+                                                    </Panel>
+                                                    <ContentControl
+                                                        Content="{TemplateBinding Content}"
+                                                        Margin="{DynamicResource ToastCardContentMargin}"
+                                                        MaxWidth="{DynamicResource ToastCardContentMaxWidth}"
+                                                        VerticalContentAlignment="Center"
+                                                        x:Name="PART_Content">
+                                                        <ContentControl.DataTemplates>
+                                                            <DataTemplate DataType="u:IToast">
+                                                                <SelectableTextBlock
+                                                                    FontWeight="{DynamicResource ToastCardContentFontWeight}"
+                                                                    Foreground="{DynamicResource ToastCardContentForeground}"
+                                                                    Text="{Binding Content}"
+                                                                    TextWrapping="Wrap" />
+                                                            </DataTemplate>
+                                                            <DataTemplate DataType="x:String">
+                                                                <SelectableTextBlock
+                                                                    FontWeight="{DynamicResource ToastCardContentFontWeight}"
+                                                                    Foreground="{DynamicResource ToastCardContentForeground}"
+                                                                    Text="{Binding}"
+                                                                    TextWrapping="Wrap" />
+                                                            </DataTemplate>
+                                                        </ContentControl.DataTemplates>
+                                                    </ContentControl>
+                                                    <!--<ContentPresenter
                                                     Content="{TemplateBinding Content}"
                                                     ContentTemplate="{TemplateBinding ContentTemplate}"
                                                     TextWrapping="Wrap" />-->
-                                                <Button
-                                                    HorizontalAlignment="Right"
-                                                    IsVisible="{TemplateBinding CanClose}"
-                                                    Margin="{DynamicResource BannerCloseButtonMargin}"
-                                                    Name="{x:Static u:Banner.PART_CloseButton}"
-                                                    Theme="{DynamicResource OverlayCloseButton}"
-                                                    VerticalAlignment="Top" />
-                                            </DockPanel>
-                                        </Border>
-                                    </ControlTemplate>
-                                </u:Banner.Template>
-                            </u:Banner>
-                            <!--<u:ToastCard
-                                    Classes="Light"
-                                    Content="{TemplateBinding CurrentOperationResultMessage}"
-                                    IsVisible="{TemplateBinding IsCurrentOperationResultVisible,
-                                                                Mode=TwoWay}"
-                                    MaxHeight="200"
-                                    MaxWidth="400"
-                                    Name="PART_ToastCard"
-                                    NotificationType="{TemplateBinding CurrentOperationResultType}"
-                                    ShowClose="False" />
-                                <Button
-                                    CornerRadius="50"
-                                    HorizontalAlignment="Right"
-                                    IsVisible="{TemplateBinding IsCurrentOperationResultVisible}"
-                                    Theme="{StaticResource OverlayCloseButton}"
-                                    VerticalAlignment="Top"
-                                    u:CronPicker.CloseOnClick="True"
-                                    x:Name="PART_CloseButton" />-->
-                            <!--<u:NotificationCard
-                                Content="{TemplateBinding CurrentOperationResultMessage,
-                                                          Mode=TwoWay}"
-                                IsClosed="{TemplateBinding IsCurrentOperationResultNotificationCardClosed,
-                                                           Mode=TwoWay}"
-                                IsVisible="{TemplateBinding IsCurrentOperationResultVisible,
-                                                            Mode=TwoWay}"
-                                Name="PART_NotificationCard"
-                                NotificationType="{TemplateBinding CurrentOperationResultType,
-                                                                   Mode=TwoWay}" />-->
+                                                    <Button
+                                                        HorizontalAlignment="Right"
+                                                        IsVisible="{TemplateBinding CanClose}"
+                                                        Margin="{DynamicResource BannerCloseButtonMargin}"
+                                                        Name="{x:Static u:Banner.PART_CloseButton}"
+                                                        Theme="{DynamicResource OverlayCloseButton}"
+                                                        VerticalAlignment="Top" />
+                                                </DockPanel>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </u:Banner.Template>
+                                </u:Banner>
+                            </StackPanel>
+                            <u:Divider
+                                Content="{TemplateBinding RecentRunTimesTitle}"
+                                FontSize="18"
+                                HorizontalAlignment="Left" />
+                            <TextBox
+                                Classes="TextArea"
+                                FontSize="18"
+                                Height="260"
+                                IsReadOnly="True"
+                                Name="PART_NextRunTimes"
+                                Text="{TemplateBinding CronExpressionCalculationResult,
+                                                       Mode=OneWay,
+                                                       Converter={StaticResource ConverterCronExpressionParseToTimesResult},
+                                                       ConverterParameter={TemplateBinding DateTimeFormat}}" />
                         </StackPanel>
-                        <u:Divider Content="{TemplateBinding NextRunTimes, Converter={StaticResource TextFormattingConverter}, ConverterParameter={TemplateBinding RecentRunTimesTitleFormat}}" FontSize="18">
-                            <!--<u:Divider.Content>
-                                <TextBlock Text="{TemplateBinding NextRunTimes, Converter={StaticResource TextFormattingConverter}, ConverterParameter={TemplateBinding}}" />
-                            </u:Divider.Content>-->
-                        </u:Divider>
-                        <TextBox
-                            Classes="TextArea"
-                            IsReadOnly="True"
-                            Name="PART_NextRunTimes"
-                            Text="{TemplateBinding NextRunTimes,
-                                                   Mode=OneWay,
-                                                   Converter={StaticResource ConverterListDateTimesText},
-                                                   ConverterParameter={TemplateBinding DateTimeFormat}}" />
-                    </StackPanel>
+                    </Grid>
                 </Border>
             </ControlTemplate>
         </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:SecondsCronPickerFieldItem"
-        x:Key="{x:Type u:SecondsCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Second}" />
-        <Setter Property="IsEverySecondMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:SecondsCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_Second}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEverySecondMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Name="PART_All"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_Second}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Second}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="58"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Second}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Second}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Interval_Second}"
-                                IsChecked="{TemplateBinding IsIntervalMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Interval"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Interval.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Second}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalStartSecond,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Second}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalValue,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Second}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_Second}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox
-                            IsEnabled="{Binding #PART_List.IsChecked}"
-                            ItemsSource="{TemplateBinding AllowedSeconds}"
-                            MaxWidth="400"
-                            MinWidth="100">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel MaxWidth="400" MinWidth="100" />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedSeconds}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                SelectedItems="{TemplateBinding SelectedSeconds}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:MinutesCronPickerFieldItem"
-        x:Key="{x:Type u:MinutesCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Minute}" />
-        <Setter Property="IsEveryMinuteMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:MinutesCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_Minute}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryMinuteMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_Minute}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Minute}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="58"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Minute}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Minute}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Interval_Minute}"
-                                IsChecked="{TemplateBinding IsIntervalMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Interval"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Interval.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Minute}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalStartMinute,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Minute}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="59"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalValue,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Minute}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_Minute}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox ItemsSource="{TemplateBinding AllowedMinutes}" SelectedItems="{TemplateBinding SelectedMinutes, Mode=TwoWay}">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedMinutes}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                SelectedItems="{TemplateBinding SelectedMinutes}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:HoursCronPickerFieldItem"
-        x:Key="{x:Type u:HoursCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Hour}" />
-        <Setter Property="IsEveryHourMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:HoursCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_Hour}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryHourMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_Hour}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Hour}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="23"
-                                    Minimum="0"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Hour}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="23"
-                                    Minimum="0"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Hour}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Interval_Hour}"
-                                IsChecked="{TemplateBinding IsIntervalMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Interval"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Interval.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Hour}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="23"
-                                    Minimum="0"
-                                    Value="{TemplateBinding IntervalStartHour,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Hour}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="23"
-                                    Minimum="0"
-                                    Value="{TemplateBinding IntervalValue,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Hour}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_Hour}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox ItemsSource="{TemplateBinding AllowedHours}" SelectedItems="{TemplateBinding SelectedHours, Mode=TwoWay}">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedHours}"
-                                MaxWidth="600"
-                                MinWidth="100"
-                                SelectedItems="{TemplateBinding SelectedHours}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:DaysOfMonthCronPickerFieldItem"
-        x:Key="{x:Type u:DaysOfMonthCronPickerFieldItem}">
-        <Setter Property="LastLeftOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_LastLeftNotSupportDayOfMonth}" />
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_DayOfMonth}" />
-        <Setter Property="IsEveryDayOfMonthMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:DaysOfMonthCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_DayOfMonth}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryDayOfMonthMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_NotSet_DayOfMonth}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsPlaceholderMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_DayOfMonth}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_DayOfMonth}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_DayOfMonth}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_DayOfMonth}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Interval_DayOfMonth}"
-                                IsChecked="{TemplateBinding IsIntervalMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Interval"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Interval.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_DayOfMonth}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalStartDay,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_DayOfMonth}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalValue,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_DayOfMonth}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_SpecialRecentlyWeekday_DayOfMonth}"
-                                IsChecked="{TemplateBinding IsRecentlyWeekdayMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Weekday"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Weekday.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_SpecialRecentlyWeekday_DayOfMonth}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RecentlyWeekday,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_SpecialRecentlyWeekday_DayOfMonth}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_LastDay_DayOfMonth}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsLastdayMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_DayOfMonth}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox ItemsSource="{TemplateBinding AllowedDaysOfMonth}" SelectedItems="{TemplateBinding SelectedDays, Mode=TwoWay}">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedDaysOfMonth}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                SelectedItems="{TemplateBinding SelectedDays}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:MonthsCronPickerFieldItem"
-        x:Key="{x:Type u:MonthsCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Month}" />
-        <Setter Property="IsEveryMonthMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:MonthsCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_Month}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryMonthMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_Month}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Month}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="12"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Month}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="12"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Month}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Interval_Month}"
-                                IsChecked="{TemplateBinding IsIntervalMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Interval"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Interval.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Month}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="12"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalStartMonth,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Month}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="12"
-                                    Minimum="1"
-                                    Value="{TemplateBinding IntervalValue,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Month}" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_Month}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox ItemsSource="{TemplateBinding AllowedMonths}" SelectedItems="{TemplateBinding SelectedMonths, Mode=TwoWay}">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedMonths}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                SelectedItems="{TemplateBinding SelectedMonths}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Converter={StaticResource MonthConverter}, Mode=OneWay}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:DaysOfWeekCronPickerFieldItem"
-        x:Key="{x:Type u:DaysOfWeekCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_DayOfWeek}" />
-        <Setter Property="IsEveryDayOfWeekMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:DaysOfWeekCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_DayOfWeek}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryDayOfWeekMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_NotSet_DayOfWeek}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsPlaceholderMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_DayOfWeek}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_DayOfWeek}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="7"
-                                    Minimum="1"
-                                    Value="{TemplateBinding RangeStart,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_DayOfWeek}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="7"
-                                    Minimum="2"
-                                    Value="{TemplateBinding RangeEnd,
-                                                            Mode=TwoWay}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_SpecialWeekAndWeekday_DayOfWeek}"
-                                IsChecked="{TemplateBinding IsSpecialWeekdayMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_SpecialWeekday"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_SpecialWeekday.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_SpecialWeekAndWeekday_DayOfWeek}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="5"
-                                    Minimum="1"
-                                    Value="{TemplateBinding SpecialWeek,
-                                                            Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_SpecialWeekAndWeekday_DayOfWeek}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="7"
-                                    Minimum="1"
-                                    Value="{TemplateBinding SpecialWeekDay,
-                                                            Mode=TwoWay}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_LastWeekdayOfMonth_DayOfWeek}"
-                                IsChecked="{TemplateBinding IsLastMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_Last"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #PART_Last.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_LastWeekdayOfMonth_DayOfWeek}" VerticalAlignment="Center" />
-                                <u:NumericByteUpDown
-                                    Maximum="31"
-                                    Minimum="1"
-                                    Value="{TemplateBinding LastWeekday,
-                                                            Mode=TwoWay}" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Orientation="Vertical" Spacing="10">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_List_DayOfWeek}"
-                                HorizontalAlignment="Left"
-                                IsChecked="{TemplateBinding IsListMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="PART_List"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <!--<u:MultiComboBox ItemsSource="{TemplateBinding AllowedWeekDays}" SelectedItems="{TemplateBinding SelectedWeekDays, Mode=TwoWay}">
-                            <u:MultiComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </u:MultiComboBox.ItemsPanel>
-                        </u:MultiComboBox>-->
-                            <ListBox
-                                HorizontalAlignment="Left"
-                                IsEnabled="{Binding #PART_List.IsChecked}"
-                                ItemsSource="{TemplateBinding AllowedWeekDays}"
-                                SelectedItems="{TemplateBinding SelectedWeekDays}"
-                                SelectionMode="Multiple"
-                                Theme="{DynamicResource MultiplePureCardCheckGroupListBox}">
-                                <ListBox.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </ListBox.Styles>
-                                <ListBox.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Converter={StaticResource WeekDayConverter}, Mode=OneWay}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme
-        BasedOn="{StaticResource {x:Type u:CronPickerFieldItem}}"
-        TargetType="u:YearsCronPickerFieldItem"
-        x:Key="{x:Type u:YearsCronPickerFieldItem}">
-        <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Year}" />
-        <Setter Property="IsPlaceholderMode" Value="True" />
-        <Setter Property="Template">
-            <ControlTemplate TargetType="u:YearsCronPickerFieldItem">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    Padding="{TemplateBinding Padding}">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_NotSet_Year}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsPlaceholderMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <CheckBox
-                            Content="{DynamicResource CronFieldModeName_All_Year}"
-                            HorizontalAlignment="Left"
-                            IsChecked="{TemplateBinding IsEveryYearMode,
-                                                        Mode=TwoWay}"
-                            MinWidth="100"
-                            Theme="{DynamicResource CardCheckBox}" />
-                        <StackPanel Orientation="Horizontal" Spacing="20">
-                            <CheckBox
-                                Content="{DynamicResource CronFieldModeName_Range_Year}"
-                                IsChecked="{TemplateBinding IsRangeLimitMode,
-                                                            Mode=TwoWay}"
-                                MinWidth="100"
-                                Name="RangeLimit"
-                                Theme="{DynamicResource CardCheckBox}" />
-                            <StackPanel IsEnabled="{Binding #RangeLimit.IsChecked}" Orientation="Horizontal">
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Year}" VerticalAlignment="Center" />
-                                <u:NumericIntUpDown Minimum="1" Value="{TemplateBinding RangeStart, Mode=TwoWay}" />
-                                <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Year}" VerticalAlignment="Center" />
-                                <u:NumericIntUpDown Minimum="1" Value="{TemplateBinding RangeEnd, Mode=TwoWay}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>
-    </ControlTheme>
-    <ControlTheme TargetType="u:CronPickerFieldItem" x:Key="{x:Type u:CronPickerFieldItem}">
-        <Setter Property="NotSupportMatchTypeFormatter" Value="{DynamicResource CronExceptionStringFormatter_NotSupportMatchType}" />
-        <Setter Property="NotNumValueFormatter" Value="{DynamicResource CronExceptionStringFormatter_NotNumValue}" />
-        <Setter Property="ExpressionErrorFormatter" Value="{DynamicResource CronExceptionStringFormatter_ExpressionError}" />
-        <Setter Property="ExpressionNotSupportFormatter" Value="{DynamicResource CronExceptionStringFormatter_ExpressionNotSupport}" />
-        <Setter Property="RangeStartOrEndOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_RangeStartOrEndOutOfRange}" />
-        <Setter Property="RangeEndLessThenStartFormatter" Value="{DynamicResource CronExceptionStringFormatter_RangeEndLessThenStart}" />
-        <Setter Property="EnumeratorEmptyFormatter" Value="{DynamicResource CronExceptionStringFormatter_EnumeratorEmpty}" />
-        <Setter Property="EnumeratorOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_EnumeratorOutOfRange}" />
-        <Setter Property="IntervalLeftOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_IntervalLeftOutOfRange}" />
-        <Setter Property="IntervalRightOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_IntervalRightOutOfRange}" />
-        <Setter Property="SharpLeftOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_SharpLeftOutOfRange}" />
-        <Setter Property="SharpRightOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_SharpRightOutOfRange}" />
-        <Setter Property="LastLeftOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_LastLeftOutOfRange}" />
-        <Setter Property="LastLeftEmptyFormatter" Value="{DynamicResource CronExceptionStringFormatter_LastLeftEmpty}" />
-        <Setter Property="WModeLeftOutOfRangeFormatter" Value="{DynamicResource CronExceptionStringFormatter_WModeLeftOutOfRange}" />
-        <Setter Property="WModeLeftEmptyFormatter" Value="{DynamicResource CronExceptionStringFormatter_WModeLeftEmpty}" />
-        <Setter Property="Padding" Value="0,0,0,0" />
-    </ControlTheme>
 
+        <Style Selector="^[SelectedFieldIndex=-1]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=0]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="True" />
+                <Setter Property="Height" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=1]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=2]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=3]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=4]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=5]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+        <Style Selector="^[SelectedFieldIndex=6]">
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_HoursField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfMonthField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_MonthsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+    </ControlTheme>
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type TabControl}}"
+        TargetType="u:CronPickerFieldsContainer"
+        x:Key="{x:Type u:CronPickerFieldsContainer}">
+        <!--<Setter Property="Template">
+            <ControlTemplate TargetType="u:CronPickerFieldsContainer">
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                    VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                    <DockPanel>
+                        <Panel DockPanel.Dock="{TemplateBinding TabStripPlacement}">
+                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
+                            <Border Background="{DynamicResource TabItemLinePipePressedBorderBrush}" Name="PART_BorderSeparator" />
+                        </Panel>
+                        <ContentPresenter
+                            Content="{TemplateBinding SelectedContent}"
+                            ContentTemplate="{TemplateBinding SelectedContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            Margin="{TemplateBinding Padding}"
+                            Name="PART_SelectedContentHost"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>-->
+    </ControlTheme>
+    <!--  u:CronPickerRulerBoxItem  -->
+    <ControlTheme TargetType="u:CronPickerRulerBoxItem" x:Key="{x:Type u:CronPickerRulerBoxItem}">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:CronPickerRulerBoxItem">
+                <ContentPresenter
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    FontSize="{TemplateBinding FontSize}"
+                    Name="PART_ContentPresenter"
+                    Padding="{TemplateBinding Padding}"
+                    RecognizesAccessKey="True" />
+                <!--
+                    Content="{TemplateBinding Content}"
+                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                -->
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+    <!--  u:CronPickerFieldView  -->
+    <ControlTheme TargetType="u:CronPickerFieldView" x:Key="{x:Type u:CronPickerFieldView}">
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Vertical" Spacing="10" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:CronPickerFieldView">
+                <Border
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    Padding="{TemplateBinding Padding}">
+                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+    <!--  u:CronPickerRulerSelector  -->
+    <ControlTheme TargetType="u:CronPickerRulerSelector" x:Key="{x:Type u:CronPickerRulerSelector}">
+        <Setter Property="Background" Value="{DynamicResource TabItemLinePipeBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource TabItemLineHeaderForeground}" />
+        <!-- <Setter Property="Margin" Value="0" /> -->
+        <Setter Property="Padding" Value="{DynamicResource CheckBoxCardPadding}" />
+        <Setter Property="FontSize" Value="{DynamicResource CronPickerRulerSelectorFontSize}" />
+        <Setter Property="MinHeight" Value="5" />
+        <!-- <Setter Property="Padding" Value="{DynamicResource CheckBoxCardPadding}" /> -->
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="CornerRadius" Value="{DynamicResource CheckBoxCardCornerRadius}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource CheckBoxCardBorderThickness}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:CronPickerRulerSelector">
+                <DockPanel>
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        DockPanel.Dock="{TemplateBinding StripPlacement}"
+                        HorizontalAlignment="Left"
+                        Name="PART_LayoutRoot">
+                        <Panel>
+                            <Border
+                                HorizontalAlignment="Left"
+                                Name="SelectRootBorder"
+                                Padding="{TemplateBinding Padding}">
+                                <Grid
+                                    ColumnDefinitions="Auto,*"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <Panel
+                                        Grid.Column="0"
+                                        Margin="{DynamicResource CheckBoxBoxMargin}"
+                                        VerticalAlignment="Top">
+                                        <Border
+                                            Background="{DynamicResource CheckBoxDefaultBackground}"
+                                            BorderBrush="{DynamicResource CheckBoxDefaultBorderBrush}"
+                                            BorderThickness="{DynamicResource CheckBoxBoxBorderThickness}"
+                                            CornerRadius="{DynamicResource CheckBoxBoxCornerRadius}"
+                                            Height="{DynamicResource CheckBoxBoxHeight}"
+                                            Name="NormalRectangle"
+                                            UseLayoutRounding="False"
+                                            Width="{DynamicResource CheckBoxBoxWidth}" />
+                                        <PathIcon
+                                            Foreground="{DynamicResource CheckBoxGlyphFill}"
+                                            Height="{DynamicResource CheckBoxBoxGlyphHeight}"
+                                            Name="CheckGlyph"
+                                            Theme="{DynamicResource InnerPathIcon}"
+                                            Width="{DynamicResource CheckBoxBoxGlyphWidth}" />
+                                    </Panel>
+
+                                    <ContentPresenter
+                                        Content="{TemplateBinding Header}"
+                                        ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                        FontSize="{DynamicResource CronPickerRulerSelectorHeaderFontSize}"
+                                        Grid.Column="1"
+                                        IsVisible="{TemplateBinding Header,
+                                                                    Converter={x:Static ObjectConverters.IsNotNull}}"
+                                        Margin="{DynamicResource CheckBoxContentMargin}"
+                                        Name="{x:Static u:CronPickerRulerSelector.PART_HeaderPresenter}"
+                                        RecognizesAccessKey="True"
+                                        TextWrapping="Wrap" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                Background="{DynamicResource TabItemLinePipeBackground}"
+                                IsVisible="True"
+                                Name="PART_SelectedPipe"
+                                UseLayoutRounding="False" />
+                        </Panel>
+                    </Border>
+                    <ContentPresenter
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        FontFamily="{TemplateBinding FontFamily}"
+                        FontSize="{TemplateBinding FontSize}"
+                        FontWeight="{TemplateBinding FontWeight}"
+                        Foreground="{TemplateBinding Foreground}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        IsEnabled="{TemplateBinding IsSelected}"
+                        Name="PART_ContentPresenter"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!--  Selected state  -->
+        <Style Selector="^:not(:selected)">
+            <Setter Property="Cursor" Value="Hand" />
+            <Style Selector="^:pointerover /template/ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource TabItemLineHeaderPointeroverForeground}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#PART_SelectedPipe">
+                <Setter Property="Background" Value="{DynamicResource TabItemLinePipePointeroverBorderBrush}" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_SelectedPipe">
+                <Setter Property="Background" Value="{DynamicResource TabItemLinePipePressedBorderBrush}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:selected">
+            <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCardCheckedBorderBrush}" />
+                <Setter Property="Background" Value="{DynamicResource CheckBoxCardCheckedBackground}" />
+            </Style>
+            <Style Selector="^ /template/ Border#NormalRectangle">
+                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedDefaultBorderBrush}" />
+                <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedDefaultBackground}" />
+            </Style>
+            <Style Selector="^ /template/ PathIcon#CheckGlyph">
+                <Setter Property="Data" Value="{DynamicResource CheckBoxCheckGlyph}" />
+                <Setter Property="Opacity" Value="1" />
+            </Style>
+
+            <!--  Selected Pointerover State  -->
+            <Style Selector="^:pointerover">
+                <Style Selector="^ /template/ Border#NormalRectangle">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedPointeroverBorderBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedPointeroverBackground}" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCardCheckedPointeroverBorderBrush}" />
+                </Style>
+            </Style>
+
+            <!--  Selected Pressed State  -->
+            <Style Selector="^:pressed">
+                <Style Selector="^ /template/ Border#NormalRectangle">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedPressedBorderBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedPressedBackground}" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCardCheckedPressedBorderBrush}" />
+                </Style>
+                <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                    <Setter Property="Background" Value="{DynamicResource TabItemHeaderBackgroundSelectedPressed}" />
+                    <Setter Property="TextElement.Foreground" Value="{DynamicResource TabItemHeaderForegroundSelectedPressed}" />
+                </Style>
+            </Style>
+
+            <!--  Selected Disabled State  -->
+            <Style Selector="^:disabled">
+                <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCardCheckedDisabledBorderBrush}" />
+                </Style>
+                <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+                    <Setter Property="Foreground" Value="{DynamicResource CheckBoxDisabledForeground}" />
+                </Style>
+                <Style Selector="^ /template/ Border#NormalRectangle">
+                    <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedDisabledBorderBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedDisabledBackground}" />
+                </Style>
+
+                <Style Selector="^ /template/ PathIcon#CheckGlyph">
+                    <Setter Property="Foreground" Value="{DynamicResource CheckBoxGlyphDisabledFill}" />
+                </Style>
+            </Style>
+
+            <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource TabItemLineHeaderSelectedForeground}" />
+                <Setter Property="FontWeight" Value="{DynamicResource TabItemSelectedFontWeight}" />
+            </Style>
+
+            <Style Selector="^ /template/ Border#PART_SelectedPipe">
+                <Setter Property="Background" Value="{DynamicResource TabItemLinePipeSelectedBackground}" />
+            </Style>
+        </Style>
+
+        <!--  Unchecked Pointerover State  -->
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ Border#NormalRectangle">
+                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxPointeroverBorderBrush}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource CheckBoxCardPointeroverBackground}" />
+            </Style>
+        </Style>
+
+        <!--  Unchecked Pressed State  -->
+        <Style Selector="^:pressed">
+            <Style Selector="^ /template/ Border#NormalRectangle">
+                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxPressedBorderBrush}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource CheckBoxCardPressedBackground}" />
+            </Style>
+        </Style>
+
+        <!--  Disabled state  -->
+        <Style Selector="^:disabled">
+            <Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+                <Setter Property="Foreground" Value="{DynamicResource CheckBoxDisabledForeground}" />
+            </Style>
+            <Style Selector="^ /template/ Border#NormalRectangle">
+                <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxDefaultDisabledBorderBrush}" />
+                <Setter Property="Background" Value="{DynamicResource CheckBoxDefaultDisabledBackground}" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_LayoutRoot">
+                <Setter Property="Background" Value="{DynamicResource TabItemHeaderBackgroundDisabled}" />
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TabItemHeaderForegroundDisabled}" />
+            </Style>
+        </Style>
+
+        <!--  TabStripPlacement States Group  -->
+        <Style Selector="^[StripPlacement=Top]">
+            <Style Selector="^ /template/Border#PART_SelectedPipe">
+                <Setter Property="Height" Value="2" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#SelectRootBorder">
+                <Setter Property="Margin" Value="0,0,0,4" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Margin" Value="{DynamicResource CronPickerRulerSelectorContentMargin_HeaderTop}" />
+            </Style>
+        </Style>
+        <Style Selector="^[StripPlacement=Bottom]">
+            <Style Selector="^ /template/Border#PART_SelectedPipe">
+                <Setter Property="Height" Value="2" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#SelectRootBorder">
+                <Setter Property="Margin" Value="0,4,0,0" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Margin" Value="{DynamicResource CronPickerRulerSelectorContentMargin_HeaderBottom}" />
+            </Style>
+        </Style>
+        <Style Selector="^[StripPlacement=Left]">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Style Selector="^/template/ Border#PART_SelectedPipe">
+                <Setter Property="Width" Value="2" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ Label#SelectRootBorder">
+                <Setter Property="Margin" Value="8,0,0,0" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Margin" Value="{DynamicResource CronPickerRulerSelectorContentMargin_HeaderLeft}" />
+            </Style>
+        </Style>
+        <Style Selector="^[StripPlacement=Right]">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Style Selector="^ /template/ Border#PART_SelectedPipe">
+                <Setter Property="Width" Value="2" />
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#SelectRootBorder">
+                <Setter Property="Margin" Value="0,0,8,0" />
+            </Style>
+            <Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Margin" Value="{DynamicResource CronPickerRulerSelectorContentMargin_HeaderRight}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+    <!--  u:CronPickerFieldTabItem  -->
     <ControlTheme
         BasedOn="{StaticResource {x:Type TabItem}}"
         TargetType="u:CronPickerFieldTabItem"
-        x:Key="{x:Type u:CronPickerFieldTabItem}" />
+        x:Key="{x:Type u:CronPickerFieldTabItem}">
+        <Setter Property="Padding" Value="{DynamicResource CronPickerFieldTabItemPadding}" />
+        <Setter Property="FontSize" Value="{DynamicResource CronPickerFieldTabItemFontSize}" />
+        <!--  header  -->
+        <Style Selector="^[FieldType=Second]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Second}" />
+        </Style>
+        <Style Selector="^[FieldType=Minute]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Minute}" />
+        </Style>
+        <Style Selector="^[FieldType=Hour]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Hour}" />
+        </Style>
+        <Style Selector="^[FieldType=DayOfMonth]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_DayOfMonth}" />
+        </Style>
+        <Style Selector="^[FieldType=Month]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Month}" />
+        </Style>
+        <Style Selector="^[FieldType=DayOfWeek]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_DayOfWeek}" />
+        </Style>
+        <Style Selector="^[FieldType=Year]">
+            <Setter Property="Header" Value="{DynamicResource CronFieldHeader_Year}" />
+        </Style>
+        <Style Selector="^[FieldType=Unknown]">
+            <Setter Property="Header" Value="wrong type" />
+        </Style>
+    </ControlTheme>
+    <!--  MultiplePureCardCheckGroupListBox : ListBox  -->
     <ControlTheme
         BasedOn="{StaticResource RadioGroupListBox}"
         TargetType="ListBox"
@@ -1185,6 +1294,7 @@
         <Setter Property="ItemContainerTheme" Value="{DynamicResource MultiplePureCardCheckGroupListBoxItem}" />
         <Setter Property="SelectionMode" Value="Multiple" />
     </ControlTheme>
+    <!--  MultiplePureCardCheckGroupListBoxItem ListBoxItem  -->
     <ControlTheme TargetType="ListBoxItem" x:Key="MultiplePureCardCheckGroupListBoxItem">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -1248,6 +1358,7 @@
             </Style>
         </Style>
     </ControlTheme>
+    <!--  LPureCardCheckBox : CheckBox  -->
     <ControlTheme TargetType="CheckBox" x:Key="LPureCardCheckBox">
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -1337,4 +1448,5 @@
             </Style>
         </Style>
     </ControlTheme>
+
 </ResourceDictionary>

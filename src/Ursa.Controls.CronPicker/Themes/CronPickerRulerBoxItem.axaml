@@ -1,0 +1,525 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:converters="using:Ursa.Converters"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Add Resources Here  -->
+    <Design.PreviewWith>
+        <ScrollViewer Height="300" Width="400">
+            <StackPanel Orientation="Vertical">
+                <!--  秒  -->
+                <u:Divider Content="秒" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Second"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Second"
+                        RulerCode="2"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="循环" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="Second"
+                        ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.SecondList}"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        Theme="{DynamicResource PrivateItemsSelector001}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  分  -->
+                <u:Divider Content="分" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Minute"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Minute"
+                        RulerCode="2"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="循环" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="Minute"
+                        ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.MinuteList}"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  时  -->
+                <u:Divider Content="时" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Hour"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Hour"
+                        RulerCode="2"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="循环" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="Hour"
+                        ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.HourList}"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  日  -->
+                <u:Divider Content="日" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="DayOfMonth"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="DayOfMonth"
+                        RulerCode="2"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="循环" />
+                    <u:OneInt32ParamCronPickerRulerBoxItem
+                        FieldType="DayOfMonth"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RECENTLY_WORKDAY}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="最近工作日" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="DayOfMonth"
+                        ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.DayOfMonthList}"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  月  -->
+                <u:Divider Content="月" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Month"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Month"
+                        RulerCode="2"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="循环" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="Month"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  周  -->
+                <u:Divider Content="周" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="DayOfWeek"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="DayOfWeek"
+                        RulerCode="6"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="指定周" />
+                    <u:OneInt32ParamCronPickerRulerBoxItem
+                        FieldType="DayOfWeek"
+                        RulerCode="4"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="本月最后一" />
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="DayOfWeek"
+                        ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.DayOfWeekList_1}"
+                        RulerCode="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="列表指定" />
+                </u:Form>
+
+                <!--  年  -->
+                <u:Divider Content="年" />
+                <u:Form LabelPosition="Left" LabelWidth="*">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="Year"
+                        RulerCode="1"
+                        u:FormItem.IsRequired="True"
+                        u:FormItem.Label="周期" />
+                </u:Form>
+            </StackPanel>
+        </ScrollViewer>
+    </Design.PreviewWith>
+
+    <converters:WeekDayConverter x:Key="WeekDayConverter" />
+    <converters:MonthConverter x:Key="MonthConverter" />
+    <!--  OnlySymbolCronPickerRulerBoxItem : CronPickerRulerBoxItem  -->
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type u:CronPickerRulerBoxItem}}"
+        TargetType="u:OnlySymbolCronPickerRulerBoxItem"
+        x:Key="{x:Type u:OnlySymbolCronPickerRulerBoxItem}">
+        <Setter Property="SymbolNullOrWhitespaceMessage" Value="{DynamicResource OnlySymbolCronPickerRulerBoxItem_SymbolNullOrWhitespaceMessage}" />
+        <Setter Property="ValueSymbolNotMatchMessage" Value="{DynamicResource OnlySymbolCronPickerRulerBoxItem_ValueSymbolNotMatchMessage}" />
+    </ControlTheme>
+
+    <!--  OneInt32ParamCronPickerRulerBoxItem : CronPickerRulerBoxItem  -->
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type u:CronPickerRulerBoxItem}}"
+        TargetType="u:OneInt32ParamCronPickerRulerBoxItem"
+        x:Key="{x:Type u:OneInt32ParamCronPickerRulerBoxItem}">
+        <Setter Property="ParamNullParseErrorMessage" Value="{DynamicResource OneInt32ParamCronPickerRulerBoxItem_ParamNullParseErrorMessage}" />
+        <Setter Property="ParamParseErrorMessage" Value="{DynamicResource OneInt32ParamCronPickerRulerBoxItem_ParamParseErrorMessage}" />
+        <Setter Property="ParamValueOutOfRangeMessage" Value="{DynamicResource OneInt32ParamCronPickerRulerBoxItem_ParamValueOutOfRangeMessage}" />
+        <Setter Property="ValueStringFormatter">
+            <u:AvaloniaStringFormatter FormatString="\{0\}\{1\}" IsSimpleStringFormatMode="True" />
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:OneInt32ParamCronPickerRulerBoxItem">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="PART_Text_Left" VerticalAlignment="Center" />
+                    <u:NumericIntUpDown2
+                        Maximum="{TemplateBinding MaxValueParam}"
+                        Minimum="{TemplateBinding MinValueParam}"
+                        Name="PART_NumericUpDown"
+                        Value="{TemplateBinding ParamValue,
+                                                Mode=TwoWay}"
+                        Width="80" />
+                    <TextBlock Name="PART_Text_Right" VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[FieldType=DayOfMonth][RulerCode=5]">
+            <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_SpecialRecentlyWeekday_DayOfMonth}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_SpecialRecentlyWeekday_DayOfMonth}" />
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=DayOfWeek][RulerCode=4]">
+            <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_LastWeekdayOfMonth_DayOfWeek}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--  TwoInt32ParamsCronPickerRulerBoxItem : CronPickerRulerBoxItem  -->
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type u:CronPickerRulerBoxItem}}"
+        TargetType="u:TwoInt32ParamsCronPickerRulerBoxItem"
+        x:Key="{x:Type u:TwoInt32ParamsCronPickerRulerBoxItem}">
+        <Setter Property="ParamsNullParseErrorMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_ParamsNullParseErrorMessage}" />
+        <Setter Property="Param2NullParseErrorMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_Param2NullParseErrorMessage}" />
+        <Setter Property="ParamsOutOfRangeMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_ParamsOutOfRangeMessage}" />
+        <Setter Property="Param1ParseErrorMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_Param1ParseErrorMessage}" />
+        <Setter Property="Param2ParseErrorMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_Param2ParseErrorMessage}" />
+        <Setter Property="Param1ValueOutOfRangeMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_Param1ValueOutOfRangeMessage}" />
+        <Setter Property="Param2ValueOutOfRangeMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_Param2ValueOutOfRangeMessage}" />
+        <Setter Property="OffsetOutOfRangeMessage" Value="{DynamicResource TwoInt32ParamsCronPickerRulerBoxItem_OffsetOutOfRangeMessage}" />
+        <Setter Property="ValueStringFormatter">
+            <u:AvaloniaStringFormatter FormatString="\{0\}\{2\}\{1\}" IsSimpleStringFormatMode="True" />
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:TwoInt32ParamsCronPickerRulerBoxItem">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="PART_Text_Left" VerticalAlignment="Center" />
+                    <u:NumericIntUpDown2
+                        Maximum="{TemplateBinding MaxValueParam1}"
+                        Minimum="{TemplateBinding MinValueParam1}"
+                        Value="{TemplateBinding Param1Value,
+                                                Mode=TwoWay}"
+                        Width="80"
+                        x:Name="PART_NumericUpDown_0" />
+                    <TextBlock Name="PART_Text_Middle" VerticalAlignment="Center" />
+                    <u:NumericIntUpDown2
+                        Maximum="{TemplateBinding MaxValueParam2}"
+                        Minimum="{TemplateBinding MinValueParam2}"
+                        Value="{TemplateBinding Param2Value,
+                                                Mode=TwoWay}"
+                        Width="80"
+                        x:Name="PART_NumericUpDown_1" />
+                    <TextBlock Name="PART_Text_Right" VerticalAlignment="Center" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[FieldType=Second]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_Second}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_Second}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_Second}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=2]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Interval_Second}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Interval_Second}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Interval_Second}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=Minute]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_Minute}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_Minute}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_Minute}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=2]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Interval_Minute}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Interval_Minute}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Interval_Minute}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=Hour]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_Hour}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_Hour}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_Hour}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=2]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Interval_Hour}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Interval_Hour}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Interval_Hour}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=DayOfMonth]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_DayOfMonth}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_DayOfMonth}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_DayOfMonth}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=2]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Interval_DayOfMonth}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Interval_DayOfMonth}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Interval_DayOfMonth}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=Month]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_Month}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_Month}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_Month}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=2]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Interval_Month}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Interval_Month}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Interval_Month}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=DayOfWeek]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_DayOfWeek}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_DayOfWeek}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_DayOfWeek}" />
+                </Style>
+            </Style>
+            <Style Selector="^[RulerCode=6]">
+                <Setter Property="ValueStringFormatter">
+                    <u:AvaloniaStringFormatter FormatString="\{1\}\{2\}\{0\}" IsSimpleStringFormatMode="True" />
+                </Setter>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_SpecialWeekAndWeekday_DayOfWeek}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_SpecialWeekAndWeekday_DayOfWeek}" />
+                </Style>
+            </Style>
+        </Style>
+        <Style Selector="^[FieldType=Year]">
+            <Style Selector="^[RulerCode=1]">
+                <Style Selector="^ /template/ TextBlock#PART_Text_Left">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Left_Range_Year}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Middle">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Middle_Range_Year}" />
+                </Style>
+                <Style Selector="^ /template/ TextBlock#PART_Text_Right">
+                    <Setter Property="Text" Value="{DynamicResource CronFieldModeElement_Right_Range_Year}" />
+                </Style>
+            </Style>
+        </Style>
+    </ControlTheme>
+
+    <!--  Int32SetCronPickerRulerBoxItem : CronPickerRulerBoxItem  -->
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type u:CronPickerRulerBoxItem}}"
+        TargetType="u:Int32SetCronPickerRulerBoxItem"
+        x:Key="{x:Type u:Int32SetCronPickerRulerBoxItem}">
+        <Setter Property="ItemPadding" Value="0,0,0,0" />
+        <Setter Property="DefaultEmptySelectedValue" Value="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+        <Setter Property="DefaultSelectedAllValue" Value="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+        <Setter Property="ParamNullParseErrorMessage" Value="{DynamicResource Int32SetCronPickerRulerBoxItem_ParamNullParseErrorMessage}" />
+        <Setter Property="HasElementParseErrorMessage" Value="{DynamicResource Int32SetCronPickerRulerBoxItem_HasElementParseErrorMessage}" />
+        <Setter Property="HasElementOutOfRangeMessage" Value="{DynamicResource Int32SetCronPickerRulerBoxItem_HasElementOutOfRangeMessage}" />
+        <Setter Property="ItemsPanelRowSpacing" Value="1" />
+        <Setter Property="ItemsPanelColumnSpacing" Value="0" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <u:WrapPanelWithSpacing
+                    ColumnSpacing="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemsPanelColumnSpacing, Mode=TwoWay}"
+                    ItemHeight="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemHeight, Mode=TwoWay}"
+                    ItemWidth="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemWidth, Mode=TwoWay}"
+                    Orientation="Horizontal"
+                    RowSpacing="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemsPanelRowSpacing, Mode=TwoWay}" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:Int32SetCronPickerRulerBoxItem">
+                <ListBox
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                    ItemTemplate="{TemplateBinding ItemTemplate}"
+                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                    ItemsSource="{TemplateBinding ItemsSource}"
+                    Padding="{TemplateBinding Padding}"
+                    SelectedItems="{TemplateBinding SelectedItems,
+                                                    Mode=TwoWay}"
+                    SelectionMode="Multiple"
+                    Theme="{DynamicResource MultiplePureCardCheckGroupListBox}"
+                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                    x:Name="PART_ListBox">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <!-- <Setter Property="Width" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemWidth, Mode=TwoWay}" /> -->
+                            <!-- <Setter Property="MinWidth" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemMinWidth, Mode=TwoWay}" /> -->
+                            <!-- <Setter Property="MaxWidth" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemMaxWidth, Mode=TwoWay}" /> -->
+                            <!-- <Setter Property="Height" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemHeight, Mode=TwoWay}" /> -->
+                            <!-- <Setter Property="MinHeight" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemMinHeight, Mode=TwoWay}" /> -->
+                            <!-- <Setter Property="MaxHeight" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemMaxHeight, Mode=TwoWay}" /> -->
+                            <Setter Property="Padding" Value="{Binding $parent[u:Int32SetCronPickerRulerBoxItem].ItemPadding, Mode=TwoWay}" />
+                            <Setter Property="BorderBrush" Value="Gainsboro" />
+                        </Style>
+                    </ListBox.Styles>
+                </ListBox>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^[FieldType=Second]">
+            <Setter Property="MaxWidth" Value="780" />
+            <Setter Property="MinWidth" Value="100" />
+            <Style Selector="^ /template/ ListBox#PART_ListBox" />
+            <Setter Property="ItemHeight" Value="40" />
+            <Setter Property="ItemWidth" Value="60" />
+        </Style>
+        <Style Selector="^[FieldType=Minute]">
+            <Setter Property="MaxWidth" Value="780" />
+            <Setter Property="MinWidth" Value="100" />
+            <Style Selector="^ /template/ ListBox#PART_ListBox" />
+            <Setter Property="ItemHeight" Value="40" />
+            <Setter Property="ItemWidth" Value="60" />
+        </Style>
+        <Style Selector="^[FieldType=Hour]">
+            <Setter Property="MaxWidth" Value="720" />
+            <Setter Property="MinWidth" Value="100" />
+            <Style Selector="^ /template/ ListBox#PART_ListBox" />
+            <Setter Property="ItemHeight" Value="40" />
+            <Setter Property="ItemWidth" Value="60" />
+        </Style>
+        <Style Selector="^[FieldType=DayOfMonth]">
+            <Setter Property="MaxWidth" Value="780" />
+            <Setter Property="MinWidth" Value="100" />
+            <Style Selector="^ /template/ ListBox#PART_ListBox" />
+            <Setter Property="ItemHeight" Value="40" />
+            <Setter Property="ItemWidth" Value="60" />
+        </Style>
+        <Style Selector="^[FieldType=Month]">
+            <Style Selector="^ /template/ ListBox#PART_ListBox">
+                <Setter Property="ItemTemplate">
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource MonthConverter}, Mode=OneWay}" />
+                    </DataTemplate>
+                </Setter>
+            </Style>
+            <Setter Property="ItemHeight" Value="40" />
+            <Setter Property="ItemWidth" Value="60" />
+        </Style>
+        <Style Selector="^[FieldType=DayOfWeek]">
+            <Style Selector="^ /template/ ListBox#PART_ListBox">
+                <Setter Property="ItemTemplate">
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Converter={StaticResource WeekDayConverter}, Mode=OneWay}" />
+                    </DataTemplate>
+                </Setter>
+            </Style>
+            <Setter Property="ItemHeight" Value="45" />
+            <Setter Property="ItemWidth" Value="100" />
+        </Style>
+    </ControlTheme>
+
+    <!--  u|NumericIntUpDown2  -->
+    <ControlTheme
+        BasedOn="{StaticResource {x:Type u:NumericUpDown}}"
+        TargetType="u:NumericIntUpDown2"
+        x:Key="{x:Type u:NumericIntUpDown2}" />
+
+</ResourceDictionary>

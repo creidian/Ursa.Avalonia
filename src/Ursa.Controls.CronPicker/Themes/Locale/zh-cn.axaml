@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     x:Class="Ursa.Themes.Semi.Locale.CronPicker.zh_cn"
     xmlns="https://github.com/avaloniaui"
+    xmlns:converters="using:Ursa.Converters"
     xmlns:u="https://irihi.tech/ursa"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--  Cron Resource Dictionary  -->
@@ -8,16 +9,144 @@
     <x:String x:Key="CronPicker_PartTitle_CronExpression">Cron表达式</x:String>
     <x:String x:Key="CronPicker_ButtonText_CronExpressionParse">反解析到UI</x:String>
     <x:String x:Key="CronPicker_ButtonText_CronExpressionCopy">复制表达式</x:String>
-    <x:String x:Key="CronPicker_PartTitle_CronExpressionRunTimes">最近{0}次运行时间</x:String>
+    <!--  通用  -->
+    <!--  单独的 symbol 指定  -->
+    <u:AvaloniaStringFormatter
+        FormatString="标识符错误，请联系管理员"
+        IsSimpleStringFormatMode="True"
+        x:Key="OnlySymbolCronPickerRulerBoxItem_SymbolNullOrWhitespaceMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="表达式错误，必须与配置符保持一致"
+        IsSimpleStringFormatMode="True"
+        x:Key="OnlySymbolCronPickerRulerBoxItem_ValueSymbolNotMatchMessage" />
+    <!--  one parameter  -->
+    <u:AvaloniaStringFormatter
+        FormatString="参数指定为空（{0}）"
+        IsSimpleStringFormatMode="True"
+        x:Key="OneInt32ParamCronPickerRulerBoxItem_ParamNullParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="指定参数类型错误（{1}：{0}）"
+        IsSimpleStringFormatMode="True"
+        x:Key="OneInt32ParamCronPickerRulerBoxItem_ParamParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="'{3}'超出范围，值 '{0}' 不在被允许范围内: [{1}, {2}]"
+        IsSimpleStringFormatMode="True"
+        x:Key="OneInt32ParamCronPickerRulerBoxItem_ParamValueOutOfRangeMessage" />
+    <!--  two parameter  -->
+    <u:AvaloniaStringFormatter
+        FormatString="未指定参数-{0}、{1}"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_ParamsNullParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="未指定参数-{0}"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_Param2NullParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="格式错误，参数过多"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_ParamsOutOfRangeMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数'{1}'值'{0}'类型转换失败"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_Param1ParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数'{1}'值'{0}'类型转换失败"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_Param2ParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数'{3}'值'{0}'超出范围，值范围为[{1}, {2}]"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_Param1ValueOutOfRangeMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数'{3}'值'{0}'超出范围，值范围为[{1}, {2}]"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_Param2ValueOutOfRangeMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数偏移值超出范围，{5} - {4} ‹ {1}"
+        IsSimpleStringFormatMode="True"
+        x:Key="TwoInt32ParamsCronPickerRulerBoxItem_OffsetOutOfRangeMessage" />
+    <!--  枚举  -->
+    <u:AvaloniaStringFormatter
+        FormatString="参数指定为空"
+        IsSimpleStringFormatMode="True"
+        x:Key="Int32SetCronPickerRulerBoxItem_ParamNullParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="元素解析'{0}'失败，位置-{1}"
+        IsSimpleStringFormatMode="True"
+        x:Key="Int32SetCronPickerRulerBoxItem_HasElementParseErrorMessage" />
+    <u:AvaloniaStringFormatter
+        FormatString="元素'{0}'超出取值范围，位置-{1}"
+        IsSimpleStringFormatMode="True"
+        x:Key="Int32SetCronPickerRulerBoxItem_HasElementOutOfRangeMessage" />
+
+
+    <u:AvaloniaStringFormatter
+        FormatString="最近{0}次运行时间"
+        IsSimpleStringFormatMode="True"
+        x:Key="CronPickerFormatter_RecentRunTimesTitle" />
+    <u:AvaloniaStringFormatter
+        FormatString="参数'{0}'值'{1}'异常,参数位置-{2}"
+        IsSimpleStringFormatMode="True"
+        x:Key="ParameterValidateErrorFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="待转换数据'{1}'与参数'{0}'类型不一致，无法从'{2}'转换为'{3}',参数位置-{4}"
+        IsSimpleStringFormatMode="True"
+        x:Key="DataTypeErrorFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="'{2}'超出范围，值 '{3}' 不在被允许范围内: [{0}, {1}],参数位置-{4}"
+        IsSimpleStringFormatMode="True"
+        x:Key="OutOfRangeErrorFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="指定索引处参数类型'{1}'与'{2}'不一致, 参数位置-{3}"
+        IsSimpleStringFormatMode="True"
+        x:Key="ListItemDataTypeErrorFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="指定索引处参数值'{0}'超出范围, 参数位置-{1}"
+        IsSimpleStringFormatMode="True"
+        x:Key="ListItemOutOfRangeErrorFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="不支持的字符串"
+        IsSimpleStringFormatMode="True"
+        x:Key="CronRulerSymbolNotFoundFormatter" />
+    <u:AvaloniaStringFormatter
+        FormatString="未指定参数-{0}"
+        IsSimpleStringFormatMode="True"
+        x:Key="UnspecifiedParameterFormatter" />
+    <!--<converters:CommonCronRulerValueConverter IsSymbolCheckEnable="True" x:Key="CommonCronRulerValueConverter_Range">
+        ~1~  CronRulerSymbolNotFoundFormatter="{DynamicResource CronRulerSymbolNotFoundFormatter}"  @1@
+        ~1~  UnSpecifiedParameterFormatter="{DynamicResource UnspecifiedParameterFormatter}"  @1@
+        <converters:CommonCronRulerValueConverter.UnSpecifiedParameterFormatter>
+            <u:AvaloniaStringFormatter FormatString="未指定参数-{0}" IsSimpleStringFormatMode="True" />
+        </converters:CommonCronRulerValueConverter.UnSpecifiedParameterFormatter>
+        <converters:CommonCronRulerValueConverter.CronRulerSymbolNotFoundFormatter>
+            <u:AvaloniaStringFormatter FormatString="不支持的字符串" IsSimpleStringFormatMode="True" />
+        </converters:CommonCronRulerValueConverter.CronRulerSymbolNotFoundFormatter>
+    </converters:CommonCronRulerValueConverter>
+    <converters:CronRulerListByteValueConverter x:Key="DefaultCronRulerListByteValueConverter">
+        ~1~
+            DataTypeErrorFormatter="{DynamicResource ListItemDataTypeErrorFormatter}"
+            OutOfRangeErrorFormatter="{DynamicResource ListItemOutOfRangeErrorFormatter}"
+        @1@
+        <converters:CronRulerListByteValueConverter.DataTypeErrorFormatter>
+            <u:AvaloniaStringFormatter FormatString="指定索引处参数类型'{1}'与'{2}'不一致, 参数位置-{3}" IsSimpleStringFormatMode="True" />
+        </converters:CronRulerListByteValueConverter.DataTypeErrorFormatter>
+        <converters:CronRulerListByteValueConverter.OutOfRangeErrorFormatter>
+            <u:AvaloniaStringFormatter FormatString="指定索引处参数值'{0}'超出范围, 参数位置-{1}" IsSimpleStringFormatMode="True" />
+        </converters:CronRulerListByteValueConverter.OutOfRangeErrorFormatter>
+    </converters:CronRulerListByteValueConverter>-->
 
     <!--  秒  -->
     <x:String x:Key="CronFieldHeader_Second">秒</x:String>
     <x:String x:Key="CronFieldModeName_All_Second">每秒</x:String>
     <x:String x:Key="CronFieldModeName_Interval_Second">循环</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Interval_Second">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Interval_Second">间隔</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Interval_Second">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Interval_Second">秒开始，每</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Interval_Second">秒执行一次</x:String>
     <x:String x:Key="CronFieldModeName_Range_Second">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_Second">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_Second">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_Second">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_Second">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_Second">秒</x:String>
@@ -26,10 +155,14 @@
     <x:String x:Key="CronFieldHeader_Minute">分</x:String>
     <x:String x:Key="CronFieldModeName_All_Minute">每分</x:String>
     <x:String x:Key="CronFieldModeName_Interval_Minute">循环</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Interval_Minute">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Interval_Minute">间隔</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Interval_Minute">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Interval_Minute">分开始，每</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Interval_Minute">分执行一次</x:String>
     <x:String x:Key="CronFieldModeName_Range_Minute">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_Minute">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_Minute">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_Minute">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_Minute">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_Minute">分</x:String>
@@ -38,10 +171,14 @@
     <x:String x:Key="CronFieldHeader_Hour">时</x:String>
     <x:String x:Key="CronFieldModeName_All_Hour">每时</x:String>
     <x:String x:Key="CronFieldModeName_Interval_Hour">循环</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Interval_Hour">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Interval_Hour">间隔</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Interval_Hour">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Interval_Hour">时开始，每</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Interval_Hour">时执行一次</x:String>
     <x:String x:Key="CronFieldModeName_Range_Hour">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_Hour">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_Hour">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_Hour">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_Hour">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_Hour">时</x:String>
@@ -51,15 +188,20 @@
     <x:String x:Key="CronFieldModeName_NotSet_DayOfMonth">不指定</x:String>
     <x:String x:Key="CronFieldModeName_All_DayOfMonth">每日</x:String>
     <x:String x:Key="CronFieldModeName_Range_DayOfMonth">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_DayOfMonth">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_DayOfMonth">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_DayOfMonth">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_DayOfMonth">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_DayOfMonth">日</x:String>
     <x:String x:Key="CronFieldModeName_Interval_DayOfMonth">循环</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Interval_DayOfMonth">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Interval_DayOfMonth">间隔</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Interval_DayOfMonth">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Interval_DayOfMonth">日开始，每</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Interval_DayOfMonth">日执行一次</x:String>
     <x:String x:Key="CronFieldModeName_SpecialRecentlyWeekday_DayOfMonth">工作日</x:String>
     <x:String x:Key="CronFieldModeElement_Left_SpecialRecentlyWeekday_DayOfMonth">本月</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_SpecialRecentlyWeekday_DayOfMonth">工作日</x:String>
     <x:String x:Key="CronFieldModeElement_Right_SpecialRecentlyWeekday_DayOfMonth">号，最近的工作日</x:String>
     <x:String x:Key="CronFieldModeName_LastDay_DayOfMonth">本月最后一天</x:String>
     <x:String x:Key="CronFieldModeName_List_DayOfMonth">指定</x:String>
@@ -67,10 +209,14 @@
     <x:String x:Key="CronFieldHeader_Month">月</x:String>
     <x:String x:Key="CronFieldModeName_All_Month">每月</x:String>
     <x:String x:Key="CronFieldModeName_Interval_Month">循环</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Interval_Month">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Interval_Month">间隔</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Interval_Month">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Interval_Month">月开始，每</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Interval_Month">月执行一次</x:String>
     <x:String x:Key="CronFieldModeName_Range_Month">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_Month">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_Month">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_Month">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_Month">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_Month">月</x:String>
@@ -80,11 +226,16 @@
     <x:String x:Key="CronFieldModeName_All_DayOfWeek">每周</x:String>
     <x:String x:Key="CronFieldModeName_NotSet_DayOfWeek">不指定</x:String>
     <x:String x:Key="CronFieldModeName_SpecialWeekAndWeekday_DayOfWeek">指定周</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_SpecialWeekAndWeekday_DayOfWeek">指定周</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_SpecialWeekAndWeekday_DayOfWeek">指定星期</x:String>
     <x:String x:Key="CronFieldModeElement_Left_SpecialWeekAndWeekday_DayOfWeek">第</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_SpecialWeekAndWeekday_DayOfWeek">周的星期</x:String>
     <x:String x:Key="CronFieldModeName_LastWeekdayOfMonth_DayOfWeek">本月最后一个</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_LastWeekdayOfMonth_DayOfWeek">指定星期</x:String>
     <x:String x:Key="CronFieldModeElement_Left_LastWeekdayOfMonth_DayOfWeek">星期</x:String>
     <x:String x:Key="CronFieldModeName_Range_DayOfWeek">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_DayOfWeek">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_DayOfWeek">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_DayOfWeek">从星期</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_DayOfWeek">至</x:String>
     <x:String x:Key="CronFieldModeName_List_DayOfWeek">指定</x:String>
@@ -93,6 +244,8 @@
     <x:String x:Key="CronFieldModeName_NotSet_Year">不指定</x:String>
     <x:String x:Key="CronFieldModeName_All_Year">每年</x:String>
     <x:String x:Key="CronFieldModeName_Range_Year">周期</x:String>
+    <x:String x:Key="CronFieldModeParamName_0_Range_Year">起始值</x:String>
+    <x:String x:Key="CronFieldModeParamName_1_Range_Year">截止值</x:String>
     <x:String x:Key="CronFieldModeElement_Left_Range_Year">从</x:String>
     <x:String x:Key="CronFieldModeElement_Middle_Range_Year">至</x:String>
     <x:String x:Key="CronFieldModeElement_Right_Range_Year">年</x:String>
@@ -114,33 +267,13 @@
         IsSimpleStringFormatMode="True"
         x:Key="CronPickerFormatter_CronExpressionParamsNotEnoughError" />
     <u:AvaloniaStringFormatter
-        FormatString="秒解析错误, {0}"
+        FormatString="\{2\}解析错误(cron: \{1\}), \{0\}"
         IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_SecondsExpressionParseError" />
+        x:Key="CronPickerFormatter_CronPartExpressionParseError" />
     <u:AvaloniaStringFormatter
-        FormatString="分解析错误, {0}"
+        FormatString="\{1\}验证失败，\{0\}"
         IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_MinutesExpressionParseError" />
-    <u:AvaloniaStringFormatter
-        FormatString="时解析错误, {0}"
-        IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_HoursExpressionParseError" />
-    <u:AvaloniaStringFormatter
-        FormatString="日解析错误, {0}"
-        IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_DaysOfMonthExpressionParseError" />
-    <u:AvaloniaStringFormatter
-        FormatString="月解析错误, {0}"
-        IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_MonthsExpressionParseError" />
-    <u:AvaloniaStringFormatter
-        FormatString="周解析错误, {0}"
-        IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_DaysOfWeekExpressionParseError" />
-    <u:AvaloniaStringFormatter
-        FormatString="年解析错误, {0}"
-        IsSimpleStringFormatMode="True"
-        x:Key="CronPickerFormatter_YearsExpressionParseError" />
+        x:Key="CronPickerFormatter_CronPartVerifyError" />
 
     <u:AvaloniaStringFormatter
         FormatString="不支持的匹配模式('{0}')!"

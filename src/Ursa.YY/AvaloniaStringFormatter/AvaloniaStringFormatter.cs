@@ -103,6 +103,16 @@ public class AvaloniaStringFormatter : AvaloniaObject, IAvaloniaStringFormatter
     }
 }
 
+public class ParameterReplaceRulers : AvaloniaList<ParameterReplaceRuler>
+{
+    public ParameterReplaceRulers() => this.ResetBehavior = ResetBehavior.Remove;
+
+    public IReadOnlyList<IParameterReplaceRuler> ToImmutable()
+    {
+        return (IReadOnlyList<IParameterReplaceRuler>)this.Select<ParameterReplaceRuler, ImmutableIParameterReplaceRuler>((Func<ParameterReplaceRuler, ImmutableIParameterReplaceRuler>)(x => new ImmutableIParameterReplaceRuler(x.ParameterName, x.Parameter, x.ParameterValueStringFormat, x.Replacer))).ToArray<ImmutableIParameterReplaceRuler>();
+    }
+}
+
 public class SharpParameterReplaceRuler : ParameterReplaceRuler
 {
     public SharpParameterReplaceRuler()
@@ -161,15 +171,5 @@ public class ParameterReplaceRuler : AvaloniaObject, IParameterReplaceRuler
     {
         get => GetValue(ReplacerProperty);
         set => SetValue(ReplacerProperty, value);
-    }
-}
-
-public class ParameterReplaceRulers : AvaloniaList<ParameterReplaceRuler>
-{
-    public ParameterReplaceRulers() => this.ResetBehavior = ResetBehavior.Remove;
-
-    public IReadOnlyList<IParameterReplaceRuler> ToImmutable()
-    {
-        return (IReadOnlyList<IParameterReplaceRuler>)this.Select<ParameterReplaceRuler, ImmutableIParameterReplaceRuler>((Func<ParameterReplaceRuler, ImmutableIParameterReplaceRuler>)(x => new ImmutableIParameterReplaceRuler(x.ParameterName, x.Parameter, x.ParameterValueStringFormat, x.Replacer))).ToArray<ImmutableIParameterReplaceRuler>();
     }
 }

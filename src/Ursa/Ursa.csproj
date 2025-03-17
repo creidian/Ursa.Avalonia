@@ -19,7 +19,4 @@
         <PackageReference Include="Irihi.Avalonia.Shared.Contracts" Version="0.2.3" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Include="irihi.png" Pack="true" PackagePath=""/>
-    </ItemGroup>
 </Project>

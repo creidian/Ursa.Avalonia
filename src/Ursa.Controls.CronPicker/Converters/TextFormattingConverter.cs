@@ -1,5 +1,7 @@
 using System.Globalization;
+using Avalonia.Controls.Notifications;
 using Avalonia.Data.Converters;
+using Ursa.Controls;
 
 namespace Ursa.Converters;
 
@@ -17,6 +19,30 @@ public class TextFormattingConverter: IValueConverter
             return formatter.Format(("value", value));
         }
 
+        return value?.ToString();
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class CronExpressionParseToTimesResultConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is CronExpressionParseResult result0 && result0.Status != NotificationType.Success)
+        {
+            return result0.Message;
+        }
+        
+        if (value is CronExpressionParseToTimesResult result)
+        {
+            string format = parameter as string ?? "yyyy-MM-dd HH:mm:ss dddd";
+            return string.Join(Environment.NewLine, result.RunTimes.Select(d => string.IsNullOrWhiteSpace(format)? d.ToString() : d.ToString(format)));
+        }
+        
         return value?.ToString();
     }
 
@@ -52,6 +78,16 @@ public class WeekDayConverter : IValueConverter
         if (value is int dayOfWeek)
         {
             return culture.DateTimeFormat.GetDayName(GetDayOfWeek(dayOfWeek));
+        }
+        
+        if (value is byte dayOfWeek2)
+        {
+            return culture.DateTimeFormat.GetDayName(GetDayOfWeek(dayOfWeek2));
+        }
+
+        if (int.TryParse(value?.ToString(), out int dayOfWeek3))
+        {
+            return culture.DateTimeFormat.GetDayName(GetDayOfWeek(dayOfWeek3));
         }
         
         return value?.ToString();
@@ -96,6 +132,16 @@ public class MonthConverter : IValueConverter
             return culture.DateTimeFormat.GetMonthName(month);
         }
         
+        if (value is byte month2)
+        {
+            return culture.DateTimeFormat.GetMonthName(month2);
+        }
+
+        if (int.TryParse(value?.ToString(), out int month3))
+        {
+            return culture.DateTimeFormat.GetMonthName(month3);
+        }
+
         return value?.ToString();
     }
 
@@ -103,4 +149,8 @@ public class MonthConverter : IValueConverter
     {
         throw new NotImplementedException();
     }
+}
+
+public static class CronPickerConverters
+{
 }

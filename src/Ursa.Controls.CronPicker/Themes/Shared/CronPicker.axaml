@@ -1,0 +1,32 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:collections="clr-namespace:Avalonia.Collections;assembly=Avalonia.Base"
+    xmlns:converters="using:Ursa.Converters"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Add Resources Here  -->
+    <Thickness x:Key="CronPickerFieldTabItemContentMargin">10</Thickness>
+    <Thickness x:Key="CronPickerFieldTabItemPadding">20,10,20,9</Thickness>
+    <x:Double x:Key="CronPickerFieldTabItemFontSize">18</x:Double>
+    <x:Double x:Key="CronPickerRulerSelectorHeaderFontSize">16</x:Double>
+    <x:Double x:Key="CronPickerRulerSelectorFontSize">16</x:Double>
+    <Thickness x:Key="CronPickerRulerSelectorContentMargin_HeaderTop">8,10,8,4</Thickness>
+    <Thickness x:Key="CronPickerRulerSelectorContentMargin_HeaderBottom">8,4,8,10</Thickness>
+    <Thickness x:Key="CronPickerRulerSelectorContentMargin_HeaderLeft">20,0,8,0</Thickness>
+    <Thickness x:Key="CronPickerRulerSelectorContentMargin_HeaderRight">8,0,20,0</Thickness>
+    <!--  周配置  -->
+    <!--  周期：星期天为第一天  -->
+    <x:Int32 x:Key="MinStart_Range_Week_CronPickerRuler">0</x:Int32>
+    <x:Int32 x:Key="MaxStart_Range_Week_CronPickerRuler">6</x:Int32>
+    <x:Int32 x:Key="MinEnd_Range_Week_CronPickerRuler">0</x:Int32>
+    <x:Int32 x:Key="MaxEnd_Range_Week_CronPickerRuler">6</x:Int32>
+    <!--  指定周：星期天为第一天  -->
+    <x:Int32 x:Key="MinWeekNo_Specific_CronPickerRuler">1</x:Int32>
+    <x:Int32 x:Key="MaxWeekNo_Specific_CronPickerRuler">5</x:Int32>
+    <x:Int32 x:Key="MinWeekday_Specific_CronPickerRuler">0</x:Int32>
+    <x:Int32 x:Key="MaxWeekday_Specific_CronPickerRuler">6</x:Int32>
+    <!--  最后周几模式：星期天为第一天  -->
+    <x:Int32 x:Key="MinWeekday_LasWeek_CronPickerRuler">0</x:Int32>
+    <x:Int32 x:Key="MaxWeekday_LasWeek_CronPickerRuler">6</x:Int32>
+
+</ResourceDictionary>

@@ -1,15 +1,18 @@
+using System.Collections;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Notifications;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
+using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Logging;
-using Avalonia.LogicalTree;
 using Irihi.Avalonia.Shared.Helpers;
 
 namespace Ursa.Controls;
@@ -24,206 +27,467 @@ namespace Ursa.Controls;
 /// 3. 显示cron表达式的自然语言描述
 /// 4. 显示cron表达式的指定步数运行时间节点
 /// </remarks>
-[TemplatePart(PART_TabControl, typeof(TabControl))]
+[TemplatePart(PART_FieldsHost, typeof(CronPickerFieldsContainer))]
 [TemplatePart(PART_ParseButton, typeof(Button))]
 [TemplatePart(PART_CopyButton, typeof(Button))]
-public class CronPicker : TemplatedControl
+[TemplatePart(PART_SecondsField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_MinutesField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_HoursField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_DaysOfMonthField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_MonthsField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_DaysOfWeekField, typeof(CronPickerFieldView))]
+[TemplatePart(PART_YearsField, typeof(CronPickerFieldView))]
+public class CronPicker : /*CronPickerRulerGroup*/ TemplatedControl
 {
-    public const string PART_TabControl = "PART_TabControl";
+    public const string PART_FieldsHost = "PART_FieldsHost";
     public const string PART_ParseButton = "PART_ParseButton";
     public const string PART_CopyButton = "PART_CopyButton";
-    public static readonly StyledProperty<string?> SecondsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Seconds));
-    public static readonly StyledProperty<string?> MinutesProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Minutes));
-    public static readonly StyledProperty<string?> HoursProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Hours));
-    public static readonly StyledProperty<string?> DaysOfMonthProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DaysOfMonth));
-    public static readonly StyledProperty<string?> MonthsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Months));
-    public static readonly StyledProperty<string?> DaysOfWeekProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DaysOfWeek));
-    public static readonly StyledProperty<string?> YearsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Years));
+    public const string PART_SecondsField = "PART_SecondsField";
+    public const string PART_MinutesField = "PART_MinutesField";
+    public const string PART_HoursField = "PART_HoursField";
+    public const string PART_DaysOfMonthField = "PART_DaysOfMonthField";
+    public const string PART_MonthsField = "PART_MonthsField";
+    public const string PART_DaysOfWeekField = "PART_DaysOfWeekField";
+    public const string PART_YearsField = "PART_YearsField";
+    
+    public static readonly StyledProperty<string?> SecondsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Seconds), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> MinutesProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Minutes), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> HoursProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Hours), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> DaysOfMonthProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DaysOfMonth), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> MonthsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Months), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> DaysOfWeekProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DaysOfWeek), defaultBindingMode: BindingMode.OneWay);
+    public static readonly StyledProperty<string?> YearsProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(Years), defaultBindingMode: BindingMode.OneWay);
     public static readonly StyledProperty<string?> CronExpressionProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(CronExpression));
     public static readonly StyledProperty<ICronExpressionParser?> CronExpressionParserProperty = AvaloniaProperty.Register<CronPicker, ICronExpressionParser?>(nameof(CronExpressionParser));
-    public static readonly StyledProperty<IEnumerable<DateTime>?> NextRunTimesProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<DateTime>?>(nameof(NextRunTimes));
-
+    public static readonly StyledProperty<int> NextRunTimeCountProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(NextRunTimeCount), defaultValue: 10);
+    public static readonly StyledProperty<string?> RecentRunTimesTitleProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(RecentRunTimesTitle), defaultValue: "");
+    // public static readonly StyledProperty<IEnumerable<DateTime>?> NextRunTimesProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<DateTime>?>(nameof(NextRunTimes));
     public static readonly StyledProperty<string?> DateTimeFormatProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DateTimeFormat), defaultValue: "yyyy-MM-dd HH:mm:ss");
-
-    // public static readonly StyledProperty<IEnumerable<CronPickerFieldItem>> FieldsProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerFieldItem>>(nameof(CornFields));
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> SecondsFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(SecondsField), o => o.SecondsField, (o, v) => { /*o.SecondsField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> MinutesFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(MinutesField), o => o.MinutesField, (o, v) => { /*o.MinutesField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> HoursFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(HoursField), o => o.HoursField, (o, v) => { /*o.HoursField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> DaysOfMonthFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(DaysOfMonthField), o => o.DaysOfMonthField, (o, v) => { /*o.DaysOfMonthField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> MonthsFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(MonthsField), o => o.MonthsField, (o, v) => { /*o.MonthsField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> DaysOfWeekFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(DaysOfWeekField), o => o.DaysOfWeekField, (o, v) => { /*o.DaysOfWeekField = v;*/ });
-    public static readonly DirectProperty<CronPicker, CronPickerFieldItem> YearsFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerFieldItem>(nameof(YearsField), o => o.YearsField, (o, v) => { /*o.YearsField = v;*/ });
     public static readonly DirectProperty<CronPicker, bool> IsCurrentOperationResultVisibleProperty = AvaloniaProperty.RegisterDirect<CronPicker, bool>(nameof(IsCurrentOperationResultVisible), o => o.IsCurrentOperationResultVisible, (o, v) => { o.IsCurrentOperationResultVisible = v; });
     public static readonly DirectProperty<CronPicker, NotificationType> CurrentOperationResultTypeProperty = AvaloniaProperty.RegisterDirect<CronPicker, NotificationType>(nameof(CurrentOperationResultType), o => o.CurrentOperationResultType, (o, v) => { o.CurrentOperationResultType = v; });
     public static readonly DirectProperty<CronPicker, IMessage?> CurrentOperationResultMessageProperty = AvaloniaProperty.RegisterDirect<CronPicker, IMessage?>(nameof(CurrentOperationResultMessage), o => o.CurrentOperationResultMessage, (o, v) => { o.CurrentOperationResultMessage = v; });
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> CopySuccessMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CopySuccessMessage)/*, defaultValue: "复制成功！"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> FailedToGetClipboardMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(FailedToGetClipboardMessage)/*, defaultValue: "无法获取剪贴板！"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronExpressionParsedMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronExpressionParsedMessage)/*, defaultValue: "成功解析！"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronExpressionParamsNotEnoughErrorMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronExpressionParamsNotEnoughErrorMessage)/*, defaultValue: "参数不足！"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> SecondsExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(SecondsExpressionParseErrorFormat)/*, defaultValue: "秒解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> MinutesExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(MinutesExpressionParseErrorFormat)/*, defaultValue: "分解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> HoursExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(HoursExpressionParseErrorFormat)/*, defaultValue: "时解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> DaysOfMonthExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(DaysOfMonthExpressionParseErrorFormat)/*, defaultValue: "日解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> MonthsExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(MonthsExpressionParseErrorFormat)/*, defaultValue: "月解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> DaysOfWeekExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(DaysOfWeekExpressionParseErrorFormat)/*, defaultValue: "周解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> YearsExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(YearsExpressionParseErrorFormat)/*, defaultValue: "年解析错误：{0}"*/);
-    public static readonly StyledProperty<IAvaloniaStringFormatter?> RecentRunTimesTitleFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(RecentRunTimesTitleFormat)/*, defaultValue: "最近运行时间：{0}"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> CopySuccessMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CopySuccessMessage) /*, defaultValue: "复制成功！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> FailedToGetClipboardMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(FailedToGetClipboardMessage) /*, defaultValue: "无法获取剪贴板！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronExpressionParsedMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronExpressionParsedMessage) /*, defaultValue: "成功解析！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronExpressionParamsNotEnoughErrorMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronExpressionParamsNotEnoughErrorMessage) /*, defaultValue: "参数不足！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> RecentRunTimesTitleFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(RecentRunTimesTitleFormat) /*, defaultValue: "最近运行时间：{0}"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindSecondFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindSecondFieldMessage) /*, defaultValue: "未找到秒字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindMinuteFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindMinuteFieldMessage) /*, defaultValue: "未找到分字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindHourFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindHourFieldMessage) /*, defaultValue: "未找到时字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindDaysOfMonthFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindDaysOfMonthFieldMessage) /*, defaultValue: "未找到日字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindMonthsFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindMonthsFieldMessage) /*, defaultValue: "未找到月字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindDaysOfWeekFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindDaysOfWeekFieldMessage) /*, defaultValue: "未找到周字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> NotFindYearsFieldMessageProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(NotFindYearsFieldMessage) /*, defaultValue: "未找到年字段！"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronPartExpressionParseErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronPartExpressionParseErrorFormat) /*, defaultValue: "秒解析错误：{0}"*/);
+    public static readonly StyledProperty<IAvaloniaStringFormatter?> CronPartVerifyErrorFormatProperty = AvaloniaProperty.Register<CronPicker, IAvaloniaStringFormatter?>(nameof(CronPartVerifyErrorFormat) /*, defaultValue: "字段“{0}”验证错误：{1}"*/);
+
+    public static readonly StyledProperty<CronExpressionParseResult?> CronExpressionCalculationResultProperty = AvaloniaProperty.Register<CronPicker, CronExpressionParseResult?>(nameof(CronExpressionCalculationResult));
+
+    // public static readonly StyledProperty<CronPickerField> SecondsFieldProperty = AvaloniaProperty.Register<CronPicker, CronPickerField>(nameof(SecondsField));
+    // public static readonly DirectProperty<CronPicker, CronPickerField> MinutesFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(MinutesField), o => o.MinutesField);
+    // public static readonly DirectProperty<CronPicker, CronPickerField> HoursFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(HoursField), o => o.HoursField);
+    // public static readonly DirectProperty<CronPicker, CronPickerField> DaysOfMonthFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(DaysOfMonthField), o => o.DaysOfMonthField);
+    // public static readonly DirectProperty<CronPicker, CronPickerField> MonthsFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(MonthsField), o => o.MonthsField);
+    // public static readonly DirectProperty<CronPicker, CronPickerField> DaysOfWeekFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(DaysOfWeekField), o => o.DaysOfWeekField);
+    // public static readonly DirectProperty<CronPicker, CronPickerField> YearsFieldProperty = AvaloniaProperty.RegisterDirect<CronPicker, CronPickerField>(nameof(YearsField), o => o.YearsField);
+    // public static readonly DirectProperty<CronPicker, IEnumerable<CronPickerField>> CronFieldsProperty = AvaloniaProperty.RegisterDirect<CronPicker, IEnumerable<CronPickerField>>(nameof(CronFields), o => o.CronFields);
+    public static readonly StyledProperty<IDataTemplate?> CronFieldContentTemplateProperty = AvaloniaProperty.Register<CronPicker, IDataTemplate?>(nameof(CronFieldContentTemplate));
+    public static readonly StyledProperty<IDataTemplate?> CronFieldItemTemplateProperty = AvaloniaProperty.Register<CronPicker, IDataTemplate?>(nameof(CronFieldItemTemplate));
+    public static readonly StyledProperty<IDataTemplate?> CronRulerItemTemplateProperty = AvaloniaProperty.Register<CronPicker, IDataTemplate?>(nameof(CronRulerItemTemplate));
+    public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPicker, DataTemplates?>(nameof(CronRulerItemDataTemplates));
+    public static readonly StyledProperty<DataTemplates?> CronRulerContentDataTemplatesProperty = AvaloniaProperty.Register<CronPicker, DataTemplates?>(nameof(CronRulerContentDataTemplates));
+    public static readonly StyledProperty<CronPickerRulers> SecondsRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("SecondsRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> MinutesRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("MinutesRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> HoursRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("HoursRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> DaysOfMonthRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("DaysOfMonthRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> MonthsRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("MonthsRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> DaysOfWeekRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("DaysOfWeekRulerItems");
+    public static readonly StyledProperty<CronPickerRulers> YearsRulerItemsProperty = AvaloniaProperty.Register<CronPicker, CronPickerRulers>("YearsRulerItems");
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> SecondsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(SecondsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MinutesRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(MinutesRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> HoursRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(HoursRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfMonthRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(DaysOfMonthRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MonthsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(MonthsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(DaysOfWeekRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(YearsRulerItemsSource));
+    public static readonly StyledProperty<int> SelectedFieldIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(SelectedFieldIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> SecondsSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(SecondsSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> MinutesSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(MinutesSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> HoursSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(HoursSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> DaysOfMonthSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(DaysOfMonthSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> MonthsSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(MonthsSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> DaysOfWeekSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(DaysOfWeekSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<int> YearsSelectedIndexProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(YearsSelectedIndex), defaultValue: -1);
+    public static readonly StyledProperty<object?> SecondsSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(SecondsSelectedItem));
+    public static readonly StyledProperty<object?> MinutesSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(MinutesSelectedItem));
+    public static readonly StyledProperty<object?> HoursSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(HoursSelectedItem));
+    public static readonly StyledProperty<object?> DaysOfMonthSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(DaysOfMonthSelectedItem));
+    public static readonly StyledProperty<object?> MonthsSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(MonthsSelectedItem));
+    public static readonly StyledProperty<object?> DaysOfWeekSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(DaysOfWeekSelectedItem));
+    public static readonly StyledProperty<object?> YearsSelectedItemProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(YearsSelectedItem));
+    public static readonly StyledProperty<object?> SecondsSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(SecondsSelectedValue));
+    public static readonly StyledProperty<object?> MinutesSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(MinutesSelectedValue));
+    public static readonly StyledProperty<object?> HoursSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(HoursSelectedValue));
+    public static readonly StyledProperty<object?> DaysOfMonthSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(DaysOfMonthSelectedValue));
+    public static readonly StyledProperty<object?> MonthsSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(MonthsSelectedValue));
+    public static readonly StyledProperty<object?> DaysOfWeekSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(DaysOfWeekSelectedValue));
+    public static readonly StyledProperty<object?> YearsSelectedValueProperty = AvaloniaProperty.Register<CronPicker, object?>(nameof(YearsSelectedValue));
+    public static readonly StyledProperty<bool> IsSecondEnabledProperty = AvaloniaProperty.Register<CronPicker, bool>(nameof(IsSecondEnabled), defaultValue: true);
+    public static readonly StyledProperty<bool> IsYearEnabledProperty = AvaloniaProperty.Register<CronPicker, bool>(nameof(IsYearEnabled), defaultValue: true);
     
-    private AvaloniaDictionary<string, string>? _fieldTypeValueMap;
-    private readonly CronPickerFieldItem _secondsField;
-    private readonly CronPickerFieldItem _minutesField;
-    private readonly CronPickerFieldItem _hoursField;
-    private readonly CronPickerFieldItem _daysOfMonthField;
-    private readonly CronPickerFieldItem _monthsField;
-    private readonly CronPickerFieldItem _daysOfWeekField;
-    private readonly CronPickerFieldItem _yearsField;
-    
-    private TabControl? _tabControl;
     private Button? _buttonParse;
     private Button? _buttonCopy;
+    private AvaloniaDictionary<string, string>? _fieldTypeValueMap;
     private bool _isOperationResultShow;
     private NotificationType _currentOperationResultType;
     private IMessage? _currentOperationResultMessage;
     private bool _isTabControlInited;
+    private bool _isCronExpressionParsed;
+    private CronPickerFieldsContainer? _fieldsHost;
+    private CronPickerFieldView? _secondsField;
+    private CronPickerFieldView? _minutesField;
+    private CronPickerFieldView? _hoursField;
+    private CronPickerFieldView? _daysOfMonthField;
+    private CronPickerFieldView? _monthsField;
+    private CronPickerFieldView? _daysOfWeekField;
+    private CronPickerFieldView? _yearsField;
     
+    public static CronPickerRulers GetSecondsRulerItems(CronPicker o) => o.SecondsField.RulerItems;
+    public static CronPickerRulers GetMinutesRulerItems(CronPicker o) => o.MinutesField.RulerItems;
+    public static CronPickerRulers GetHoursRulerItems(CronPicker o) => o.HoursField.RulerItems;
+    public static CronPickerRulers GetDaysOfMonthRulerItems(CronPicker o) => o.DaysOfMonthField.RulerItems;
+    public static CronPickerRulers GetMonthsRulerItems(CronPicker o) => o.MonthsField.RulerItems;
+    public static CronPickerRulers GetDaysOfWeekRulerItems(CronPicker o) => o.DaysOfWeekField.RulerItems;
+    public static CronPickerRulers GetYearsRulerItems(CronPicker o) => o.YearsField.RulerItems;
+
+    static CronPicker()
+    {
+        // CronRulersProperty.Changed.AddClassHandler<CronPicker>((o, e) => o.OnRulersChanged(e));
+        CronFieldContentTemplateProperty.Changed.AddClassHandler<CronPicker>((o, e) => o.OnCronFieldContentTemplateChanged(e));
+        IsSecondEnabledProperty.Changed.AddClassHandler<CronPicker>((o, e) => o.OnIsSecondEnabledChanged(e));
+        IsYearEnabledProperty.Changed.AddClassHandler<CronPicker>((o, e) => o.OnIsYearEnabledChanged(e));
+    }
+
     public CronPicker()
     {
         _fieldTypeValueMap = new AvaloniaDictionary<string, string>();
-        WeakReference<CronPicker> weakReference = new WeakReference<CronPicker>(this);
-        _fieldTypeValueMap.CollectionChanged += (sender, e) =>
-        {
-            if (weakReference.TryGetTarget(out CronPicker? target))
-            {
-                target.OnFieldTypeValueMapCollChanged(e);
-            }
-        };
-        _fieldTypeValueMap.PropertyChanged += (sender, e) =>
-        {
-            if (weakReference.TryGetTarget(out CronPicker? target))
-            {
-                target.OnFieldTypeValueMapChanged(e);
-            }
-        };
-        _secondsField = new SecondsCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.Seconds = x;
-                }
-            }
-        };
-        _minutesField = new MinutesCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.Minutes = x;
-                }
-            }
-        };
-        _hoursField = new HoursCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.Hours = x;
-                }
-            }
-        };
-        _daysOfMonthField = new DaysOfMonthCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.DaysOfMonth = x;
-                }
-            }
-        };
-        _monthsField = new MonthsCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.Months = x;
-                }
-            }
-        };
-        _daysOfWeekField = new DaysOfWeekCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.DaysOfWeek = x;
-                }
-            }
-        };
-        _yearsField = new YearsCronPickerFieldItem()
-        {
-            _fieldTypeValueMap = _fieldTypeValueMap,
-            _valueChanged = x =>
-            {
-                if (weakReference.TryGetTarget(out CronPicker? target))
-                {
-                    target.Years = x;
-                }
-            }
-        };
-        this.CornFields = new CronPickerFieldItem[] { _secondsField, _minutesField, _hoursField, _daysOfMonthField, _monthsField, _daysOfWeekField, _yearsField };
+        SecondsField = CronPickerField.Create(CronFieldTypes.Second);
+        MinutesField = CronPickerField.Create(CronFieldTypes.Minute);
+        HoursField = CronPickerField.Create(CronFieldTypes.Hour);
+        DaysOfMonthField = CronPickerField.Create(CronFieldTypes.DayOfMonth);
+        MonthsField = CronPickerField.Create(CronFieldTypes.Month);
+        DaysOfWeekField = CronPickerField.Create(CronFieldTypes.DayOfWeek);
+        YearsField = CronPickerField.Create(CronFieldTypes.Year);
     }
+
+    public int SelectedFieldIndex
+    {
+        get => GetValue(SelectedFieldIndexProperty);
+        set => SetValue(SelectedFieldIndexProperty, value);
+    }
+
+    public bool IsYearEnabled
+    {
+        get => GetValue(IsYearEnabledProperty);
+        set => SetValue(IsYearEnabledProperty, value);
+    }
+
+    #region ...秒
+
+    public bool IsSecondEnabled
+    {
+        get => GetValue(IsSecondEnabledProperty);
+        set => SetValue(IsSecondEnabledProperty, value);
+    }
+
+    public int SecondsSelectedIndex
+    {
+        get => GetValue(SecondsSelectedIndexProperty);
+        set => SetValue(SecondsSelectedIndexProperty, value);
+    }
+
+    public object? SecondsSelectedItem
+    {
+        get => GetValue(SecondsSelectedItemProperty);
+        set => SetValue(SecondsSelectedItemProperty, value);
+    }
+
+    public object? SecondsSelectedValue
+    {
+        get => GetValue(SecondsSelectedValueProperty);
+        set => SetValue(SecondsSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? SecondsRulerItemsSource
+    {
+        get => GetValue(SecondsRulerItemsSourceProperty);
+        set => SetValue(SecondsRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...分
+
+    public int MinutesSelectedIndex
+    {
+        get => GetValue(MinutesSelectedIndexProperty);
+        set => SetValue(MinutesSelectedIndexProperty, value);
+    }
+
+    public object? MinutesSelectedItem
+    {
+        get => GetValue(MinutesSelectedItemProperty);
+        set => SetValue(MinutesSelectedItemProperty, value);
+    }
+
+    public object? MinutesSelectedValue
+    {
+        get => GetValue(MinutesSelectedValueProperty);
+        set => SetValue(MinutesSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? MinutesRulerItemsSource
+    {
+        get => GetValue(MinutesRulerItemsSourceProperty);
+        set => SetValue(MinutesRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...时
+
+    public int HoursSelectedIndex
+    {
+        get => GetValue(HoursSelectedIndexProperty);
+        set => SetValue(HoursSelectedIndexProperty, value);
+    }
+
+    public object? HoursSelectedItem
+    {
+        get => GetValue(HoursSelectedItemProperty);
+        set => SetValue(HoursSelectedItemProperty, value);
+    }
+
+    public object? HoursSelectedValue
+    {
+        get => GetValue(HoursSelectedValueProperty);
+        set => SetValue(HoursSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? HoursRulerItemsSource
+    {
+        get => GetValue(HoursRulerItemsSourceProperty);
+        set => SetValue(HoursRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...日
+
+    public int DaysOfMonthSelectedIndex
+    {
+        get => GetValue(DaysOfMonthSelectedIndexProperty);
+        set => SetValue(DaysOfMonthSelectedIndexProperty, value);
+    }
+
+    public object? DaysOfMonthSelectedItem
+    {
+        get => GetValue(DaysOfMonthSelectedItemProperty);
+        set => SetValue(DaysOfMonthSelectedItemProperty, value);
+    }
+
+    public object? DaysOfMonthSelectedValue
+    {
+        get => GetValue(DaysOfMonthSelectedValueProperty);
+        set => SetValue(DaysOfMonthSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? DaysOfMonthRulerItemsSource
+    {
+        get => GetValue(DaysOfMonthRulerItemsSourceProperty);
+        set => SetValue(DaysOfMonthRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...月
+
+    public int MonthsSelectedIndex
+    {
+        get => GetValue(MonthsSelectedIndexProperty);
+        set => SetValue(MonthsSelectedIndexProperty, value);
+    }
+
+    public object? MonthsSelectedItem
+    {
+        get => GetValue(MonthsSelectedItemProperty);
+        set => SetValue(MonthsSelectedItemProperty, value);
+    }
+
+    public object? MonthsSelectedValue
+    {
+        get => GetValue(MonthsSelectedValueProperty);
+        set => SetValue(MonthsSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? MonthsRulerItemsSource
+    {
+        get => GetValue(MonthsRulerItemsSourceProperty);
+        set => SetValue(MonthsRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...周
+
+    public int DaysOfWeekSelectedIndex
+    {
+        get => GetValue(DaysOfWeekSelectedIndexProperty);
+        set => SetValue(DaysOfWeekSelectedIndexProperty, value);
+    }
+
+    public object? DaysOfWeekSelectedItem
+    {
+        get => GetValue(DaysOfWeekSelectedItemProperty);
+        set => SetValue(DaysOfWeekSelectedItemProperty, value);
+    }
+
+    public object? DaysOfWeekSelectedValue
+    {
+        get => GetValue(DaysOfWeekSelectedValueProperty);
+        set => SetValue(DaysOfWeekSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? DaysOfWeekRulerItemsSource
+    {
+        get => GetValue(DaysOfWeekRulerItemsSourceProperty);
+        set => SetValue(DaysOfWeekRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    #region ...年
+
+    public int YearsSelectedIndex
+    {
+        get => GetValue(YearsSelectedIndexProperty);
+        set => SetValue(YearsSelectedIndexProperty, value);
+    }
+
+    public object? YearsSelectedItem
+    {
+        get => GetValue(YearsSelectedItemProperty);
+        set => SetValue(YearsSelectedItemProperty, value);
+    }
+
+    public object? YearsSelectedValue
+    {
+        get => GetValue(YearsSelectedValueProperty);
+        set => SetValue(YearsSelectedValueProperty, value);
+    }
+
+    public IEnumerable<CronPickerRuler>? YearsRulerItemsSource
+    {
+        get => GetValue(YearsRulerItemsSourceProperty);
+        set => SetValue(YearsRulerItemsSourceProperty, value);
+    }
+
+    #endregion
+
+    public CronPickerField SecondsField { get; }
+    public CronPickerField MinutesField { get; }
+    public CronPickerField HoursField { get; }
+    public CronPickerField DaysOfMonthField { get; }
+    public CronPickerField MonthsField { get; }
+    public CronPickerField DaysOfWeekField { get; }
+    public CronPickerField YearsField { get; }
+
+    // public IEnumerable<CronPickerField> CronFields { get; }
+
+    /// <summary>
+    /// The template of the cron field content.
+    /// </summary>
+    public IDataTemplate? CronFieldContentTemplate
+    {
+        get => GetValue(CronFieldContentTemplateProperty);
+        set => SetValue(CronFieldContentTemplateProperty, value);
+    }
+
+    /// <summary>
+    /// The template of the cron field item.
+    /// </summary>
+    public IDataTemplate? CronFieldItemTemplate
+    {
+        get => GetValue(CronFieldItemTemplateProperty);
+        set => SetValue(CronFieldItemTemplateProperty, value);
+    }
+    
+    /// <summary>
+    /// The template of the ruler item.
+    /// </summary>
+    public IDataTemplate? CronRulerItemTemplate 
+    {
+        get => GetValue(CronRulerItemTemplateProperty);
+        set => SetValue(CronRulerItemTemplateProperty, value);
+    }
+
+    public DataTemplates? CronRulerItemDataTemplates
+    {
+        get => this.GetValue(CronRulerItemDataTemplatesProperty);
+        set => this.SetValue(CronRulerItemDataTemplatesProperty, value);
+    }
+    
+    /// <summary>
+    /// The data templates of the cron ruler.
+    /// </summary>
+    public DataTemplates? CronRulerContentDataTemplates
+    {
+        get => this.GetValue(CronRulerContentDataTemplatesProperty);
+        set => this.SetValue(CronRulerContentDataTemplatesProperty, value);
+    }
+
+    #region 属性
 
     public string? Seconds
     {
         get => GetValue(SecondsProperty);
-        set => SetValue(SecondsProperty, value);
+        private set => SetValue(SecondsProperty, value);
     }
 
     public string? Minutes
     {
         get => GetValue(MinutesProperty);
-        set => SetValue(MinutesProperty, value);
+        private set => SetValue(MinutesProperty, value);
     }
 
     public string? Hours
     {
         get => GetValue(HoursProperty);
-        set => SetValue(HoursProperty, value);
+        private set => SetValue(HoursProperty, value);
     }
 
     public string? DaysOfMonth
     {
         get => GetValue(DaysOfMonthProperty);
-        set => SetValue(DaysOfMonthProperty, value);
+        private set => SetValue(DaysOfMonthProperty, value);
     }
 
     public string? Months
     {
         get => GetValue(MonthsProperty);
-        set => SetValue(MonthsProperty, value);
+        private set => SetValue(MonthsProperty, value);
     }
 
     public string? DaysOfWeek
     {
         get => GetValue(DaysOfWeekProperty);
-        set => SetValue(DaysOfWeekProperty, value);
+        private set => SetValue(DaysOfWeekProperty, value);
     }
 
     public string? Years
     {
         get => GetValue(YearsProperty);
-        set => SetValue(YearsProperty, value);
+        private set => SetValue(YearsProperty, value);
     }
 
     public string? CronExpression
@@ -233,23 +497,31 @@ public class CronPicker : TemplatedControl
     }
 
     /// <summary>
-    /// A delegate to get the next run time of the cron expression.
-    /// </summary>
-    public Func<string, DateTime, DateTime>? GetNextRunTime { get; set; }
-
-    /// <summary>
     /// The count of the next run time.
     /// </summary>
-    public int NextRunTimeCount { get; set; } = 10;
+    public int NextRunTimeCount
+    {
+        get => GetValue(NextRunTimeCountProperty);
+        set => SetValue(NextRunTimeCountProperty, value);
+    }
 
     /// <summary>
+    /// The cron expression calculation result.
+    /// </summary>
+    public CronExpressionParseResult? CronExpressionCalculationResult
+    {
+        get => GetValue(CronExpressionCalculationResultProperty);
+        private set => SetValue(CronExpressionCalculationResultProperty, value);
+    }
+
+    /*/// <summary>
     /// The next run times of the cron expression.
     /// </summary>
     public IEnumerable<DateTime>? NextRunTimes
     {
         get => GetValue(NextRunTimesProperty);
         protected set => SetValue(NextRunTimesProperty, value);
-    }
+    }*/
 
     /// <summary>
     /// The format of the date time.
@@ -259,50 +531,6 @@ public class CronPicker : TemplatedControl
         get => GetValue(DateTimeFormatProperty);
         set => SetValue(DateTimeFormatProperty, value);
     }
-
-    public CronPickerFieldItem SecondsField
-    {
-        get => _secondsField;
-        // private set => SetAndRaise(SecondsFieldProperty, ref _secondsField, value);
-    }
-
-    public CronPickerFieldItem MinutesField
-    {
-        get => _minutesField;
-        // private set => SetAndRaise(MinutesFieldProperty, ref _minutesField, value);
-    }
-
-    public CronPickerFieldItem HoursField
-    {
-        get => _hoursField;
-        // private set => SetAndRaise(HoursFieldProperty, ref _hoursField, value);
-    }
-
-    public CronPickerFieldItem DaysOfMonthField
-    {
-        get => _daysOfMonthField;
-        // private set => SetAndRaise(DaysOfMonthFieldProperty, ref _daysOfMonthField, value);
-    }
-
-    public CronPickerFieldItem MonthsField
-    {
-        get => _monthsField;
-        // private set => SetAndRaise(MonthsFieldProperty, ref _monthsField, value);
-    }
-
-    public CronPickerFieldItem DaysOfWeekField
-    {
-        get => _daysOfWeekField;
-        // private set => SetAndRaise(DaysOfWeekFieldProperty, ref _daysOfWeekField, value);
-    }
-
-    public CronPickerFieldItem YearsField
-    {
-        get => _yearsField;
-        // private set => SetAndRaise(YearsFieldProperty, ref _yearsField, value);
-    }
-
-    public CronPickerFieldItem[] CornFields { get; }
 
     /// <summary>
     /// Whether to show the operation result.
@@ -321,7 +549,7 @@ public class CronPicker : TemplatedControl
         get => _currentOperationResultType;
         private set => SetAndRaise(CurrentOperationResultTypeProperty, ref _currentOperationResultType, value);
     }
-    
+
     /// <summary>
     /// The message of the current operation result.
     /// </summary>
@@ -339,7 +567,18 @@ public class CronPicker : TemplatedControl
         get => GetValue(CronExpressionParserProperty);
         set => SetValue(CronExpressionParserProperty, value);
     }
-    
+
+    /// <summary>
+    /// 预计运行日期标题
+    /// </summary>
+    public string? RecentRunTimesTitle
+    {
+        get => GetValue(RecentRunTimesTitleProperty);
+        private set => SetValue(RecentRunTimesTitleProperty, value);
+    }
+
+    #endregion
+
     #region 消息提示相关属性
 
     public IAvaloniaStringFormatter? CopySuccessMessage
@@ -347,13 +586,13 @@ public class CronPicker : TemplatedControl
         get => GetValue(CopySuccessMessageProperty);
         set => SetValue(CopySuccessMessageProperty, value);
     }
-    
+
     public IAvaloniaStringFormatter? FailedToGetClipboardMessage
     {
         get => GetValue(FailedToGetClipboardMessageProperty);
         set => SetValue(FailedToGetClipboardMessageProperty, value);
     }
-    
+
     public IAvaloniaStringFormatter? CronExpressionParsedMessage
     {
         get => GetValue(CronExpressionParsedMessageProperty);
@@ -365,63 +604,117 @@ public class CronPicker : TemplatedControl
         get => GetValue(CronExpressionParamsNotEnoughErrorMessageProperty);
         set => SetValue(CronExpressionParamsNotEnoughErrorMessageProperty, value);
     }
-    
-    public IAvaloniaStringFormatter? SecondsExpressionParseErrorFormat
+
+    /// <summary>
+    /// cron 表达式解析失败格式.
+    /// </summary>
+    /// <remarks>
+    /// 提供参数（msg, source, part）：
+    /// <list type="bullet">
+    /// <item>msg: 错误信息</item>
+    /// <item>source: 错误源</item>
+    /// <item>part: 错误部分名称</item>
+    /// </list>
+    /// </remarks>
+    public IAvaloniaStringFormatter? CronPartExpressionParseErrorFormat
     {
-        get => GetValue(SecondsExpressionParseErrorFormatProperty);
-        set => SetValue(SecondsExpressionParseErrorFormatProperty, value);
+        get => GetValue(CronPartExpressionParseErrorFormatProperty);
+        set => SetValue(CronPartExpressionParseErrorFormatProperty, value);
     }
-    
-    public IAvaloniaStringFormatter? MinutesExpressionParseErrorFormat
+
+    /// <summary>
+    /// cron 表达式验证失败格式.
+    /// </summary>
+    /// <remarks>
+    /// 提供参数（msg, part）：
+    /// <list type="bullet">
+    /// <item>msg: 错误信息</item>
+    /// <item>part: 错误部分名称</item>
+    /// </list>
+    /// </remarks>
+    public IAvaloniaStringFormatter? CronPartVerifyErrorFormat
     {
-        get => GetValue(MinutesExpressionParseErrorFormatProperty);
-        set => SetValue(MinutesExpressionParseErrorFormatProperty, value);
+        get => GetValue(CronPartVerifyErrorFormatProperty);
+        set => SetValue(CronPartVerifyErrorFormatProperty, value);
     }
-    
-    public IAvaloniaStringFormatter? HoursExpressionParseErrorFormat
-    {
-        get => GetValue(HoursExpressionParseErrorFormatProperty);
-        set => SetValue(HoursExpressionParseErrorFormatProperty, value);
-    }
-    
-    public IAvaloniaStringFormatter? DaysOfMonthExpressionParseErrorFormat
-    {
-        get => GetValue(DaysOfMonthExpressionParseErrorFormatProperty);
-        set => SetValue(DaysOfMonthExpressionParseErrorFormatProperty, value);
-    }
-    
-    public IAvaloniaStringFormatter? MonthsExpressionParseErrorFormat
-    {
-        get => GetValue(MonthsExpressionParseErrorFormatProperty);
-        set => SetValue(MonthsExpressionParseErrorFormatProperty, value);
-    }
-    
-    public IAvaloniaStringFormatter? DaysOfWeekExpressionParseErrorFormat
-    {
-        get => GetValue(DaysOfWeekExpressionParseErrorFormatProperty);
-        set => SetValue(DaysOfWeekExpressionParseErrorFormatProperty, value);
-    }
-    
-    public IAvaloniaStringFormatter? YearsExpressionParseErrorFormat
-    {
-        get => GetValue(YearsExpressionParseErrorFormatProperty);
-        set => SetValue(YearsExpressionParseErrorFormatProperty, value);
-    }
-    
+
     public IAvaloniaStringFormatter? RecentRunTimesTitleFormat
     {
         get => GetValue(RecentRunTimesTitleFormatProperty);
         set => SetValue(RecentRunTimesTitleFormatProperty, value);
     }
+
+    /// <summary>
+    /// The message of the not find second field.(不提供参数)
+    /// </summary>
+    public IAvaloniaStringFormatter? NotFindSecondFieldMessage
+    {
+        get => GetValue(NotFindSecondFieldMessageProperty);
+        set => SetValue(NotFindSecondFieldMessageProperty, value);
+    }
+    
+    /// <summary>
+    /// The message of the not find minute field.(不提供参数)
+    /// </summary>
+    public IAvaloniaStringFormatter? NotFindMinuteFieldMessage
+    {
+        get => GetValue(NotFindMinuteFieldMessageProperty);
+        set => SetValue(NotFindMinuteFieldMessageProperty, value);
+    }
+    
+    /// <summary>
+    /// The message of the not find hour field.(不提供参数)
+    /// </summary>
+    public IAvaloniaStringFormatter? NotFindHourFieldMessage
+    {
+        get => GetValue(NotFindHourFieldMessageProperty);
+        set => SetValue(NotFindHourFieldMessageProperty, value);
+    }
+    
+    /// <summary>
+    /// The message of the not find days of month field.(不提供参数)
+    /// </summary>
+    public IAvaloniaStringFormatter? NotFindDaysOfMonthFieldMessage
+    {
+        get => GetValue(NotFindDaysOfMonthFieldMessageProperty);
+        set => SetValue(NotFindDaysOfMonthFieldMessageProperty, value);
+    }
+    
+     /// <summary>
+     /// The message of the not find months field.(不提供参数)
+     /// </summary>
+    public IAvaloniaStringFormatter? NotFindMonthsFieldMessage
+    {
+        get => GetValue(NotFindMonthsFieldMessageProperty);
+        set => SetValue(NotFindMonthsFieldMessageProperty, value);
+    }
+    
+     /// <summary>
+     /// The message of the not find days of week field.(不提供参数)
+     /// </summary>
+    public IAvaloniaStringFormatter? NotFindDaysOfWeekFieldMessage
+    {
+        get => GetValue(NotFindDaysOfWeekFieldMessageProperty);
+        set => SetValue(NotFindDaysOfWeekFieldMessageProperty, value);
+    }
+    
+    /// <summary>
+    /// The message of the not find years field.(不提供参数)
+    /// </summary>
+    public IAvaloniaStringFormatter? NotFindYearsFieldMessage
+    {
+        get => GetValue(NotFindYearsFieldMessageProperty);
+        set => SetValue(NotFindYearsFieldMessageProperty, value);
+    }
     
     #endregion
-    
+
     public void ShowWarningNotification(string title = "Warning", string? message = null) => ShowOperationResult(NotificationType.Warning, title, message);
-    
+
     public void ShowInfoNotification(string title = "Info", string? message = null) => ShowOperationResult(NotificationType.Information, title, message);
-    
+
     public void ShowErrorNotification(string title = "Error", string? message = null) => ShowOperationResult(NotificationType.Error, title, message);
-    
+
     public void ShowSuccessNotification(string title = "Success", string? message = null) => ShowOperationResult(NotificationType.Success, title, message);
 
     public void ShowOperationResult(NotificationType type, string title, string? message = null)
@@ -430,7 +723,7 @@ public class CronPicker : TemplatedControl
         CurrentOperationResultType = type;
         IsCurrentOperationResultVisible = true;
     }
-    
+
     public void HideOperationResult(bool isClear = false)
     {
         IsCurrentOperationResultVisible = false;
@@ -441,28 +734,188 @@ public class CronPicker : TemplatedControl
             // CurrentOperationResultTitle = null;
         }
     }
-    
+
+    public void ReSetSecondsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.SecondsField, value, isClear);
+    }
+
+    public void AddSecondsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.SecondsField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveSecondsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.SecondsField.RulerItems.Remove(x));
+    }
+
+    public void ReSetMinutesRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.MinutesField, value, isClear);
+    }
+    public void AddMinutesRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.MinutesField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveMinutesRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.MinutesField.RulerItems.Remove(x));
+    }
+
+    public void ReSetHoursRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.HoursField, value, isClear);
+    }
+    public void AddHoursRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.HoursField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveHoursRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.HoursField.RulerItems.Remove(x));
+    }
+
+    public void ReSetDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.DaysOfMonthField, value, isClear);
+    }
+    public void AddDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.DaysOfMonthField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.DaysOfMonthField.RulerItems.Remove(x));
+    }
+
+    public void ReSetMonthsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.MonthsField, value, isClear);
+    }
+    public void AddMonthsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.MonthsField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveMonthsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.MonthsField.RulerItems.Remove(x));
+    }
+
+    public void ReSetDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.DaysOfWeekField, value, isClear);
+    }
+    public void AddDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.DaysOfWeekField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.DaysOfWeekField.RulerItems.Remove(x));
+    }
+
+    public void ReSetYearsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    {
+        ResetCronRulerCollection(this.YearsField, value, isClear);
+    }
+    public void AddYearsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        if (value is not null)
+        {
+            this.YearsField.RulerItems.AddRange(value);
+        }
+    }
+
+    public void RemoveYearsRulerItems(IEnumerable<CronPickerRuler>? value)
+    {
+        value?.ToList().ForEach(x => this.YearsField.RulerItems.Remove(x));
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _tabControl = e.NameScope.Find<TabControl>(PART_TabControl);
-        OnTabControlLoad();
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _secondsField);
+        _secondsField = e.NameScope.Find<CronPickerFieldView>(PART_SecondsField);
+        if (_secondsField is not null)
+        {
+            _secondsField.ItemsSource = this.SecondsField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _secondsField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _minutesField);
+        _minutesField = e.NameScope.Find<CronPickerFieldView>(PART_MinutesField);
+        if (_minutesField is not null)
+        {
+            _minutesField.ItemsSource = this.MinutesField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _minutesField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _hoursField);
+        _hoursField = e.NameScope.Find<CronPickerFieldView>(PART_HoursField);
+        if (_hoursField is not null)
+        {
+            _hoursField.ItemsSource = this.HoursField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _hoursField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _daysOfMonthField);
+        _daysOfMonthField = e.NameScope.Find<CronPickerFieldView>(PART_DaysOfMonthField);
+        if (_daysOfMonthField is not null)
+        {
+            _daysOfMonthField.ItemsSource = this.DaysOfMonthField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _daysOfMonthField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _monthsField);
+        _monthsField = e.NameScope.Find<CronPickerFieldView>(PART_MonthsField);
+        if (_monthsField is not null)
+        {
+            _monthsField.ItemsSource = this.MonthsField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _monthsField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _daysOfWeekField);
+        _daysOfWeekField = e.NameScope.Find<CronPickerFieldView>(PART_DaysOfWeekField);
+        if (_daysOfWeekField is not null)
+        {
+            _daysOfWeekField.ItemsSource = this.DaysOfWeekField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _daysOfWeekField);
+        CronPickerFieldView.ValueChangedEvent.RemoveHandler(OnCronFieldRulerValueChanged, _yearsField);
+        _yearsField = e.NameScope.Find<CronPickerFieldView>(PART_YearsField);
+        if (_yearsField is not null)
+        {
+            _yearsField.ItemsSource = this.YearsField.RulerItems;
+        }
+        CronPickerFieldView.ValueChangedEvent.AddHandler(OnCronFieldRulerValueChanged, _yearsField);
+        _fieldsHost= e.NameScope.Find<CronPickerFieldsContainer>(PART_FieldsHost);
+        // _tabControl = e.NameScope.Find<TabControl>(PART_TabControl);
         Button.ClickEvent.RemoveHandler(ParsePicker, _buttonParse);
         _buttonParse = e.NameScope.Find<Button>(PART_ParseButton);
         Button.ClickEvent.AddHandler(ParsePicker, _buttonParse);
         Button.ClickEvent.RemoveHandler(CopyPicker, _buttonCopy);
         _buttonCopy = e.NameScope.Find<Button>(PART_CopyButton);
         Button.ClickEvent.AddHandler(CopyPicker, _buttonCopy);
-    }
-
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        base.OnLoaded(e);
-    }
-
-    protected override void OnUnloaded(RoutedEventArgs e)
-    {
-        base.OnUnloaded(e);
+        // this.OnTabControlLoad();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -471,133 +924,457 @@ public class CronPicker : TemplatedControl
         if (change.Property == SecondsProperty || change.Property == MinutesProperty || change.Property == HoursProperty || change.Property == DaysOfMonthProperty || change.Property == MonthsProperty || change.Property == DaysOfWeekProperty || change.Property == YearsProperty)
         {
             this.RefreshCronExpression();
+            if (_isCronExpressionParsed == false)
+            {
+                HideOperationResult();
+                this.TryRefreshRecentRunTimes(this.CronExpression);
+            }
         }
         else if (change.Property == CronExpressionProperty)
         {
             this.OnCronExpressionChanged(change.NewValue?.ToString() ?? string.Empty);
         }
-    }
-    
-    private static void Button_Click(object? sender, RoutedEventArgs e)
-    {
-        ILogical? btn = sender as ILogical;
-        CronPicker? parent = btn?.GetLogicalAncestors().OfType<CronPicker>().FirstOrDefault();
-        parent?.HideOperationResult();
-    }
-    
-    private void OnTabControlLoad()
-    {
-        TabControl? tabControl = _tabControl;
-        if (tabControl != null && _isTabControlInited == false)
+        else if (change.Property == NextRunTimeCountProperty || change.Property == RecentRunTimesTitleFormatProperty)
         {
-            _isTabControlInited = true;
-            if (tabControl.DataContext is not null)
+            this.RecentRunTimesTitle = RecentRunTimesTitleFormat?.Format(("count", NextRunTimeCount));
+        }
+        else if (change.Property == SecondsRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
             {
-                tabControl.DataContext = null;
-            }
-            
-#if false // ItemTemplate 中的模型回传数据类型与数据源数据类型不一致
-            tabControl.ItemTemplate = new FuncDataTemplate(x =>
-            {
-                return true;
-                // if (x is CronPickerFieldItem field)
-                // {
-                //     return true;
-                // }
-                //
-                // return false;
-            }, (o, scope) =>
-            {
-                if (o is CronPickerFieldItem field)
+                this.RemoveSecondsRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
                 {
-                    return new TextBlock()
-                    {
-                        [!TextBlock.TextProperty] = field[!CronPickerFieldItem.HeaderProperty]
-                    };
-                }
-                
-                return new TextBlock(){ Text = "Error" };
-            }, true);
-            tabControl.ContentTemplate = new FuncDataTemplate<CronPickerFieldItem>(x => true, x => x, true);
-            tabControl.ItemsSource = this.CornFields;
-#else
-            CronPickerFieldItem[] items = this.CornFields;
-            for (int i = 0; i < items.Length; i++)
-            {
-                CronPickerFieldItem item = items[i];
-                if (tabControl.Items.FirstOrDefault(x => x is TabItem tabitem && tabitem.Content == item) is null)
-                {
-                    TabItem tabitem = new CronPickerFieldTabItem()
-                    {
-                        [!HeaderedContentControl.HeaderProperty] = item[!CronPickerFieldItem.HeaderProperty],
-                        Content = item
-                    };
-                    tabControl.Items.Add(tabitem);
+                    notifyCollection.CollectionChanged -= SecondsRulerItemCollectionChanged;
                 }
             }
-#endif
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetSecondsRulerItems(rulers, IsInitialized);
+                this.SecondsSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += SecondsRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == MinutesRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveMinutesRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= MinutesRulerItemCollectionChanged;
+                }
+            }
+
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetMinutesRulerItems(rulers, IsInitialized);
+                this.MinutesSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += MinutesRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == HoursRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveHoursRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= HoursRulerItemCollectionChanged;
+                }
+            }
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetHoursRulerItems(rulers, IsInitialized);
+                this.HoursSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += HoursRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == DaysOfMonthRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveDaysOfMonthRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= DaysOfMonthRulerItemCollectionChanged;
+                }
+            }
+
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetDaysOfMonthRulerItems(rulers, IsInitialized);
+                this.DaysOfMonthSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += DaysOfMonthRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == MonthsRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveMonthsRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= MonthsRulerItemCollectionChanged;
+                }
+            }
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetMonthsRulerItems(rulers, IsInitialized);
+                this.MonthsSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += MonthsRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == DaysOfWeekRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveDaysOfWeekRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= DaysOfWeekRulerItemCollectionChanged;
+                }
+            }
+
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetDaysOfWeekRulerItems(rulers, IsInitialized);
+                this.DaysOfWeekSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += DaysOfWeekRulerItemCollectionChanged;
+                }
+            }
+        }
+        else if (change.Property == YearsRulerItemsSourceProperty)
+        {
+            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            {
+                this.RemoveYearsRulerItems(oldRulers);
+                if (oldRulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged -= YearsRulerItemCollectionChanged;
+                }
+            }
+            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            {
+                this.ReSetYearsRulerItems(rulers, IsInitialized);
+                this.YearsSelectedIndex = 0;
+                if (rulers is INotifyCollectionChanged notifyCollection)
+                {
+                    notifyCollection.CollectionChanged += YearsRulerItemCollectionChanged;
+                }
+            }
+        }
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        // this.SelectedFieldIndex = -1;
+        this.IniRefresh();
+    }
+
+    public void IniRefresh()
+    {
+        if (_fieldsHost is not null)
+        {
+            /*_fieldsHost.SelectedItem = _yearsField;
+            _fieldsHost.SelectedItem = _daysOfWeekField;
+            _fieldsHost.SelectedItem = _monthsField;
+            _fieldsHost.SelectedItem = _daysOfMonthField;
+            _fieldsHost.SelectedItem = _hoursField;
+            _fieldsHost.SelectedItem = _minutesField;
+            _fieldsHost.SelectedItem = _secondsField;*/
+
+            /*_fieldsHost.Select(6);
+            _fieldsHost.Select(5);
+            _fieldsHost.Select(4);
+            _fieldsHost.Select(3);
+            _fieldsHost.Select(2);
+            _fieldsHost.Select(1);
+            _fieldsHost.Select(0);*/
+        }
+    }
+
+    public void SelectCronField(CronFieldTypes type)
+    {
+        if (_fieldsHost is not null)
+        {
+            switch (type)
+            {
+                case CronFieldTypes.Second:
+                    _fieldsHost.Select(0);
+                    break;
+                case CronFieldTypes.Minute:
+                    _fieldsHost.Select(1);
+                    break;
+                case CronFieldTypes.Hour:
+                    _fieldsHost.Select(2);
+                    break;
+                case CronFieldTypes.DayOfMonth:
+                    _fieldsHost.Select(3);
+                    break;
+                case CronFieldTypes.Month:
+                    _fieldsHost.Select(4);
+                    break;
+                case CronFieldTypes.DayOfWeek:
+                    _fieldsHost.Select(5);
+                    break;
+                case CronFieldTypes.Year:
+                    _fieldsHost.Select(6);
+                    break;
+            }
         }
     }
     
+    private static void ResetCronRulerCollection(CronPickerField field, IEnumerable<CronPickerRuler>? value, bool isClear)
+    {
+        if (isClear)
+        {
+            field.RulerItems.Clear();
+        }
+
+        if (value is not null)
+        {
+            field.RulerItems.AddRange(value);
+        }
+    }
+
+    private void OnIsYearEnabledChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        this.RefreshCronExpression();
+    }
+
+    private void OnIsSecondEnabledChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        this.RefreshCronExpression();
+    }
+
+    private void OnCronFieldRulerValueChanged(object sender, UsualValueChangedEventArgs<string> e)
+    {
+        if (sender is CronPickerFieldView field)
+        {
+            this.SetCronPartValue(field.GetFieldType(), e.NewValue);
+        }
+    }
+
+    private void OnCronFieldRulerValueChanged(object sender, UsualValueChangedEventArgs<(ICronPickerRulersContainer Field, string Value)> e)
+    {
+        this.SetCronPartValue(e.NewValue.Field.GetFieldType(), e.NewValue.Field.Value);
+    }
+
+    private void SecondsRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddSecondsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveSecondsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveSecondsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void MinutesRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddMinutesRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveMinutesRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveMinutesRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void HoursRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddHoursRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveHoursRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveHoursRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void DaysOfMonthRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddDaysOfMonthRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void MonthsRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddMonthsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveMonthsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveMonthsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void DaysOfWeekRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddDaysOfWeekRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+
+    private void YearsRulerItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            this.AddYearsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            this.RemoveYearsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Reset)
+        {
+            this.RemoveYearsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+        }
+    }
+    
+    private void OnCronFieldContentTemplateChanged(AvaloniaPropertyChangedEventArgs args)
+    {
+        if (args.OldValue is IDataTemplate oldDataTemplate && _fieldsHost is not null && _fieldsHost.DataTemplates.Contains(oldDataTemplate))
+        {
+            _fieldsHost.DataTemplates.Remove(oldDataTemplate);
+        }
+
+        if (args.NewValue is IDataTemplate dataTemplate && _fieldsHost is not null && !_fieldsHost.DataTemplates.Contains(dataTemplate))
+        {
+            _fieldsHost.DataTemplates.Add(dataTemplate);
+        }
+    }
+
+    protected void SetCronPartValue(CronFieldTypes type, string? value)
+    {
+        if (type is CronFieldTypes.Second)
+        {
+            this.Seconds = value;
+        }
+        else if (type is CronFieldTypes.Minute)
+        {
+            this.Minutes = value;
+        }
+        else if (type is CronFieldTypes.Hour)
+        {
+            this.Hours = value;
+        }
+        else if (type is CronFieldTypes.DayOfMonth)
+        {
+            this.DaysOfMonth = value;
+        }
+        else if (type is CronFieldTypes.Month)
+        {
+            this.Months = value;
+        }
+        else if (type is CronFieldTypes.DayOfWeek)
+        {
+            this.DaysOfWeek = value;
+        }
+        else if (type is CronFieldTypes.Year)
+        {
+            this.Years = value;
+        }
+    }
+
     private void OnCronExpressionChanged(string value)
     {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return;
-            }
-
-            Func<string,DateTime,DateTime>? func = this.GetNextRunTime;
-            if (func == null)
-            {
-                return;
-            }
-
-            int count = NextRunTimeCount;
-            DateTime nextRunTime = DateTime.Now;
-            List<DateTime> runTimes = new List<DateTime>();
-            for (int i = 0; i < count; i++)
-            {
-                nextRunTime = func(value, nextRunTime);
-                runTimes.Add(nextRunTime);
-            }
-            
-            NextRunTimes = runTimes;
-        }
-        catch (Exception e)
-        {
-        }
+        // if (!string.IsNullOrWhiteSpace(value) && value.Length > 10)
+        // {
+        //     try
+        //     {
+        //         RefreshRecentRunTimes(value);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         this.ShowErrorNotification("Error", e.Message);
+        //     }
+        // }
     }
 
     private void RefreshCronExpression()
     {
-        string expression;
-        if (!string.IsNullOrWhiteSpace(Years))
+        string format = "{0} {1} {2} {3} {4}"; //  分     时     日     月     周
+        List<string> parts = new List<string>(){ Minutes, Hours, DaysOfMonth, Months, DaysOfWeek };
+        if (this.IsSecondEnabled)
         {
-            expression = string.Format("{0} {1} {2} {3} {4} {5} {6}", Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek, Years);
+            format = "{0} {1} {2} {3} {4} {5}"; // 秒     分     时     日     月     周
+            parts.Insert(0, Seconds);
         }
-        else
+
+        if (this.IsYearEnabled && !string.IsNullOrWhiteSpace(Years))
         {
-            expression = string.Format("{0} {1} {2} {3} {4} {5}", Seconds, Minutes, Hours, DaysOfMonth, Months, DaysOfWeek);
+            format = string.Concat(format, " {6}"); // ? 分     时     日     月     周     年
+            parts.Add(Years);
         }
-            
-        CronExpression = expression;
+        
+        CronExpression = string.Format(format, parts.ToArray());
     }
-    
+
     private void ChangeCronExpression(string? expression)
     {
         CronExpression = expression;
     }
 
-    private void OnFieldTypeValueMapCollChanged(NotifyCollectionChangedEventArgs args)
-    {
-    }
-
-    private void OnFieldTypeValueMapChanged(PropertyChangedEventArgs args)
-    {
-    }
-    
     // 复制当前 cron 表达式到粘贴板
     private async void CopyPicker(object sender, RoutedEventArgs e)
     {
@@ -632,122 +1409,463 @@ public class CronPicker : TemplatedControl
     // 反解析当前 cron 表达式到各项
     private void ParsePicker(object sender, RoutedEventArgs e)
     {
-        List<DateTime> runTimes;
+        InnerParsePicker();
+    }
+
+    private void InnerParsePicker()
+    {
         try
         {
+            _isCronExpressionParsed = false;
+            ThrowIfFieldsNotExists();
             string? cronString = this.CronExpression;
             string[]? args = cronString?.Trim().Split(new char[] { ' ' }, options: StringSplitOptions.RemoveEmptyEntries);
-            if (args is null || args.Length < 6)
+            int allowLength = 5;
+            if (this.IsSecondEnabled)
+            {
+                allowLength = 6;
+            }
+
+            if (args is null || args.Length < allowLength)
             {
                 this.ShowWarningNotification("Warning", CronExpressionParamsNotEnoughErrorMessage?.Format());
                 return;
             }
 
-            try
+            int index_run = -1;
+            if (this.IsSecondEnabled)
             {
-                this._secondsField.ParsetoValue(args[0]); // 秒~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(SecondsExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                this._minutesField.ParsetoValue(args[1]); // 分~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(MinutesExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                this._hoursField.ParsetoValue(args[2]); // 时~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(HoursExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                this._daysOfMonthField.ParsetoValue(args[3]); // 日~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(DaysOfMonthExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                this._monthsField.ParsetoValue(args[4]); // 月~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(MonthsExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                this._daysOfWeekField.ParsetoValue(args[5]); // 周~解析
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(DaysOfWeekExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
-            }
-
-            try
-            {
-                if (args.Length > 6)
+                try
                 {
-                    this._yearsField.ParsetoValue(args[6]); // 年~解析
+                    index_run++;
+                    _secondsField!.ParsetoValue(args[index_run]); // 秒~解析
                 }
-                else
+                catch (Exception ex)
                 {
-                    this._yearsField.ParsetoValue(string.Empty); // 年~清空
+                    throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _secondsField!.FieldName), ex);
                 }
             }
-            catch (Exception exception)
+
+            try
             {
-                throw new Exception(YearsExpressionParseErrorFormat?.Format(("msg", exception.Message)), exception);
+                index_run++;
+                _minutesField!.ParsetoValue(args[index_run]); // 分~解析
             }
-            
+            catch (Exception ex)
+            {
+                throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _minutesField!.FieldName), ex);
+            }
+
+            try
+            {
+                index_run++;
+                _hoursField!.ParsetoValue(args[index_run]); // 时~解析
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _hoursField!.FieldName), ex);
+            }
+
+            try
+            {
+                index_run++;
+                _daysOfMonthField!.ParsetoValue(args[index_run]); // 日~解析
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _daysOfMonthField!.FieldName), ex);
+            }
+
+            try
+            {
+                index_run++;
+                _monthsField!.ParsetoValue(args[index_run]); // 月~解析
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _monthsField!.FieldName), ex);
+            }
+
+            try
+            {
+                index_run++;
+                _daysOfWeekField!.ParsetoValue(args[index_run]); // 周~解析
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _daysOfWeekField!.FieldName), ex);
+            }
+
+            if (this.IsYearEnabled)
+            {
+                try
+                {
+                    index_run++;
+                    CronPickerFieldView? field = _yearsField;
+                    if (args.Length > index_run)
+                    {
+                        field!.ParsetoValue(args[index_run]); // 年~解析
+                    }
+                    else
+                    {
+                        field!.ParsetoValue(string.Empty); // 年~清空
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(InnerCronPartParseErrorFormat(ex.Message, args[index_run], _yearsField!.FieldName), ex);
+                }
+            }
+
             // 外部解析器解析并获取指定次数运行时间
-            if (this.CronExpressionParser is not null)
-            {
-                DateTime start = DateTime.Now;
-                runTimes = new List<DateTime>();
-                for (int i = 0; i < NextRunTimeCount; i++)
-                {
-                    try
-                    {
-                        DateTime nextTime = this.CronExpressionParser.GetNextTime(cronString, start);
-                        if (nextTime == start)
-                        {
-                            break;
-                        }
-                        
-                        start = nextTime;
-                    }
-                    catch (Exception exception)
-                    {
-                        throw new Exception(exception.Message, exception);
-                    }
-                    
-                    runTimes.Add(start);
-                }
-
-                this.NextRunTimes = runTimes;
-            }
-            
+            RefreshRecentRunTimes(cronString);
             this.ShowSuccessNotification("Success", CronExpressionParsedMessage?.Format());
         }
         catch (Exception exception)
         {
             this.ShowErrorNotification("Error", exception.Message);
-            Logger.TryGet(LogEventLevel.Error, LogArea.Control)?.Log(this, $"{exception}");
+            // Logger.TryGet(LogEventLevel.Error, LogArea.Control)?.Log(this, $"{exception}");
+        }
+        finally
+        {
+            _isCronExpressionParsed = true;
+        }
+    }
+    
+    private void TryRefreshRecentRunTimes(string? cronString)
+    {
+        if (string.IsNullOrWhiteSpace(Minutes) || string.IsNullOrWhiteSpace(Hours) || string.IsNullOrWhiteSpace(DaysOfMonth) || string.IsNullOrWhiteSpace(Months) || string.IsNullOrWhiteSpace(DaysOfWeek)
+            || (IsSecondEnabled && string.IsNullOrWhiteSpace(Seconds)) || string.IsNullOrWhiteSpace(cronString))
+        {
+            return;
+        }
+
+        try
+        {
+            ThrowIfFieldsNotExists();
+            if (this.IsSecondEnabled)
+            {
+                try
+                {
+                    _secondsField!.VerifyCurrentCronValue(); // 秒~ 合法性验证
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _secondsField!.FieldName)), exception);
+                }
+            }
+
+            try
+            {
+                _secondsField!.VerifyCurrentCronValue(); // 分~ 合法性验证
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _minutesField!.FieldName)), exception);
+            }
+
+            try
+            {
+                _hoursField!.VerifyCurrentCronValue(); // 时~ 合法性验证
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _hoursField!.FieldName)), exception);
+            }
+
+            try
+            {
+                _daysOfMonthField!.VerifyCurrentCronValue(); // 日~ 合法性验证
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _daysOfMonthField!.FieldName)), exception);
+            }
+
+            try
+            {
+                _monthsField!.VerifyCurrentCronValue(); // 月~ 合法性验证
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _monthsField!.FieldName)), exception);
+            }
+
+            try
+            {
+                _daysOfWeekField!.VerifyCurrentCronValue(); // 周~ 合法性验证
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _daysOfWeekField!.FieldName)), exception);
+            }
+
+            if (this.IsYearEnabled)
+            {
+                try
+                {
+                    _yearsField!.VerifyCurrentCronValue(); // 年~ 合法性验证
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception(CronPartVerifyErrorFormat?.Format(("msg", exception.Message), ("part", _yearsField!.FieldName)), exception);
+                }
+            }
+            
+            RefreshRecentRunTimes(cronString);
+        }
+        catch (Exception e)
+        {
+            this.CronExpressionCalculationResult = CronExpressionParseResult.CreateError(e.Message);
+            // this.ShowErrorNotification("Error", e.Message);
+        }
+    }
+
+    private void RefreshRecentRunTimes(string cronString)
+    {
+        ICronExpressionParser? parser = this.CronExpressionParser;
+        if (parser is not null)
+        {
+            DateTime start = DateTime.Now;
+            List<DateTime> runTimes = new List<DateTime>();
+            for (int i = 0; i < NextRunTimeCount; i++)
+            {
+                try
+                {
+                    DateTime nextTime = parser.GetNextTime(cronString, this.IsSecondEnabled, this.IsYearEnabled, start);
+                    if (nextTime == start)
+                    {
+                        break;
+                    }
+
+                    start = nextTime;
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception(exception.Message, exception);
+                }
+
+                runTimes.Add(start);
+            }
+
+            this.CronExpressionCalculationResult = CronExpressionParseResult.CreateSuccess(runTimes);
+            // this.NextRunTimes = runTimes;
+        }
+    }
+
+    private IEnumerable<ICronPickerRulersContainer>? GetCronRulersContainerControls()
+    {
+        if (_secondsField is not null)
+        {
+            yield return _secondsField;
+        }
+        if (_minutesField is not null)
+        {
+            yield return _minutesField;
+        }
+        if (_hoursField is not null)
+        {
+            yield return _hoursField;
+        }
+        if (_daysOfMonthField is not null)
+        {
+            yield return _daysOfMonthField;
+        }
+        if (_monthsField is not null)
+        {
+            yield return _monthsField;
+        }
+        if (_daysOfWeekField is not null)
+        {
+            yield return _daysOfWeekField;
+        }
+        if (_yearsField is not null)
+        {
+            yield return _yearsField;
+        }
+        // return _fieldsHost?.GetLogicalChildren().OfType<ICronPickerRulersContainer>();
+    }
+
+    private void ThrowIfFieldsNotExists()
+    {
+        if (this.IsSecondEnabled && _secondsField is null)
+        { // 未提供秒支持部件，请联系管理员
+            throw new Exception(NotFindSecondFieldMessage?.Format());
+        }
+
+        if (_minutesField is null)
+        { // 未提供分支持部件，请联系管理员
+            throw new Exception(NotFindMinuteFieldMessage?.Format());
+        }
+            
+        if (_hoursField is null)
+        { // 未提供时支持部件，请联系管理员
+            throw new Exception(NotFindHourFieldMessage?.Format());
+        }
+
+        if (_daysOfMonthField is null)
+        { // 未提供日支持部件，请联系管理员
+            throw new Exception(NotFindDaysOfMonthFieldMessage?.Format());
+        }
+
+        if (_monthsField is null)
+        { // 未提供月支持部件，请联系管理员
+            throw new Exception(NotFindMonthsFieldMessage?.Format());
+        }
+
+        if (_daysOfWeekField is null)
+        { // 未提供周支持部件，请联系管理员
+            throw new Exception(NotFindDaysOfWeekFieldMessage?.Format());
         }
         
+        if (this.IsYearEnabled && _yearsField is null)
+        { // 未提供年支持部件，请联系管理员
+            throw new Exception(NotFindYearsFieldMessage?.Format());
+        }
+    }
+    
+    private string InnerCronPartParseErrorFormat(string? msg, string? source, string? part)
+    {
+        return CronPartExpressionParseErrorFormat?.Format((nameof(msg), msg), (nameof(source), source), (nameof(part), part));
+    }
+}
+
+public class CronExpressionParseToTimesResult : CronExpressionParseResult
+{
+    public CronExpressionParseToTimesResult(IEnumerable<DateTime> runTimes) : base(NotificationType.Success, null)
+    {
+        this.RunTimes = runTimes;
+    }
+
+    public IEnumerable<DateTime> RunTimes { get; }
+}
+
+public class CronExpressionParseErrorResult : CronExpressionParseResult
+{
+    public CronExpressionParseErrorResult(string message) : base(NotificationType.Error, message)
+    {
+    }
+}
+
+public class CronExpressionParseResult
+{
+    protected CronExpressionParseResult(NotificationType status, string? message)
+    {
+        Status = status;
+        Message = message;
+    }
+
+    public NotificationType Status { get; }
+
+    public string? Message { get; }
+
+    public static CronExpressionParseResult CreateSuccess(IEnumerable<DateTime> runTimes)
+    {
+        return new CronExpressionParseToTimesResult(runTimes);
+    }
+
+    public static CronExpressionParseResult CreateError(string message)
+    {
+        return new CronExpressionParseErrorResult(message);
+    }
+}
+
+public class CronPickerFieldsContainer : TabControl, ICronPickerFieldsContainer
+{
+    public IEnumerable<ICronPickerRulersContainer> GetCronPickerFields()
+    {
+        return this.LogicalChildren.OfType<ICronPickerRulersContainer>();
+    }
+
+    public void Select(int index)
+    {
+        this.SelectedIndex = index;
+    }
+
+    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        base.LogicalChildrenCollectionChanged(sender, e);
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            AddControlItemsToLogicalChildren(e.NewItems);
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            RemoveControlItemsFromLogicalChildren(e.OldItems);
+        }
+    }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        this.UpdateTabItemContents();
+    }
+    
+    private void AddControlItemsToLogicalChildren(IList items)
+    {
+        int old = this.SelectedIndex;
+        foreach (object? item in items)
+        {
+            if (item is TabItem tabItem)
+            {
+                tabItem.IsSelected = true;
+            }
+        }
+        
+        this.SelectedIndex = old;
+    }
+    
+    private void RemoveControlItemsFromLogicalChildren(IList items)
+    {
+    }
+
+    private void UpdateTabItemContents()
+    {
+        TabItem[] tabItems = this.LogicalChildren.OfType<TabItem>().ToArray();
+        if (tabItems == null)
+            return;
+        foreach (TabItem item in tabItems)
+        {
+            item.IsSelected = true;
+        }
+        
+        this.SelectedIndex = 0;
+    }
+
+    private ContentPresenter CreateContentPresenter(TabItem tabItem)
+    {
+        ContentPresenter contentPresenter = CreateContentPresenter();
+        IDisposable disposable = tabItem.GetObservable<object>((AvaloniaProperty<object>)ContentControl.ContentProperty).Subscribe<object>((Action<object>)(v =>
+        {
+            try
+            {
+                contentPresenter.Content = v;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }));
+        IDisposable disposable2 = tabItem.GetObservable<IDataTemplate>((AvaloniaProperty<IDataTemplate>)ContentControl.ContentTemplateProperty).Subscribe<IDataTemplate>((Action<IDataTemplate>)(v =>
+        {
+            try
+            {
+                contentPresenter.ContentTemplate = v ?? this.ContentTemplate;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }));
+        return contentPresenter;
+    }
+
+    private ContentPresenter CreateContentPresenter()
+    {
+        return new ContentPresenter();
+    }
+
+    private void AddTabContent(TabItem tabItem)
+    {
     }
 }

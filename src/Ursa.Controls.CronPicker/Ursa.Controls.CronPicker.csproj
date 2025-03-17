@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Ursa.YY\Ursa.YY.csproj" />
         <ProjectReference Include="..\Ursa\Ursa.csproj" />
     </ItemGroup>
 
@@ -30,6 +31,29 @@
         <DependentUpon>Index.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Remove="FieldItems\DaysOfMonthCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\DaysOfWeekCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\HoursCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\MinutesCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\MonthsCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\SecondsCronPickerFieldItem.cs" />
+      <Compile Remove="FieldItems\YearsCronPickerFieldItem.cs" />
+      <Compile Remove="CommonCronPickerFieldItem.cs" />
+      <Compile Remove="CronPickerFieldItem.cs" />
+      <Compile Remove="CustomCronPickerFieldItem.cs" />
+      <Compile Remove="CronPickerRulerContentCollection.cs" />
+      <Compile Remove="CronPickerRulerParam.cs" />
+      <Compile Remove="CronPickerRulerParams.cs" />
+      <Compile Remove="CronPickerRulerParamsContent.cs" />
+      <Compile Remove="CronPickerRulerSelectingItemsContent.cs" />
+      <Compile Remove="CronPickerRulerContent.cs" />
+      <Compile Remove="ICronPickerFieldPartParam.cs" />
+      <Compile Remove="ICronRulerListValueConverter.cs" />
+      <Compile Remove="ICronRulerValueConverter.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AvaloniaXaml Remove="Themes\CronPickerRulerContent.axaml" />
     </ItemGroup>
 
 </Project>
