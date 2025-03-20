@@ -17,7 +17,7 @@
                         <u:TimePicker />
                         <u:TimePicker />
                         <u:DateTimePicker />
-                        <u:CronPicker Width="100">
+                        <u:CronPicker VerifySteps="VerifyToSuccessed" Width="180">
                             <DataValidationErrors.Error>
                                 <system:Exception />
                             </DataValidationErrors.Error>
@@ -293,6 +293,7 @@
     <converters:TextFormattingConverter x:Key="TextFormattingConverter" />
     <converters:ListDateTimesTextConverter x:Key="ConverterListDateTimesText" />
     <converters:CronExpressionParseToTimesResultConverter x:Key="ConverterCronExpressionParseToTimesResult" />
+    <!-- <converters:CronExpressionCalculationResultSuccessedConverter x:Key="ConverterCronExpressionCalculationResultSuccessed" /> -->
     <converters:WeekDayConverter x:Key="WeekDayConverter" />
     <converters:MonthConverter x:Key="MonthConverter" />
     <!--  CronPicker  -->
@@ -320,7 +321,7 @@
                             CornerRadius="{TemplateBinding CornerRadius}"
                             x:Name="Background" />
                         <Grid
-                            ColumnDefinitions="*, Auto"
+                            ColumnDefinitions="*, Auto, Auto"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch">
                             <TextBox
@@ -343,7 +344,7 @@
                                 VerticalAlignment="Stretch"
                                 Watermark="{TemplateBinding Watermark}" />
                             <Button
-                                Command="{Binding $parent[u:DatePicker].Clear}"
+                                Command="{Binding $parent[u:CronPicker].Clear}"
                                 Content="{DynamicResource IconButtonClearData}"
                                 Focusable="False"
                                 Grid.Column="1"
@@ -359,6 +360,12 @@
                                 Margin="8,0"
                                 Name="PART_Button"
                                 Theme="{DynamicResource InnerIconButton}" />
+                            <Button
+                                Command="{Binding $parent[u:CronPicker].Enter}"
+                                Focusable="True"
+                                Grid.Column="2"
+                                Margin="2,0"
+                                Name="EnterButton" />
                             <Popup
                                 Grid.Column="0"
                                 Height="400"
@@ -384,6 +391,7 @@
                                                 CornerRadius="{Binding $parent[Border].CornerRadius}"
                                                 CronExpressionParser="{TemplateBinding CronExpressionParser}"
                                                 CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                                DateTimeFormat="{TemplateBinding DateTimeFormat}"
                                                 DaysOfMonthRulerItemsSource="{TemplateBinding DaysOfMonthRulerItemsSource}"
                                                 DaysOfWeekRulerItemsSource="{TemplateBinding DaysOfWeekRulerItemsSource}"
                                                 FontSize="{DynamicResource DefaultFontSize}"
@@ -392,9 +400,10 @@
                                                 IsYearEnabled="{TemplateBinding IsYearEnabled}"
                                                 MinutesRulerItemsSource="{TemplateBinding MinutesRulerItemsSource}"
                                                 MonthsRulerItemsSource="{TemplateBinding MonthsRulerItemsSource}"
-                                                Name="{x:Static u:CronPicker.PART_CronExpressionView}"
+                                                NextRunTimeCount="{TemplateBinding NextRunTimeCount}"
                                                 SecondsRulerItemsSource="{TemplateBinding SecondsRulerItemsSource}"
-                                                YearsRulerItemsSource="{TemplateBinding YearsRulerItemsSource}" />
+                                                YearsRulerItemsSource="{TemplateBinding YearsRulerItemsSource}"
+                                                x:Name="PART_CronExpressionView" />
                                         </ScrollViewer>
                                         <StackPanel
                                             Grid.Row="1"
@@ -404,6 +413,7 @@
                                             Spacing="8">
                                             <Button
                                                 Content="{DynamicResource CronPicker_ButtonText_CronExpressionEditor_OK}"
+                                                IsEnabled="{Binding #PART_CronExpressionView.CronExpressionCalculationResult, Mode=OneWay, Converter={x:Static converters:CronPickerConverters.IsParseResultSuccessed}}"
                                                 Name="PART_EditorOKButton"
                                                 Theme="{DynamicResource SolidButton}" />
                                             <Button
@@ -420,13 +430,67 @@
             </ControlTemplate>
         </Setter>
 
+        <Style Selector="^[VerifySteps=InputToVerifyAllowed]">
+            <Setter Property="ToolTip.IsOpen" Value="False" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="True" />
+                <Setter Property="Content" Value="{DynamicResource CronPicker_ButtonText_InputToVerifyAllowed}" />
+                <Setter Property="Margin" Value="0" />
+                <!-- <Setter Property="Theme" Value="{DynamicResource SolidButton}" /> -->
+            </Style>
+        </Style>
+        <Style Selector="^[VerifySteps=Verify]">
+            <Setter Property="ToolTip.IsOpen" Value="False" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Content" Value="" />
+                <Setter Property="Width" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[VerifySteps=Input]">
+            <Setter Property="ToolTip.IsOpen" Value="False" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Content" Value="" />
+                <Setter Property="Width" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[VerifySteps=VerifyError]">
+            <Setter Property="ToolTip.IsOpen" Value="False" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Content" Value="" />
+                <Setter Property="Width" Value="0" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[VerifySteps=None]">
+            <Setter Property="ToolTip.IsOpen" Value="False" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Content" Value="" />
+                <Setter Property="Width" Value="0" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+        </Style>
+        <Style Selector="^[VerifySteps=VerifyToSuccessed]">
+            <Setter Property="ToolTip.IsOpen" Value="{Binding $self.CronExpressionCalculationResult, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            <Setter Property="ToolTip.Tip" Value="{Binding $self.CronExpressionCalculationResult, Converter={StaticResource ConverterCronExpressionParseToTimesResult}, ConverterParameter={TemplateBinding DateTimeFormat}}" />
+            <Style Selector="^ /template/ Button#EnterButton">
+                <Setter Property="IsEnabled" Value="False" />
+                <Setter Property="Content" Value="{DynamicResource CheckBoxCheckGlyph}" />
+                <Setter Property="Foreground" Value="Green" />
+                <Setter Property="Theme" Value="{DynamicResource InnerIconButton}" />
+            </Style>
+        </Style>
+
         <Style Selector="^[IsSecondEnabled=True]">
             <Setter Property="DefaultExpressionString" Value="* * * * * *" />
         </Style>
 
         <Style Selector="^.clearButton, ^.ClearButton">
             <Style Selector="^:pointerover /template/ Button#ClearButton">
-                <Setter Property="IsVisible" Value="{Binding $parent[u:DatePicker].SelectedDate, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                <Setter Property="IsVisible" Value="{Binding $parent[u:CronPicker].ExpressionString, Converter={x:Static ObjectConverters.IsNotNull}}" />
             </Style>
         </Style>
 
@@ -458,16 +522,6 @@
         <Style Selector="^:focus-within /template/ Border#Background">
             <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerFocusBorderBrush}" />
         </Style>
-        <!--  cron 表达式解析异常错误UI样式  -->
-        <!--<Style Selector="^ /template/ DataValidationErrors">
-            <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
-        </Style>-->
-
-        <!--<Style Selector="^ /template/ TextBox#PART_TextBox">
-            <Style Selector="^ /template/ DataValidationErrors">
-                <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
-            </Style>
-        </Style>-->
     </ControlTheme>
     <!--  CronExpressionEditor  -->
     <ControlTheme TargetType="u:CronExpressionEditor" x:Key="{x:Type u:CronExpressionEditor}">
@@ -479,62 +533,6 @@
         <Setter Property="CronPartVerifyErrorFormat" Value="{DynamicResource CronPickerFormatter_CronPartVerifyError}" />
         <Setter Property="RecentRunTimesTitleFormat" Value="{DynamicResource CronPickerFormatter_RecentRunTimesTitle}" />
         <Setter Property="Padding" Value="15,5" />
-        <!-- <Setter Property="Background" Value="Aqua" /> -->
-        <!--<Setter Property="CronRulerItemDataTemplates">
-            <DataTemplates>
-                <DataTemplate DataType="u:CronPickerRulerSimpleSymbol" />
-            </DataTemplates>
-        </Setter>-->
-        <!--<Setter Property="CronRulerItemTemplate">
-            <DataTemplate DataType="u:CronPickerRuler">
-                <u:CronPickerRulerSelector
-                    Content="{Binding}"
-                    CronRulerItemDataTemplates="{Binding $parent[u:CronExpressionEditor].CronRulerItemDataTemplates}"
-                    FieldType="{Binding FieldType}"
-                    IsSelected="{Binding $parent[u:CronPickerFieldRulerSelectorContainer].IsSelected, Mode=TwoWay}"
-                    Priority="{Binding Priority}"
-                    RulerCode="{Binding Code}"
-                    StripPlacement="{Binding HeaderPlacement}"
-                    Symbol="{Binding Symbol}" />
-            </DataTemplate>
-        </Setter>-->
-        <!--<Setter Property="CronFieldContentTemplate">
-            ~1~  CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"  @1@
-            <DataTemplate DataType="u:CronPickerField">
-                <ListBox ItemsSource="{Binding TestData}">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-                ~1~ <ListBox ItemsSource="{Binding RulerItems}" /> @1@
-                ~1~<u:CronPickerFieldView
-                    FieldType="{Binding FieldType}"
-                    ItemTemplate="{Binding $parent[u:CronPicker].CronRulerItemTemplate}"
-                    ItemsSource="{Binding RulerItems}" />@1@
-            </DataTemplate>
-        </Setter>-->
-        <!--<Setter Property="CronFieldItemTemplate">
-            <DataTemplate DataType="u:CronPickerField">
-                <u:CronPickerFieldTabItem FieldType="{Binding FieldType}">
-                    <u:CronPickerFieldTabItem.Template>
-                        <ControlTemplate TargetType="u:CronPickerFieldTabItem">
-                            <ContentPresenter
-                                Content="{TemplateBinding Header}"
-                                ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                FontFamily="{TemplateBinding FontFamily}"
-                                FontWeight="{TemplateBinding FontWeight}"
-                                Foreground="{TemplateBinding Foreground}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Name="PART_ContentPresenter"
-                                Padding="{TemplateBinding Padding}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </ControlTemplate>
-                    </u:CronPickerFieldTabItem.Template>
-                </u:CronPickerFieldTabItem>
-            </DataTemplate>
-        </Setter>-->
         <Setter Property="Template">
             <ControlTemplate TargetType="u:CronExpressionEditor">
                 <Border

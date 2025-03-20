@@ -46,6 +46,10 @@ public class CronPicker: CronPickerBase, IClearControl
     public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(YearsRulerItemsSource));
     public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPicker, DataTemplates?>(nameof(CronRulerItemDataTemplates));
     public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<CronPicker, string>(nameof (Text), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
+    public static readonly StyledProperty<CronExpressionInputVerifySteps> VerifyStepsProperty = AvaloniaProperty.Register<CronPicker, CronExpressionInputVerifySteps>(nameof(VerifySteps));
+    public static readonly StyledProperty<CronExpressionParseResult?> CronExpressionCalculationResultProperty = AvaloniaProperty.Register<CronPicker, CronExpressionParseResult?>(nameof(CronExpressionCalculationResult));
+    public static readonly StyledProperty<int> NextRunTimeCountProperty = AvaloniaProperty.Register<CronPicker, int>(nameof(NextRunTimeCount), defaultValue: 10);
+    public static readonly StyledProperty<string?> DateTimeFormatProperty = AvaloniaProperty.Register<CronPicker, string?>(nameof(DateTimeFormat), defaultValue: "yyyy-MM-dd HH:mm:ss");
 
     private Button? _button;
     private TextBox? _textBox;
@@ -157,6 +161,36 @@ public class CronPicker: CronPickerBase, IClearControl
         set => this.SetValue(CronRulerItemDataTemplatesProperty, value);
     }
 
+    public CronExpressionInputVerifySteps VerifySteps 
+    {
+        get => this.GetValue(VerifyStepsProperty);
+        set => this.SetValue(VerifyStepsProperty, value);
+    }
+    
+    public CronExpressionParseResult? CronExpressionCalculationResult
+    {
+        get => GetValue(CronExpressionCalculationResultProperty);
+        private set => SetValue(CronExpressionCalculationResultProperty, value);
+    }
+
+    /// <summary>
+    /// The count of the next run time.
+    /// </summary>
+    public int NextRunTimeCount
+    {
+        get => GetValue(NextRunTimeCountProperty);
+        set => SetValue(NextRunTimeCountProperty, value);
+    }
+
+    /// <summary>
+    /// The format of the date time.
+    /// </summary>
+    public string? DateTimeFormat
+    {
+        get => GetValue(DateTimeFormatProperty);
+        set => SetValue(DateTimeFormatProperty, value);
+    }
+
     static CronPicker()
     {
         FocusableProperty.OverrideDefaultValue<CronPicker>(true);
@@ -167,8 +201,15 @@ public class CronPicker: CronPickerBase, IClearControl
     public void Clear()
     {
         SetCurrentValue(ExpressionStringProperty, null);
+        SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.None);
     }
 
+    public void Enter()
+    {
+        SetCurrentValue(IsDropdownOpenProperty, false);
+        CommitInput(false);
+    }
+    
     /// <inheritdoc/>
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -229,8 +270,7 @@ public class CronPicker: CronPickerBase, IClearControl
                 return;
             case Key.Enter:
             {
-                SetCurrentValue(IsDropdownOpenProperty, false);
-                CommitInput(false);
+                Enter();
                 e.Handled = true;
                 return;
             }
@@ -266,7 +306,7 @@ public class CronPicker: CronPickerBase, IClearControl
         var element = top?.FocusManager?.GetFocusedElement();
         if (element is Visual v && _popup?.IsInsidePopup(v) == true)return;
         if (Equals(element, _textBox))return;
-        CommitInput(false);
+        // CommitInput(false);
         SetCurrentValue(IsDropdownOpenProperty, false);
     }
     
@@ -317,24 +357,46 @@ public class CronPicker: CronPickerBase, IClearControl
             return;
         }
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         // SetExpressionString(true);
+        if (_cronPickerView is not null)
+        {
+            if (_cronPickerView.CronExpression == _textBox?.Text && VerifySteps == CronExpressionInputVerifySteps.VerifyToSuccessed)
+            {
+                return;
+            }
+            
+            CronExpressionCalculationResult = null;
+            if (_cronPickerView.AllowTryParse(_textBox?.Text))
+            {
+                SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.InputToVerifyAllowed);
+            }
+            else
+            {
+                SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.Input);
+            }
+        }
+        else
+        {
+            CronExpressionCalculationResult = null;
+            SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.Input);
+        }
     }
-    
+
     private void SyncExpressionStringTo(string? expression)
     {
         if (string.IsNullOrWhiteSpace(expression))
         {
             _textBox?.SetValue(TextBox.TextProperty, null);
-            _cronPickerView?.Clear();
+            // _cronPickerView?.Clear();
         }
         else
         {
             _textBox?.SetValue(TextBox.TextProperty, expression);
-            TryRefreshExpression(expression, out _);
+            // TryRefreshExpression(expression, out _);
         }
     }
 
@@ -360,7 +422,7 @@ public class CronPicker: CronPickerBase, IClearControl
             SetCurrentValue(IsDropdownOpenProperty, true);
             if (!String.IsNullOrWhiteSpace(ExpressionString))
             {
-                TryRefreshExpression(ExpressionString, out _);
+                // TryRefreshExpression(ExpressionString, out _);
             }
             else
             {
@@ -387,25 +449,52 @@ public class CronPicker: CronPickerBase, IClearControl
         if (_cronPickerView is not null)
         {
             string? expressionString = _cronPickerView.CronExpression;
+            CronExpressionParseResult? result = _cronPickerView.CronExpressionCalculationResult;
+            if (result is not null)
+            {
+                if (result.Status == NotificationType.Success)
+                {
+                    CronExpressionCalculationResult = result;
+                    SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccessed);
+                }
+                else
+                {
+                    CronExpressionCalculationResult = null;
+                    SetError(result.Message);
+                    SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyError);
+                }
+            }
+            else
+            {
+                CronExpressionCalculationResult = null;
+                SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.None);
+            }
+            
             if (string.IsNullOrWhiteSpace(expressionString))
             {
                 SetCurrentValue(ExpressionStringProperty, null);
+                this._textBox?.SetCurrentValue(TextBox.TextProperty, null);
             }
             else
             {
                 SetCurrentValue(ExpressionStringProperty, expressionString);
+                this._textBox?.SetCurrentValue(TextBox.TextProperty, expressionString);
             }
         }
     }
-    
+
     private void CommitInput(bool clearWhenInvalid)
     {
+        CronExpressionCalculationResult = null;
+        SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.Verify);
         if (TryRefreshExpression(_textBox?.Text, out string expressionString))
         {
-            SetCurrentValue(ExpressionStringProperty, expressionString);
+            SetCurrentValue(ExpressionStringProperty, _textBox?.Text);
+            SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccessed);
         }
         else
         {
+            SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyError);
             if (clearWhenInvalid)
             {
                 SetCurrentValue(ExpressionStringProperty, null);
@@ -429,12 +518,20 @@ public class CronPicker: CronPickerBase, IClearControl
                     if (result.Status == NotificationType.Error || result.Status == NotificationType.Warning)
                     {
                         SetError(result.Message);
+                        expressionString = expression;
                     }
                     else
                     {
+                        expressionString = _cronPickerView.CronExpression;
                         ClearError();
+                        CronExpressionCalculationResult = _cronPickerView.CronExpressionCalculationResult;
                     }
                 }
+                else
+                {
+                    expressionString = expression;
+                }
+
                 return result?.Status == NotificationType.Success;
             }
             catch (Exception ex)
@@ -621,4 +718,14 @@ public class CronExpressionStringFormatter : AvaloniaObject
         
         return StringFormatter.Format(format, ParameterReplaceRulers.ToImmutable(), args);
     }
+}
+
+public enum CronExpressionInputVerifySteps
+{
+    None,
+    Input,
+    InputToVerifyAllowed,
+    Verify,
+    VerifyToSuccessed,
+    VerifyError,
 }

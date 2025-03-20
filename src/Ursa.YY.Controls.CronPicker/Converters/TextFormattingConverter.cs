@@ -52,6 +52,24 @@ public class CronExpressionParseToTimesResultConverter : IValueConverter
     }
 }
 
+public class CronExpressionCalculationResultSuccessedConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is CronExpressionParseResult result0)
+        {
+            return result0.Status == NotificationType.Success;
+        }
+        
+        return false;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public class ListDateTimesTextConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -153,4 +171,5 @@ public class MonthConverter : IValueConverter
 
 public static class CronPickerConverters
 {
+    public static readonly IValueConverter IsParseResultSuccessed = (IValueConverter) new FuncValueConverter<object, bool>((Func<object, bool>) (x => x != null && x is CronExpressionParseResult result && result.Status == NotificationType.Success));
 }

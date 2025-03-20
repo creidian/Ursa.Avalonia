@@ -62,8 +62,8 @@ public class CronExpressionEditor : TemplatedControl
     public static readonly StyledProperty<string?> CronExpressionProperty = AvaloniaProperty.Register<CronExpressionEditor, string?>(nameof(CronExpression));
     public static readonly StyledProperty<ICronExpressionParser?> CronExpressionParserProperty = AvaloniaProperty.Register<CronExpressionEditor, ICronExpressionParser?>(nameof(CronExpressionParser));
     public static readonly StyledProperty<int> NextRunTimeCountProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(NextRunTimeCount), defaultValue: 10);
-    public static readonly StyledProperty<string?> RecentRunTimesTitleProperty = AvaloniaProperty.Register<CronExpressionEditor, string?>(nameof(RecentRunTimesTitle), defaultValue: "");
     public static readonly StyledProperty<string?> DateTimeFormatProperty = AvaloniaProperty.Register<CronExpressionEditor, string?>(nameof(DateTimeFormat), defaultValue: "yyyy-MM-dd HH:mm:ss");
+    public static readonly StyledProperty<string?> RecentRunTimesTitleProperty = AvaloniaProperty.Register<CronExpressionEditor, string?>(nameof(RecentRunTimesTitle), defaultValue: "");
     public static readonly DirectProperty<CronExpressionEditor, bool> IsCurrentOperationResultVisibleProperty = AvaloniaProperty.RegisterDirect<CronExpressionEditor, bool>(nameof(IsCurrentOperationResultVisible), o => o.IsCurrentOperationResultVisible, (o, v) => { o.IsCurrentOperationResultVisible = v; });
     public static readonly DirectProperty<CronExpressionEditor, NotificationType> CurrentOperationResultTypeProperty = AvaloniaProperty.RegisterDirect<CronExpressionEditor, NotificationType>(nameof(CurrentOperationResultType), o => o.CurrentOperationResultType, (o, v) => { o.CurrentOperationResultType = v; });
     public static readonly DirectProperty<CronExpressionEditor, IMessage?> CurrentOperationResultMessageProperty = AvaloniaProperty.RegisterDirect<CronExpressionEditor, IMessage?>(nameof(CurrentOperationResultMessage), o => o.CurrentOperationResultMessage, (o, v) => { o.CurrentOperationResultMessage = v; });
@@ -145,6 +145,7 @@ public class CronExpressionEditor : TemplatedControl
     private CronPickerFieldView? _monthsField;
     private CronPickerFieldView? _daysOfWeekField;
     private CronPickerFieldView? _yearsField;
+    private bool _isPartChangedFlag;
     
     public static CronPickerRulers GetSecondsRulerItems(CronExpressionEditor o) => o.SecondsField.RulerItems;
     public static CronPickerRulers GetMinutesRulerItems(CronExpressionEditor o) => o.MinutesField.RulerItems;
@@ -401,42 +402,6 @@ public class CronExpressionEditor : TemplatedControl
     public CronPickerField MonthsField { get; }
     public CronPickerField DaysOfWeekField { get; }
     public CronPickerField YearsField { get; }
-
-    /*/// <summary>
-    /// The template of the cron field content.
-    /// </summary>
-    public IDataTemplate? CronFieldContentTemplate
-    {
-        get => GetValue(CronFieldContentTemplateProperty);
-        set => SetValue(CronFieldContentTemplateProperty, value);
-    }*/
-
-    /*/// <summary>
-    /// The template of the cron field item.
-    /// </summary>
-    public IDataTemplate? CronFieldItemTemplate
-    {
-        get => GetValue(CronFieldItemTemplateProperty);
-        set => SetValue(CronFieldItemTemplateProperty, value);
-    }*/
-    
-    /*/// <summary>
-    /// The template of the ruler item.
-    /// </summary>
-    public IDataTemplate? CronRulerItemTemplate 
-    {
-        get => GetValue(CronRulerItemTemplateProperty);
-        set => SetValue(CronRulerItemTemplateProperty, value);
-    }*/
-
-    /*/// <summary>
-    /// The data templates of the cron ruler.
-    /// </summary>
-    public DataTemplates? CronRulerContentDataTemplates
-    {
-        get => this.GetValue(CronRulerContentDataTemplatesProperty);
-        set => this.SetValue(CronRulerContentDataTemplatesProperty, value);
-    }*/
 
     public DataTemplates? CronRulerItemDataTemplates
     {
@@ -849,7 +814,7 @@ public class CronExpressionEditor : TemplatedControl
     {
         value?.ToList().ForEach(x => this.YearsField.RulerItems.Remove(x));
     }
-
+ 
     public CronExpressionParseResult? ParseCronExpressionBy(string? cronExpression)
     {
         DataValidationErrors.ClearErrors(_tb_cronExpression);
@@ -896,6 +861,19 @@ public class CronExpressionEditor : TemplatedControl
         this.CronExpression = null;
         this.HideOperationResult(true);
         this.TryRefreshRecentRunTimes(null);
+    }
+
+    public bool AllowTryParse(string? source)
+    {
+        try
+        {
+           var args = ThrowGetCronExpressionParts(source);
+           return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -977,6 +955,7 @@ public class CronExpressionEditor : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == SecondsProperty || change.Property == MinutesProperty || change.Property == HoursProperty || change.Property == DaysOfMonthProperty || change.Property == MonthsProperty || change.Property == DaysOfWeekProperty || change.Property == YearsProperty)
         {
+            _isPartChangedFlag = true;
             DataValidationErrors.ClearErrors(_tb_cronExpression);
             this.RefreshCronExpression();
             if (_isCronExpressionParsed == false)
@@ -987,6 +966,16 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == CronExpressionProperty)
         {
+            if (_isPartChangedFlag)
+            {
+                _isPartChangedFlag = false;
+            }
+            else
+            {
+                DataValidationErrors.ClearErrors(_tb_cronExpression);
+                this.CronExpressionCalculationResult = null;
+            }
+
             this.OnCronExpressionChanged(change.GetOldValue<string>(), change.GetNewValue<string>());
         }
         else if (change.Property == NextRunTimeCountProperty || change.Property == RecentRunTimesTitleFormatProperty)
@@ -1003,6 +992,7 @@ public class CronExpressionEditor : TemplatedControl
                     notifyCollection.CollectionChanged -= SecondsRulerItemCollectionChanged;
                 }
             }
+
             if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
             {
                 this.ReSetSecondsRulerItems(rulers, IsInitialized);
@@ -1044,6 +1034,7 @@ public class CronExpressionEditor : TemplatedControl
                     notifyCollection.CollectionChanged -= HoursRulerItemCollectionChanged;
                 }
             }
+
             if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
             {
                 this.ReSetHoursRulerItems(rulers, IsInitialized);
@@ -1085,6 +1076,7 @@ public class CronExpressionEditor : TemplatedControl
                     notifyCollection.CollectionChanged -= MonthsRulerItemCollectionChanged;
                 }
             }
+
             if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
             {
                 this.ReSetMonthsRulerItems(rulers, IsInitialized);
@@ -1126,6 +1118,7 @@ public class CronExpressionEditor : TemplatedControl
                     notifyCollection.CollectionChanged -= YearsRulerItemCollectionChanged;
                 }
             }
+
             if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
             {
                 this.ReSetYearsRulerItems(rulers, IsInitialized);
@@ -1350,10 +1343,15 @@ public class CronExpressionEditor : TemplatedControl
 
     private void RefreshCronExpression()
     {
-        CronExpressionStringFormatter format = CronExpressionFormatter ?? new CronExpressionStringFormatter();
-        CronExpression = format.Format(this.Seconds, this.Minutes, this.Hours, this.DaysOfMonth, this.Months, this.DaysOfWeek, this.Years, this.IsSecondEnabled, this.IsYearEnabled);
+        CronExpression = CombineCronExpression();
     }
 
+    private string CombineCronExpression()
+    {
+        CronExpressionStringFormatter format = CronExpressionFormatter ?? new CronExpressionStringFormatter();
+        return format.Format(this.Seconds, this.Minutes, this.Hours, this.DaysOfMonth, this.Months, this.DaysOfWeek, this.Years, this.IsSecondEnabled, this.IsYearEnabled);
+    }
+    
     private void ChangeCronExpression(string? expression)
     {
         CronExpression = expression;

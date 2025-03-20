@@ -20,7 +20,7 @@
                     <u:CronPicker
                         Classes="DefaultCronRulers"
                         Name="TestCronPicker"
-                        Width="140" />
+                        Width="180" />
                     <!--<u:CronExpressionView
                         Classes="DefaultCronRulers"
                         Name="TestCronExpressionView"
