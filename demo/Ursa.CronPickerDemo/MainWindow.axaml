@@ -20,13 +20,11 @@
                     <u:CronPicker
                         Classes="DefaultCronRulers"
                         Name="TestCronPicker"
-                        Width="850">
-                        <u:CronPicker.Styles>
-                            <Style Selector="u|CronPickerFieldTabItem">
-                                <!-- <Setter Property="Background" Value="Red" /> -->
-                            </Style>
-                        </u:CronPicker.Styles>
-                    </u:CronPicker>
+                        Width="140" />
+                    <!--<u:CronExpressionView
+                        Classes="DefaultCronRulers"
+                        Name="TestCronExpressionView"
+                        Width="850" />-->
                 </StackPanel>
             </TabItem>
             <TabItem Header="Tab 2">

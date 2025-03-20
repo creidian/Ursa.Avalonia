@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -45,6 +44,7 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
     private string _symbol;
     private string _valueString;
     private CronFieldTypes _fieldType;
+    private ICronPickerRulerItem? _innerRulerItem;
 
     static CronPickerRulerSelector()
     {
@@ -159,6 +159,19 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         private set;
     }
 
+    internal ICronPickerRulerItem? InnerRulerItem
+    {
+        get => _innerRulerItem;
+        private set
+        {
+            if (_innerRulerItem != value)
+            {
+                _innerRulerItem = value;
+                this.ValueString = value?.Value?? string.Empty;
+            }
+        }
+    }
+
     public string GetExpression() => ValueString;
     
     public void Select(bool isSelected)
@@ -172,6 +185,7 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
     }
     
     void ICronPickerRulerItemParent.ValueChanged(string value) => this.ValueString = value;
+    void ICronPickerRulerItemParent.OnRulerBoxItemLoaded(ICronPickerRulerItem innerItem) => this.InnerRulerItem = innerItem;
 
     internal ICronPickerRulerItem? GetRuler() => this.LogicalChildren?.OfType<ICronPickerRulerItem>()?.FirstOrDefault();
 
@@ -204,28 +218,6 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         }
     }
 
-    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        base.LogicalChildrenCollectionChanged(sender, e);
-        if (e.Action == NotifyCollectionChangedAction.Add)
-        {
-            ICronPickerRulerItem? newItem = e.NewItems?.OfType<ICronPickerRulerItem>()?.FirstOrDefault();
-            if (newItem is not null)
-            {
-                newItem.ValueChanged += ChildOnValueChanged;
-                this.ValueString = newItem.Value;
-            }
-        }
-        else if (e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset)
-        {
-            ICronPickerRulerItem? oldItem = e.OldItems?.OfType<ICronPickerRulerItem>()?.FirstOrDefault();
-            if (oldItem is not null)
-            {
-                oldItem.ValueChanged -= ChildOnValueChanged;
-            }
-        }
-    }
-
     /// <inheritdoc/>
     protected override bool RegisterContentPresenter(ContentPresenter presenter)
     {
@@ -252,11 +244,6 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         }
     }
 
-    private void ChildOnValueChanged(object sender, UsualValueChangedEventArgs<string> e)
-    {
-        this.ValueString = e.NewValue;
-    }
-
     private void UpdateCronRulerItemDataTemplates(DataTemplates? oldValue, DataTemplates? newValue)
     {
         if (oldValue is not null)
@@ -279,11 +266,6 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
             this.DataTemplates.Clear();
         }
     }
-
-    /*private void OnValueChange(object sender, TextChangedEventArgs e)
-    {
-        this.ValueString = _cronRuler?.ValueString ?? string.Empty;
-    }*/
 
     private void RaiseValueChangeEvents()
     {
@@ -334,7 +316,7 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         }*/
     }
 
-    private void OnSelectPartPointerPressed(object sender, PointerPressedEventArgs e)
+    private void OnSelectPartPointerPressed(object sender, PointerPressedEventArgs e) 
     {
         if (sender is Border control)
         {
@@ -432,4 +414,12 @@ public class CronPickerRulerSelectStatusChangingEventArgs : RoutedEventArgs
     public bool Cancel { get; set; }
     public bool OldValue { get; }
     public bool NewValue { get; }
+}
+
+public class MyContentPresenter : ContentPresenter
+{
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+    }
 }

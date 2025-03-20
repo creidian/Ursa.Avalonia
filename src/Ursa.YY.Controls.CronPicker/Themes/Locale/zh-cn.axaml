@@ -9,6 +9,8 @@
     <x:String x:Key="CronPicker_PartTitle_CronExpression">Cron表达式</x:String>
     <x:String x:Key="CronPicker_ButtonText_CronExpressionParse">反解析到UI</x:String>
     <x:String x:Key="CronPicker_ButtonText_CronExpressionCopy">复制表达式</x:String>
+    <x:String x:Key="CronPicker_ButtonText_CronExpressionEditor_OK">确认</x:String>
+    <x:String x:Key="CronPicker_ButtonText_CronExpressionEditor_Cancel">取消</x:String>
     <!--  通用  -->
     <!--  单独的 symbol 指定  -->
     <u:AvaloniaStringFormatter

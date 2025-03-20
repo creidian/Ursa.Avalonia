@@ -13,11 +13,12 @@ public partial class MainWindow : Window
         this.ListBox2.ItemsSource = new[] { "Item 1", "Item 2", "Item 3" };
         this.TestButton.Click += TestButton_Click;
         TestCronPicker.CronExpressionParser = new CronExpressionParser();
+        // TestCronPicker.CronExpressionParser = new CronExpressionParser();
     }
 
     private void TestButton_Click(object? sender, RoutedEventArgs e)
     {
-        this.TestCronPicker.SelectCronField(CronFieldTypes.Hour);
+        // this.TestCronPicker.SelectCronField(CronFieldTypes.Hour);
     }
 
     protected override void OnLoaded(RoutedEventArgs e)

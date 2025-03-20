@@ -1,80 +1,56 @@
 <ResourceDictionary
     xmlns="https://github.com/avaloniaui"
+    xmlns:collections="clr-namespace:System.Collections;assembly=netstandard"
     xmlns:converters="using:Ursa.Converters"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
     xmlns:u="https://irihi.tech/ursa"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <TabControl
             Height="400"
             Theme="{DynamicResource CronPickerRulerItemTabControl}"
-            Width="800">
+            Width="900">
             <TabItem Header="WarpPanelText">
                 <ScrollViewer>
-
-                    <StackPanel Spacing="10">
-                        <Border
-                            Background="Aquamarine"
-                            Height="100"
-                            Width="100">
-                            <WrapPanel Orientation="Vertical">
-                                <Button Background="Aquamarine">1</Button>
-                                <Button Background="Azure">2</Button>
-                                <Button Background="Blue">3</Button>
-                                <Button Background="Chocolate">4</Button>
-                                <Button Background="Chocolate">5</Button>
-                                <Button Background="Chocolate">6</Button>
-                                <Button Background="Chocolate">7</Button>
-                            </WrapPanel>
-                        </Border>
-                        <Grid Background="Aquamarine" Height="100">
-                            <WrapPanel Orientation="Vertical">
-                                <Button Background="Aquamarine">1</Button>
-                                <Button Background="Azure">2</Button>
-                                <Button Background="Blue">3</Button>
-                                <Button Background="Chocolate">4</Button>
-                                <Button Background="Chocolate">5</Button>
-                                <Button Background="Chocolate">6</Button>
-                                <Button Background="Chocolate">7</Button>
-                            </WrapPanel>
-                        </Grid>
-                        <u:WrapPanelWithSpacing
-                            Background="Bisque"
-                            ColumnSpacing="5"
-                            Height="120"
-                            Orientation="Vertical"
-                            RowSpacing="5"
-                            Width="100">
-                            <Button Background="Aquamarine">1</Button>
-                            <Button Background="Azure">2</Button>
-                            <Button Background="Blue">3</Button>
-                            <Button Background="Chocolate">4</Button>
-                            <Button Background="Chocolate">5</Button>
-                            <Button Background="Chocolate">6</Button>
-                            <Button Background="Chocolate" Height="88">7</Button>
-                            <Button Background="Chocolate">8</Button>
-                        </u:WrapPanelWithSpacing>
-                        <Grid Height="120">
-                            <u:WrapPanelWithSpacing
-                                Background="Bisque"
-                                ColumnSpacing="5"
-                                Orientation="Vertical"
-                                RowSpacing="5">
-                                <Button Background="Aquamarine">1</Button>
-                                <Button Background="Azure">2</Button>
-                                <Button Background="Blue">3</Button>
-                                <Button Background="Chocolate">4</Button>
-                                <Button Background="Chocolate">5</Button>
-                                <Button Background="Chocolate">6</Button>
-                                <Button Background="Chocolate" Height="88">7</Button>
-                                <Button Background="Chocolate">8</Button>
-                            </u:WrapPanelWithSpacing>
-                        </Grid>
+                    <StackPanel>
+                        <u:DatePicker Width="100" />
+                        <u:TimePicker />
+                        <u:TimePicker />
+                        <u:DateTimePicker />
+                        <u:CronPicker Width="100">
+                            <DataValidationErrors.Error>
+                                <system:Exception />
+                            </DataValidationErrors.Error>
+                        </u:CronPicker>
+                        <TextBox Width="100">
+                            <!--<DataValidationErrors.Error>
+                                <system:Exception />
+                            </DataValidationErrors.Error>-->
+                        </TextBox>
+                        <TextBox
+                            InnerLeftContent="http://"
+                            InnerRightContent=".com"
+                            Width="300">
+                            <TextBox.Styles>
+                                <Style Selector="TextBox /template/ DataValidationErrors">
+                                    <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
+                                </Style>
+                            </TextBox.Styles>
+                            <DataValidationErrors.Error>
+                                <system:Exception />
+                            </DataValidationErrors.Error>
+                        </TextBox>
+                        <NumericUpDown Width="300">
+                            <DataValidationErrors.Error>
+                                <system:Exception />
+                            </DataValidationErrors.Error>
+                        </NumericUpDown>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="ALL">
                 <ScrollViewer>
-                    <u:CronPicker>
+                    <u:CronExpressionEditor>
                         <!--<u:CronPicker.SecondsRulerItems>
                             <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="*" />
                             <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="?" />
@@ -307,7 +283,7 @@
                                 </u:CronPickerRulerSelectingItemsContent.Styles>
                             </u:CronPickerRulerSelectingItemsContent>
                         </u:CronPickerRulerContentHourCollection>-->
-                    </u:CronPicker>
+                    </u:CronExpressionEditor>
                 </ScrollViewer>
             </TabItem>
         </TabControl>
@@ -319,7 +295,182 @@
     <converters:CronExpressionParseToTimesResultConverter x:Key="ConverterCronExpressionParseToTimesResult" />
     <converters:WeekDayConverter x:Key="WeekDayConverter" />
     <converters:MonthConverter x:Key="MonthConverter" />
+    <!--  CronPicker  -->
     <ControlTheme TargetType="u:CronPicker" x:Key="{x:Type u:CronPicker}">
+        <Setter Property="Background" Value="{DynamicResource CalendarDatePickerBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource CalendarDatePickerForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource CalendarDatePickerBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource CalendarDatePickerCornerRadius}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Padding" Value="8 0" />
+        <Setter Property="MinHeight" Value="{DynamicResource CalendarDatePickerDefaultHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="u:CronPicker">
+                <DataValidationErrors Theme="{DynamicResource TooltipLineDataValidationErrors}">
+                    <Panel
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        x:Name="LayoutRoot">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            x:Name="Background" />
+                        <Grid
+                            ColumnDefinitions="*, Auto"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                            <TextBox
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                BorderThickness="0"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                DataValidationErrors.Errors="{Binding $parent[u:CronPicker].(DataValidationErrors.Errors)}"
+                                FontSize="{TemplateBinding FontSize}"
+                                Foreground="{TemplateBinding Foreground}"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                InnerLeftContent="{TemplateBinding InnerLeftContent}"
+                                InnerRightContent="{TemplateBinding InnerRightContent}"
+                                MinHeight="{TemplateBinding MinHeight}"
+                                Name="PART_TextBox"
+                                Text="{TemplateBinding Text}"
+                                Theme="{DynamicResource NonErrorTextBox}"
+                                VerticalAlignment="Stretch"
+                                Watermark="{TemplateBinding Watermark}" />
+                            <Button
+                                Command="{Binding $parent[u:DatePicker].Clear}"
+                                Content="{DynamicResource IconButtonClearData}"
+                                Focusable="False"
+                                Grid.Column="1"
+                                IsVisible="False"
+                                Margin="8,0"
+                                Name="ClearButton"
+                                Theme="{DynamicResource InnerIconButton}" />
+                            <Button
+                                Content="{DynamicResource TimePickerIconGlyph}"
+                                Focusable="False"
+                                Grid.Column="1"
+                                IsVisible="{Binding !#ClearButton.IsVisible}"
+                                Margin="8,0"
+                                Name="PART_Button"
+                                Theme="{DynamicResource InnerIconButton}" />
+                            <Popup
+                                Grid.Column="0"
+                                Height="400"
+                                HorizontalOffset="-4"
+                                IsLightDismissEnabled="True"
+                                IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsDropdownOpen, Mode=TwoWay}"
+                                Name="PART_Popup"
+                                Placement="BottomEdgeAlignedLeft"
+                                PlacementTarget="{TemplateBinding}"
+                                Width="800">
+                                <Border
+                                    Background="{DynamicResource ComboBoxPopupBackground}"
+                                    BorderBrush="{DynamicResource ComboBoxPopupBorderBrush}"
+                                    BorderThickness="{DynamicResource ComboBoxPopupBorderThickness}"
+                                    BoxShadow="{DynamicResource ComboBoxPopupBoxShadow}"
+                                    CornerRadius="{DynamicResource CalendarCornerRadius}"
+                                    Margin="{DynamicResource ComboBoxPopupBorderMargin}"
+                                    Padding="8">
+                                    <Grid RowDefinitions="*,Auto">
+                                        <ScrollViewer Grid.Row="0">
+                                            <u:CronExpressionEditor
+                                                BorderThickness="0"
+                                                CornerRadius="{Binding $parent[Border].CornerRadius}"
+                                                CronExpressionParser="{TemplateBinding CronExpressionParser}"
+                                                CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
+                                                DaysOfMonthRulerItemsSource="{TemplateBinding DaysOfMonthRulerItemsSource}"
+                                                DaysOfWeekRulerItemsSource="{TemplateBinding DaysOfWeekRulerItemsSource}"
+                                                FontSize="{DynamicResource DefaultFontSize}"
+                                                HoursRulerItemsSource="{TemplateBinding HoursRulerItemsSource}"
+                                                IsSecondEnabled="{TemplateBinding IsSecondEnabled}"
+                                                IsYearEnabled="{TemplateBinding IsYearEnabled}"
+                                                MinutesRulerItemsSource="{TemplateBinding MinutesRulerItemsSource}"
+                                                MonthsRulerItemsSource="{TemplateBinding MonthsRulerItemsSource}"
+                                                Name="{x:Static u:CronPicker.PART_CronExpressionView}"
+                                                SecondsRulerItemsSource="{TemplateBinding SecondsRulerItemsSource}"
+                                                YearsRulerItemsSource="{TemplateBinding YearsRulerItemsSource}" />
+                                        </ScrollViewer>
+                                        <StackPanel
+                                            Grid.Row="1"
+                                            Height="40"
+                                            HorizontalAlignment="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="8">
+                                            <Button
+                                                Content="{DynamicResource CronPicker_ButtonText_CronExpressionEditor_OK}"
+                                                Name="PART_EditorOKButton"
+                                                Theme="{DynamicResource SolidButton}" />
+                                            <Button
+                                                Content="{DynamicResource CronPicker_ButtonText_CronExpressionEditor_Cancel}"
+                                                Name="PART_EditorCancelButton"
+                                                Theme="{DynamicResource SolidButton}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </Panel>
+                </DataValidationErrors>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^[IsSecondEnabled=True]">
+            <Setter Property="DefaultExpressionString" Value="* * * * * *" />
+        </Style>
+
+        <Style Selector="^.clearButton, ^.ClearButton">
+            <Style Selector="^:pointerover /template/ Button#ClearButton">
+                <Setter Property="IsVisible" Value="{Binding $parent[u:DatePicker].SelectedDate, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ Border#Background">
+                <Setter Property="Background" Value="{DynamicResource CalendarDatePickerPointeroverBackground}" />
+            </Style>
+        </Style>
+
+        <!--  Disabled State  -->
+        <Style Selector="^:disabled">
+            <Style Selector="^ /template/ Border#Background">
+                <Setter Property="Background" Value="{DynamicResource CalendarDatePickerDisabledBackground}" />
+            </Style>
+
+            <Style Selector="^ /template/ Button#PART_Button">
+                <Setter Property="Foreground" Value="{DynamicResource CalendarDatePickerDisabledIconForeground}" />
+            </Style>
+            <Style Selector="^ /template/ TextBox#PART_TextBox">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+        </Style>
+
+        <!--  Focused State  -->
+        <Style Selector="^:focus /template/ Border#Background">
+            <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerFocusBorderBrush}" />
+        </Style>
+        <Style Selector="^:focus-within /template/ Border#Background">
+            <Setter Property="BorderBrush" Value="{DynamicResource CalendarDatePickerFocusBorderBrush}" />
+        </Style>
+        <!--  cron 表达式解析异常错误UI样式  -->
+        <!--<Style Selector="^ /template/ DataValidationErrors">
+            <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
+        </Style>-->
+
+        <!--<Style Selector="^ /template/ TextBox#PART_TextBox">
+            <Style Selector="^ /template/ DataValidationErrors">
+                <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
+            </Style>
+        </Style>-->
+    </ControlTheme>
+    <!--  CronExpressionEditor  -->
+    <ControlTheme TargetType="u:CronExpressionEditor" x:Key="{x:Type u:CronExpressionEditor}">
         <Setter Property="CopySuccessMessage" Value="{DynamicResource CronPickerFormatter_CopySuccess}" />
         <Setter Property="FailedToGetClipboardMessage" Value="{DynamicResource CronPickerFormatter_FailedToGetClipboard}" />
         <Setter Property="CronExpressionParsedMessage" Value="{DynamicResource CronPickerFormatter_CronExpressionParsed}" />
@@ -329,16 +480,16 @@
         <Setter Property="RecentRunTimesTitleFormat" Value="{DynamicResource CronPickerFormatter_RecentRunTimesTitle}" />
         <Setter Property="Padding" Value="15,5" />
         <!-- <Setter Property="Background" Value="Aqua" /> -->
-        <Setter Property="CronRulerItemDataTemplates">
+        <!--<Setter Property="CronRulerItemDataTemplates">
             <DataTemplates>
                 <DataTemplate DataType="u:CronPickerRulerSimpleSymbol" />
             </DataTemplates>
-        </Setter>
-        <Setter Property="CronRulerItemTemplate">
+        </Setter>-->
+        <!--<Setter Property="CronRulerItemTemplate">
             <DataTemplate DataType="u:CronPickerRuler">
                 <u:CronPickerRulerSelector
                     Content="{Binding}"
-                    CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"
+                    CronRulerItemDataTemplates="{Binding $parent[u:CronExpressionEditor].CronRulerItemDataTemplates}"
                     FieldType="{Binding FieldType}"
                     IsSelected="{Binding $parent[u:CronPickerFieldRulerSelectorContainer].IsSelected, Mode=TwoWay}"
                     Priority="{Binding Priority}"
@@ -346,9 +497,9 @@
                     StripPlacement="{Binding HeaderPlacement}"
                     Symbol="{Binding Symbol}" />
             </DataTemplate>
-        </Setter>
-        <Setter Property="CronFieldContentTemplate">
-            <!--  CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"  -->
+        </Setter>-->
+        <!--<Setter Property="CronFieldContentTemplate">
+            ~1~  CronRulerItemDataTemplates="{Binding $parent[u:CronPicker].CronRulerItemDataTemplates}"  @1@
             <DataTemplate DataType="u:CronPickerField">
                 <ListBox ItemsSource="{Binding TestData}">
                     <ListBox.ItemsPanel>
@@ -357,14 +508,14 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
-                <!-- <ListBox ItemsSource="{Binding RulerItems}" /> -->
-                <!--<u:CronPickerFieldView
+                ~1~ <ListBox ItemsSource="{Binding RulerItems}" /> @1@
+                ~1~<u:CronPickerFieldView
                     FieldType="{Binding FieldType}"
                     ItemTemplate="{Binding $parent[u:CronPicker].CronRulerItemTemplate}"
-                    ItemsSource="{Binding RulerItems}" />-->
+                    ItemsSource="{Binding RulerItems}" />@1@
             </DataTemplate>
-        </Setter>
-        <Setter Property="CronFieldItemTemplate">
+        </Setter>-->
+        <!--<Setter Property="CronFieldItemTemplate">
             <DataTemplate DataType="u:CronPickerField">
                 <u:CronPickerFieldTabItem FieldType="{Binding FieldType}">
                     <u:CronPickerFieldTabItem.Template>
@@ -383,9 +534,9 @@
                     </u:CronPickerFieldTabItem.Template>
                 </u:CronPickerFieldTabItem>
             </DataTemplate>
-        </Setter>
+        </Setter>-->
         <Setter Property="Template">
-            <ControlTemplate TargetType="u:CronPicker">
+            <ControlTemplate TargetType="u:CronExpressionEditor">
                 <Border
                     Background="{TemplateBinding Background}"
                     BorderBrush="{TemplateBinding BorderBrush}"
@@ -393,117 +544,33 @@
                     CornerRadius="{TemplateBinding CornerRadius}"
                     Padding="{TemplateBinding Padding}">
                     <Grid RowDefinitions="Auto,*">
-                        <!--<u:CronPickerFieldsContainer
-                            Grid.Row="0"
-                            Name="{x:Static u:CronPicker.PART_FieldsHost}"
-                            Padding="{DynamicResource CronPickerFieldTabItemContentMargin}">
-                            <u:CronPickerFieldTabItem FieldType="Second">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="Second"
-                                    Name="{x:Static u:CronPicker.PART_SecondsField}"
-                                    SelectedIndex="{TemplateBinding SecondsSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding SecondsSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding SecondsSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="Minute">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="Minute"
-                                    Name="{x:Static u:CronPicker.PART_MinutesField}"
-                                    SelectedIndex="{TemplateBinding MinutesSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding MinutesSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding MinutesSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="Hour">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="Hour"
-                                    Name="{x:Static u:CronPicker.PART_HoursField}"
-                                    SelectedIndex="{TemplateBinding HoursSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding HoursSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding HoursSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="DayOfMonth">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="DayOfMonth"
-                                    Name="{x:Static u:CronPicker.PART_DaysOfMonthField}"
-                                    SelectedIndex="{TemplateBinding DaysOfMonthSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding DaysOfMonthSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding DaysOfMonthSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="Month">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="Month"
-                                    Name="{x:Static u:CronPicker.PART_MonthsField}"
-                                    SelectedIndex="{TemplateBinding MonthsSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding MonthsSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding MonthsSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="DayOfWeek">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="DayOfWeek"
-                                    Name="{x:Static u:CronPicker.PART_DaysOfWeekField}"
-                                    SelectedIndex="{TemplateBinding DaysOfWeekSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding DaysOfWeekSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding DaysOfWeekSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                            <u:CronPickerFieldTabItem FieldType="Year">
-                                <u:CronPickerFieldView
-                                    CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
-                                    FieldType="Year"
-                                    Name="{x:Static u:CronPicker.PART_YearsField}"
-                                    SelectedIndex="{TemplateBinding YearsSelectedIndex,
-                                                                    Mode=TwoWay}"
-                                    SelectedItem="{TemplateBinding YearsSelectedItem,
-                                                                   Mode=TwoWay}"
-                                    SelectedValue="{TemplateBinding YearsSelectedValue,
-                                                                    Mode=TwoWay}" />
-                            </u:CronPickerFieldTabItem>
-                        </u:CronPickerFieldsContainer>-->
                         <Border
                             BoxShadow="0 0 10 4 #ccc"
                             Grid.Row="0"
                             Margin="0,0,0,20">
                             <StackPanel>
-                                <u:CronPickerFieldsContainer Name="{x:Static u:CronPicker.PART_FieldsHost}" SelectedIndex="{TemplateBinding SelectedFieldIndex, Mode=TwoWay}">
-                                    <u:CronPickerFieldTabItem FieldType="Second" x:Name="TabItem_Second" />
+                                <u:CronPickerFieldsContainer Name="{x:Static u:CronExpressionEditor.PART_FieldsHost}" SelectedIndex="{TemplateBinding SelectedFieldIndex, Mode=TwoWay}">
+                                    <u:CronPickerFieldTabItem
+                                        FieldType="Second"
+                                        IsVisible="{TemplateBinding IsSecondEnabled}"
+                                        x:Name="TabItem_Second" />
                                     <u:CronPickerFieldTabItem FieldType="Minute" x:Name="TabItem_Minute" />
                                     <u:CronPickerFieldTabItem FieldType="Hour" x:Name="TabItem_Hour" />
                                     <u:CronPickerFieldTabItem FieldType="DayOfMonth" x:Name="TabItem_DayOfMonth" />
                                     <u:CronPickerFieldTabItem FieldType="Month" x:Name="TabItem_Month" />
                                     <u:CronPickerFieldTabItem FieldType="DayOfWeek" x:Name="TabItem_DayOfWeek" />
-                                    <u:CronPickerFieldTabItem FieldType="Year" x:Name="TabItem_Year" />
+                                    <u:CronPickerFieldTabItem
+                                        FieldType="Year"
+                                        IsVisible="{TemplateBinding IsYearEnabled}"
+                                        x:Name="TabItem_Year" />
                                 </u:CronPickerFieldsContainer>
                                 <Border Padding="{DynamicResource CronPickerFieldTabItemContentMargin}">
                                     <StackPanel Orientation="Vertical">
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_Second.Header}"
                                             FieldType="Second"
                                             IsVisible="{TemplateBinding IsSecondEnabled}"
-                                            Name="{x:Static u:CronPicker.PART_SecondsField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_SecondsField}"
                                             SelectedIndex="{TemplateBinding SecondsSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding SecondsSelectedItem,
@@ -511,10 +578,9 @@
                                             SelectedValue="{TemplateBinding SecondsSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_Minute.Header}"
                                             FieldType="Minute"
-                                            Name="{x:Static u:CronPicker.PART_MinutesField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_MinutesField}"
                                             SelectedIndex="{TemplateBinding MinutesSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding MinutesSelectedItem,
@@ -522,10 +588,9 @@
                                             SelectedValue="{TemplateBinding MinutesSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_Hour.Header}"
                                             FieldType="Hour"
-                                            Name="{x:Static u:CronPicker.PART_HoursField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_HoursField}"
                                             SelectedIndex="{TemplateBinding HoursSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding HoursSelectedItem,
@@ -533,10 +598,9 @@
                                             SelectedValue="{TemplateBinding HoursSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_DayOfMonth.Header}"
                                             FieldType="DayOfMonth"
-                                            Name="{x:Static u:CronPicker.PART_DaysOfMonthField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_DaysOfMonthField}"
                                             SelectedIndex="{TemplateBinding DaysOfMonthSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding DaysOfMonthSelectedItem,
@@ -544,10 +608,9 @@
                                             SelectedValue="{TemplateBinding DaysOfMonthSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_Month.Header}"
                                             FieldType="Month"
-                                            Name="{x:Static u:CronPicker.PART_MonthsField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_MonthsField}"
                                             SelectedIndex="{TemplateBinding MonthsSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding MonthsSelectedItem,
@@ -555,10 +618,9 @@
                                             SelectedValue="{TemplateBinding MonthsSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_DayOfWeek.Header}"
                                             FieldType="DayOfWeek"
-                                            Name="{x:Static u:CronPicker.PART_DaysOfWeekField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_DaysOfWeekField}"
                                             SelectedIndex="{TemplateBinding DaysOfWeekSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding DaysOfWeekSelectedItem,
@@ -566,11 +628,10 @@
                                             SelectedValue="{TemplateBinding DaysOfWeekSelectedValue,
                                                                             Mode=TwoWay}" />
                                         <u:CronPickerFieldView
-                                            CronRulerItemDataTemplates="{TemplateBinding CronRulerItemDataTemplates}"
                                             FieldName="{Binding #TabItem_Year.Header}"
                                             FieldType="Year"
                                             IsVisible="{TemplateBinding IsYearEnabled}"
-                                            Name="{x:Static u:CronPicker.PART_YearsField}"
+                                            Name="{x:Static u:CronExpressionEditor.PART_YearsField}"
                                             SelectedIndex="{TemplateBinding YearsSelectedIndex,
                                                                             Mode=TwoWay}"
                                             SelectedItem="{TemplateBinding YearsSelectedItem,
@@ -626,7 +687,11 @@
                                 Content="{DynamicResource CronPicker_PartTitle_CronExpression}"
                                 FontSize="18"
                                 HorizontalAlignment="Left" />
-                            <TextBox Name="PART_CronExpression" Text="{TemplateBinding CronExpression, Mode=TwoWay}" />
+                            <TextBox
+                                FontSize="18"
+                                Name="{x:Static u:CronExpressionEditor.PART_CronExpression}"
+                                Text="{TemplateBinding CronExpression,
+                                                       Mode=TwoWay}" />
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Button
                                     Content="{DynamicResource CronPicker_ButtonText_CronExpressionParse}"
@@ -723,7 +788,7 @@
                 </Border>
             </ControlTemplate>
         </Setter>
-
+        <!--  选项卡动作  -->
         <Style Selector="^[SelectedFieldIndex=-1]">
             <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
                 <Setter Property="IsVisible" Value="True" />
@@ -914,37 +979,18 @@
                 <Setter Property="IsVisible" Value="True" />
             </Style>
         </Style>
+        <!--  cron 表达式解析异常错误UI样式  -->
+        <Style Selector="^ /template/ TextBox#PART_CronExpression">
+            <Style Selector="^ /template/ DataValidationErrors">
+                <Setter Property="Theme" Value="{DynamicResource TooltipLineDataValidationErrors}" />
+            </Style>
+        </Style>
     </ControlTheme>
+    <!--  CronPickerFieldsContainer  -->
     <ControlTheme
         BasedOn="{StaticResource {x:Type TabControl}}"
         TargetType="u:CronPickerFieldsContainer"
-        x:Key="{x:Type u:CronPickerFieldsContainer}">
-        <!--<Setter Property="Template">
-            <ControlTemplate TargetType="u:CronPickerFieldsContainer">
-                <Border
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="{TemplateBinding CornerRadius}"
-                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                    VerticalAlignment="{TemplateBinding VerticalAlignment}">
-                    <DockPanel>
-                        <Panel DockPanel.Dock="{TemplateBinding TabStripPlacement}">
-                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="PART_ItemsPresenter" />
-                            <Border Background="{DynamicResource TabItemLinePipePressedBorderBrush}" Name="PART_BorderSeparator" />
-                        </Panel>
-                        <ContentPresenter
-                            Content="{TemplateBinding SelectedContent}"
-                            ContentTemplate="{TemplateBinding SelectedContentTemplate}"
-                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            Margin="{TemplateBinding Padding}"
-                            Name="PART_SelectedContentHost"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </DockPanel>
-                </Border>
-            </ControlTemplate>
-        </Setter>-->
-    </ControlTheme>
+        x:Key="{x:Type u:CronPickerFieldsContainer}" />
     <!--  u:CronPickerRulerBoxItem  -->
     <ControlTheme TargetType="u:CronPickerRulerBoxItem" x:Key="{x:Type u:CronPickerRulerBoxItem}">
         <Setter Property="Template">
@@ -958,12 +1004,6 @@
                     Name="PART_ContentPresenter"
                     Padding="{TemplateBinding Padding}"
                     RecognizesAccessKey="True" />
-                <!--
-                    Content="{TemplateBinding Content}"
-                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                -->
             </ControlTemplate>
         </Setter>
     </ControlTheme>
@@ -1447,6 +1487,77 @@
                 </Style>
             </Style>
         </Style>
+    </ControlTheme>
+    <ControlTheme TargetType="DataValidationErrors" x:Key="TooltipLineDataValidationErrors">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="DataValidationErrors">
+                <DockPanel LastChildFill="True">
+                    <ContentControl
+                        Content="{Binding (DataValidationErrors.Errors)}"
+                        ContentTemplate="{TemplateBinding ErrorTemplate}"
+                        DataContext="{TemplateBinding Owner}"
+                        DockPanel.Dock="Bottom"
+                        IsVisible="{Binding (DataValidationErrors.HasErrors)}"
+                        Margin="0,4,0,0"
+                        Name="InlineDataValidationContentControl" />
+                    <ContentPresenter
+                        Background="{TemplateBinding Background}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Name="PART_ContentPresenter"
+                        Padding="{TemplateBinding Padding}" />
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ErrorTemplate">
+            <DataTemplate>
+                <Panel Background="Transparent" Name="PART_InlineErrorTemplatePanel">
+                    <Panel.Styles>
+                        <Style Selector="Panel#PART_InlineErrorTemplatePanel">
+                            <Setter Property="Margin" Value="8,0" />
+                        </Style>
+                        <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip">
+                            <Setter Property="BorderBrush" Value="{DynamicResource DataValidationErrorsForeground}" />
+                        </Style>
+                        <Style Selector="Panel#PART_InlineErrorTemplatePanel ToolTip TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </Panel.Styles>
+                    <ToolTip.Tip>
+                        <ItemsControl ItemsSource="{Binding}" x:DataType="collections:IEnumerable" />
+                    </ToolTip.Tip>
+                    <Grid RowDefinitions="*,Auto">
+                        <TextBlock
+                            FontSize="{DynamicResource DataValidationErrorsFontSize}"
+                            FontStyle="Italic"
+                            Foreground="{DynamicResource DataValidationErrorsForeground}"
+                            Grid.Row="0"
+                            Text="{Binding [0]}"
+                            TextTrimming="CharacterEllipsis"
+                            x:DataType="DataValidationErrors" />
+                        <Border
+                            Background="{DynamicResource DataValidationErrorsForeground}"
+                            Grid.Row="1"
+                            Height="1"
+                            IsVisible="True"
+                            Name="PART_Underline"
+                            UseLayoutRounding="False" />
+                    </Grid>
+                </Panel>
+                <!--<ItemsControl
+                    Foreground="{DynamicResource DataValidationErrorsForeground}"
+                    ItemsSource="{Binding}"
+                    x:DataType="DataValidationErrors">
+                    <ItemsControl.Styles>
+                        <Style Selector="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </ItemsControl.Styles>
+                </ItemsControl>-->
+            </DataTemplate>
+        </Setter>
     </ControlTheme>
 
 </ResourceDictionary>

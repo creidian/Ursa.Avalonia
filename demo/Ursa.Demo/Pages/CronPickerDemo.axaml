@@ -16,7 +16,7 @@
                     Margin="20"
                     Spacing="20">
                     <u:Form>
-                        <u:CronPicker u:FormItem.NoLabel="True" />
+                        <u:CronExpressionEditor u:FormItem.NoLabel="True" />
                     </u:Form>
                 </StackPanel>
             </ScrollViewer>

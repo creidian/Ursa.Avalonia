@@ -14,6 +14,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Include="irihi.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)"/>
     </ItemGroup>
 </Project>

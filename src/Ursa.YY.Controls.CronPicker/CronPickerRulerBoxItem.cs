@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -54,6 +55,10 @@ public abstract class CronPickerRulerBoxItem : /*ContentControl*/ TemplatedContr
     
     public string Value => GetValue(ValueProperty);
 
+    public CronPickerRulerBoxItem()
+    {
+    }
+    
     public abstract void VerifyCurrentCronValue();
 
     public virtual CronParseResult ParseTo(string text) => CronParseResult.UnSupported();
@@ -82,10 +87,19 @@ public abstract class CronPickerRulerBoxItem : /*ContentControl*/ TemplatedContr
 
     protected void OnValueChanged()
     {
-        /*if (_parent is not null)
+        if (_parent is not null && this.IsLoaded)
         {
             _parent.ValueChanged(this.Value);
-        }*/
+        }
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        if (_parent is not null)
+        {
+            _parent.OnRulerBoxItemLoaded(this);
+        }
     }
 
     protected void OnSymbolChanged() => this.RefreshCurrentValue();
@@ -197,8 +211,13 @@ public abstract class WithParamsCronPickerRulerBoxItem : CronPickerRulerBoxItem
             return CronParseResult.UnSupported();
         }
         
-        string[] args = text.Split(new string[] { Symbol }, StringSplitOptions.RemoveEmptyEntries);
+        string[] args = this.ReadParamsFrom(text);
         return this.ParseTo(args);
+    }
+
+    protected virtual string[] ReadParamsFrom(string text)
+    {
+        return text.Split(new string[] { Symbol }, StringSplitOptions.RemoveEmptyEntries);
     }
 
     protected abstract CronParseResult ParseTo(string[] args);
@@ -584,7 +603,18 @@ public class TwoInt32ParamsCronPickerRulerBoxItem : WithParamsCronPickerRulerBox
         get => GetValue(OffsetOutOfRangeMessageProperty);
         set => SetValue(OffsetOutOfRangeMessageProperty, value);
     }
-    
+
+    protected override string[] ReadParamsFrom(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return Array.Empty<string>();
+        }
+
+        int index = text.LastIndexOf(Symbol);
+        return new[] { text.Substring(0, index).Trim(), text.Substring(index + 1).Trim() };
+    }
+
     protected override CronParseResult ParseTo(string[] args)
     {
         if (args.Length != 2)
@@ -700,7 +730,7 @@ public class TwoInt32ParamsCronPickerRulerBoxItem : WithParamsCronPickerRulerBox
 public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
 {
     public static readonly StyledProperty<IEnumerable<int>> ItemsSourceProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, IEnumerable<int>>(nameof(ItemsSource));
-    public static readonly StyledProperty<IList> SelectedItemsProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, IList>(nameof(SelectedItems), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+    public static readonly DirectProperty<Int32SetCronPickerRulerBoxItem, IList> SelectedItemsProperty = AvaloniaProperty.RegisterDirect<Int32SetCronPickerRulerBoxItem, IList>(nameof(SelectedItems), o => o.SelectedItems);
     public static readonly StyledProperty<string> DefaultEmptySelectedValueProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, string>(nameof(DefaultEmptySelectedValue));
     public static readonly StyledProperty<string> DefaultSelectedAllValueProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, string>(nameof(DefaultSelectedAllValue));
     public static readonly StyledProperty<ITemplate<Panel?>> ItemsPanelProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, ITemplate<Panel?>>(nameof(ItemsPanel));
@@ -718,6 +748,21 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
     public static readonly StyledProperty<double> ItemsPanelRowSpacingProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double>(nameof(ItemsPanelRowSpacing), 0);
     public static readonly StyledProperty<double> ItemsPanelColumnSpacingProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double>(nameof(ItemsPanelColumnSpacing), 0);
 
+    private readonly AvaloniaList<int> _currSelectedItems;
+
+    public Int32SetCronPickerRulerBoxItem()
+    {
+        _currSelectedItems = new();
+        WeakReference<Int32SetCronPickerRulerBoxItem> weakSelf = new(this);
+        _currSelectedItems.CollectionChanged += (sender, args) =>
+        {
+            if (weakSelf.TryGetTarget(out Int32SetCronPickerRulerBoxItem? owner))
+            {
+                owner?.RefreshCurrentValue();
+            }
+        };
+    }
+    
     /// <summary>
     /// 单个元素的高度。
     /// </summary>
@@ -804,8 +849,8 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
     
     public IList SelectedItems
     {
-        get => GetValue(SelectedItemsProperty);
-        set => SetValue(SelectedItemsProperty, value);
+        get => _currSelectedItems;
+        // set => SetValue(SelectedItemsProperty, value);
     }
     
     public ITemplate<Panel?> ItemsPanel
@@ -857,6 +902,11 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
 
     protected override bool IsSymbolAlwaysContain { get; } = false;
 
+    /*public static IList GetSelectedItems(Int32SetCronPickerRulerBoxItem sender)
+    {
+        return sender._currSelectedItems;
+    }*/
+    
     protected override CronParseResult ParseTo(string[] args)
     {
         if (args.Length < 0)
@@ -935,7 +985,12 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == SelectedItemsProperty)
+        if (change.Property == ValueProperty)
+        {
+            var nv = change.NewValue;
+            var ov = change.OldValue;
+        }
+        /*if (change.Property == SelectedItemsProperty)
         {
             this.RefreshCurrentValue();
             if (change.NewValue is INotifyCollectionChanged notifyCollection)
@@ -948,7 +1003,7 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
                 oldNotifyCollection.CollectionChanged -= OnSelectedItemsCollectionChanged;
             }
         }
-        else if (change.Property == ItemWidthProperty)
+        else*/ if (change.Property == ItemWidthProperty)
         {
         }
         else if (change.Property == ItemHeightProperty)

@@ -1,0 +1,92 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  Add Resources Here  -->
+    <!--  单个符号 CronPickerRulerBoxItem_SimpleSymbol  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_SimpleSymbol">
+        <DataTemplate DataType="u:CronPickerRulerSimpleSymbol">
+            <u:OnlySymbolCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                IsNullEnable="{Binding IsNullAllowed}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+    <!--  间隔（俩参）CronPickerRulerBoxItem_IntervalExpression  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_IntervalExpression">
+        <DataTemplate DataType="u:CronPickerRulerIntervalExpression">
+            <u:TwoInt32ParamsCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                MaxValueParam1="{Binding MaxStartValue}"
+                MaxValueParam2="{Binding MaxInterval}"
+                MinValueParam1="{Binding MinStartValue}"
+                MinValueParam2="{Binding MinInterval}"
+                Param1Name="{Binding ParamName_Start}"
+                Param2Name="{Binding ParamName_Interval}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+    <!--  范围（俩参）CronPickerRulerBoxItem_RangeExpression  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_RangeExpression">
+        <DataTemplate DataType="u:CronPickerRulerRangeExpression">
+            <u:TwoInt32ParamsCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                IsParamsComparable="True"
+                LegalOffsetValue="{Binding OffsetValue}"
+                MaxValueParam1="{Binding MaxStartValue}"
+                MaxValueParam2="{Binding MaxEndValue}"
+                MinValueParam1="{Binding MinStartValue}"
+                MinValueParam2="{Binding MinEndValue}"
+                Param1Name="{Binding ParamName_Start}"
+                Param2Name="{Binding ParamName_End}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+    <!--  可选枚举值 CronPickerRulerBoxItem_ListExpression  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_ListExpression">
+        <DataTemplate DataType="u:CronPickerRulerListExpression">
+            <u:Int32SetCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding ItemsSource}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+    <!--  单个参数 CronPickerRulerBoxItem_WithOneParameterExpression  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_WithOneParameterExpression">
+        <DataTemplate DataType="u:CronPickerRulerWithOneParameterExpression">
+            <u:OneInt32ParamCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                MaxValueParam="{Binding MaxValue}"
+                MinValueParam="{Binding MinValue}"
+                ParamName="{Binding ParamName}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+    <!--  指定第几个星期的星期几（俩参） CronPickerRulerBoxItem_SpecialWeekdayExpression  -->
+    <DataTemplate x:Key="CronPickerRulerBoxItem_SpecialWeekdayExpression">
+        <DataTemplate DataType="u:CronPickerRulerSpecialWeekdayExpression">
+            <u:TwoInt32ParamsCronPickerRulerBoxItem
+                FieldType="{Binding FieldType}"
+                MaxValueParam1="{Binding MaxWeekNo}"
+                MaxValueParam2="{Binding MaxWeekDay}"
+                MinValueParam1="{Binding MinWeekNo}"
+                MinValueParam2="{Binding MinWeekDay}"
+                Param1Name="{Binding ParamName_WeekNo}"
+                Param2Name="{Binding ParamName_WeekDay}"
+                Priority="{Binding Priority}"
+                RulerCode="{Binding Code}"
+                Symbol="{Binding Symbol}" />
+        </DataTemplate>
+    </DataTemplate>
+</ResourceDictionary>

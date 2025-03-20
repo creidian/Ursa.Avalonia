@@ -9,7 +9,7 @@ public partial class App : Application
 {
     public override void Initialize()
     {
-        this.EnableHotReload(); // Ensure this line **precedes** `AvaloniaXamlLoader.Load(this);`
+        this.EnableHotReload();
         AvaloniaXamlLoader.Load(this);
     }
 

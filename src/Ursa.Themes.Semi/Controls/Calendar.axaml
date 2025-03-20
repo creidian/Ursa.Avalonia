@@ -1,16 +1,17 @@
 ﻿<ResourceDictionary
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:u="https://irihi.tech/ursa">
+    xmlns:u="https://irihi.tech/ursa"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <ThemeVariantScope RequestedThemeVariant="Dark">
-            <StackPanel Width="600" Height="400">
+            <StackPanel Height="400" Width="600">
                 <u:DatePicker HorizontalAlignment="Stretch" />
                 <u:DateRangePicker />
+                <u:CalendarView />
             </StackPanel>
         </ThemeVariantScope>
     </Design.PreviewWith>
-    <ControlTheme x:Key="{x:Type u:CalendarDayButton}" TargetType="u:CalendarDayButton">
+    <ControlTheme TargetType="u:CalendarDayButton" x:Key="{x:Type u:CalendarDayButton}">
         <Setter Property="MinWidth" Value="{DynamicResource CalenderDayMinWidth}" />
         <Setter Property="MinHeight" Value="{DynamicResource CalenderDayMinHeight}" />
         <Setter Property="Margin" Value="{DynamicResource CalenderDayMargin}" />
@@ -24,17 +25,17 @@
             <ControlTemplate TargetType="u:CalendarDayButton">
                 <Panel>
                     <Border
-                        Name="PART_Background"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Name="PART_Background">
                         <ContentPresenter
-                            Name="PART_ContentPresenter"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
                             Content="{TemplateBinding Content}"
-                            Foreground="{TemplateBinding Foreground}" />
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="Center"
+                            Name="PART_ContentPresenter"
+                            VerticalAlignment="Center" />
                     </Border>
                 </Panel>
             </ControlTemplate>
@@ -143,7 +144,7 @@
         </Style>
     </ControlTheme>
 
-    <ControlTheme x:Key="{x:Type u:CalendarYearButton}" TargetType="u:CalendarYearButton">
+    <ControlTheme TargetType="u:CalendarYearButton" x:Key="{x:Type u:CalendarYearButton}">
         <Setter Property="MinWidth" Value="{DynamicResource CalenderYearMinWidth}" />
         <Setter Property="MinHeight" Value="{DynamicResource CalenderYearMinHeight}" />
         <Setter Property="Margin" Value="{DynamicResource CalenderYearMargin}" />
@@ -155,17 +156,17 @@
             <ControlTemplate TargetType="u:CalendarDayButton">
                 <Panel>
                     <Border
-                        Name="PART_Background"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Name="PART_Background">
                         <ContentPresenter
-                            Name="PART_ContentPresenter"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
                             Content="{TemplateBinding Content}"
-                            Foreground="{TemplateBinding Foreground}" />
+                            Foreground="{TemplateBinding Foreground}"
+                            HorizontalAlignment="Center"
+                            Name="PART_ContentPresenter"
+                            VerticalAlignment="Center" />
                     </Border>
                 </Panel>
             </ControlTemplate>
@@ -188,7 +189,7 @@
         </Style>
     </ControlTheme>
 
-    <ControlTheme x:Key="{x:Type u:CalendarView}" TargetType="u:CalendarView">
+    <ControlTheme TargetType="u:CalendarView" x:Key="{x:Type u:CalendarView}">
         <Setter Property="MinHeight" Value="{DynamicResource CalenderViewMinWidth}" />
         <Setter Property="MinWidth" Value="{DynamicResource CalenderViewMinHeight}" />
         <Setter Property="Background" Value="{DynamicResource DatePickerViewBackground}" />
@@ -196,71 +197,71 @@
             <ControlTemplate TargetType="u:CalendarView">
                 <Grid Background="{TemplateBinding Background}" RowDefinitions="Auto, *">
                     <Grid
+                        ColumnDefinitions="Auto, Auto,*, Auto, Auto"
                         Grid.Row="0"
-                        Margin="0,0,0,16"
-                        ColumnDefinitions="Auto, Auto,*, Auto, Auto">
+                        Margin="0,0,0,16">
                         <u:IconButton
-                            Name="{x:Static u:CalendarView.PART_FastPreviousButton}"
                             Classes="Tertiary"
                             Grid.Column="0"
                             Icon="{DynamicResource CalendarViewFastForwardGlyph}"
-                            Theme="{DynamicResource BorderlessIconButton}"/>
+                            Name="{x:Static u:CalendarView.PART_FastPreviousButton}"
+                            Theme="{DynamicResource BorderlessIconButton}" />
 
                         <u:IconButton
-                            Name="{x:Static u:CalendarView.PART_PreviousButton}"
-                            Grid.Column="1"
                             Classes="Tertiary"
+                            Grid.Column="1"
                             Icon="{DynamicResource CalendarItemPreviousIconGlyph}"
-                            Theme="{DynamicResource BorderlessIconButton}"/>
+                            Name="{x:Static u:CalendarView.PART_PreviousButton}"
+                            Theme="{DynamicResource BorderlessIconButton}" />
 
-                        <Grid Grid.Column="2" ColumnDefinitions="*, *">
+                        <Grid ColumnDefinitions="*, *" Grid.Column="2">
                             <Button
-                                Name="{x:Static u:CalendarView.PART_YearButton}"
+                                Foreground="{TemplateBinding Foreground}"
                                 Grid.Column="0"
                                 HorizontalContentAlignment="Center"
-                                Foreground="{TemplateBinding Foreground}"
+                                Name="{x:Static u:CalendarView.PART_YearButton}"
                                 Theme="{DynamicResource BorderlessButton}" />
                             <Button
-                                Name="{x:Static u:CalendarView.PART_MonthButton}"
+                                Foreground="{TemplateBinding Foreground}"
                                 Grid.Column="1"
                                 HorizontalContentAlignment="Center"
-                                Foreground="{TemplateBinding Foreground}"
+                                Name="{x:Static u:CalendarView.PART_MonthButton}"
                                 Theme="{DynamicResource BorderlessButton}" />
                             <Button
-                                Name="{x:Static u:CalendarView.PART_HeaderButton}"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
-                                IsVisible="True" />
+                                IsVisible="True"
+                                Name="{x:Static u:CalendarView.PART_HeaderButton}" />
                         </Grid>
                         <u:IconButton
-                            Name="{x:Static u:CalendarView.PART_NextButton}"
+                            Classes="Tertiary"
                             Grid.Column="3"
-                            Classes="Tertiary"
                             Icon="{DynamicResource CalendarItemNextIconGlyph}"
-                            Theme="{DynamicResource BorderlessIconButton}"/>
+                            Name="{x:Static u:CalendarView.PART_NextButton}"
+                            Theme="{DynamicResource BorderlessIconButton}" />
                         <u:IconButton
-                            Name="{x:Static u:CalendarView.PART_FastNextButton}"
-                            Grid.Column="4"
                             Classes="Tertiary"
+                            Grid.Column="4"
                             Icon="{DynamicResource CalendarViewFastBackwardGlyph}"
-                            Theme="{DynamicResource BorderlessIconButton}"/>
+                            Name="{x:Static u:CalendarView.PART_FastNextButton}"
+                            Theme="{DynamicResource BorderlessIconButton}" />
                     </Grid>
                     <Grid
-                        Name="{x:Static u:CalendarView.PART_MonthGrid}"
-                        Grid.Row="1"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
                         ColumnDefinitions="*, *, *, *, *, *, *"
-                        RowDefinitions="*, Auto, *, *, *, *, *, *" />
-                    <Grid
-                        Name="{x:Static u:CalendarView.PART_YearGrid}"
                         Grid.Row="1"
                         HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
+                        Name="{x:Static u:CalendarView.PART_MonthGrid}"
+                        RowDefinitions="*, Auto, *, *, *, *, *, *"
+                        VerticalAlignment="Stretch" />
+                    <Grid
                         ColumnDefinitions="*, *, *"
-                        RowDefinitions="*, *, *, *" />
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        Name="{x:Static u:CalendarView.PART_YearGrid}"
+                        RowDefinitions="*, *, *, *"
+                        VerticalAlignment="Stretch" />
                 </Grid>
             </ControlTemplate>
         </Setter>

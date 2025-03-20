@@ -42,6 +42,7 @@ public interface ICronPickerRulerItem
 public interface ICronPickerRulerItemParent
 {
     void ValueChanged(string value);
+    void OnRulerBoxItemLoaded(ICronPickerRulerItem innerItem);
 }
 
 public class CronParseResult

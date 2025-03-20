@@ -28,7 +28,6 @@
     </ItemGroup>
     
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <!-- If you're a .vbproj user, replace ';' with ',' -->
         <DefineConstants>$(DefineConstants);ENABLE_XAML_HOT_RELOAD</DefineConstants>
     </PropertyGroup>
 

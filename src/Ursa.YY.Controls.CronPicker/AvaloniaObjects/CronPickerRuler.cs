@@ -1,6 +1,6 @@
-using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Templates;
 
 namespace Ursa.Controls;
 
@@ -14,6 +14,9 @@ public abstract class CronPickerRuler : AvaloniaObject
     public static readonly DirectProperty<CronPickerRuler, CronFieldTypes> FieldTypeProperty = AvaloniaProperty.RegisterDirect<CronPickerRuler, CronFieldTypes>(nameof(FieldType), o => o.FieldType);
     public static readonly StyledProperty<Dock> HeaderPlacementProperty = AvaloniaProperty.Register<CronPickerRuler, Dock>(nameof(HeaderPlacement), defaultValue: Dock.Left);
     public static readonly StyledProperty<int> PriorityProperty = AvaloniaProperty.Register<CronPickerRuler, int>(nameof(Priority));
+    public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<CronPickerRuler, object?>(nameof(Header));
+    public static readonly StyledProperty<string> RulerNameProperty = AvaloniaProperty.Register<CronPickerRuler, string>(nameof(RulerName));
+    public static readonly StyledProperty<IDataTemplate?> ContentTemplateProperty = AvaloniaProperty.Register<CronPickerRuler, IDataTemplate?>(nameof (ContentTemplate));
     private CronFieldTypes _fieldType;
 
     /// <summary>
@@ -39,6 +42,27 @@ public abstract class CronPickerRuler : AvaloniaObject
         set => SetValue(SymbolProperty, value);
     }
 
+    /// <summary>
+    /// 标题
+    /// </summary>
+    public object? Header
+    {
+        get => GetValue(HeaderProperty);
+        set => SetValue(HeaderProperty, value);
+    }
+
+    /// <summary>
+    /// 标题名称
+    /// </summary>
+    public string RulerName
+    {
+        get => GetValue(RulerNameProperty);
+        set => SetValue(RulerNameProperty, value);
+    }
+
+    /// <summary>
+    ///  标题相对于内容的位置关系
+    /// </summary>
     public Dock HeaderPlacement
     {
         get => GetValue(HeaderPlacementProperty);
@@ -52,6 +76,15 @@ public abstract class CronPickerRuler : AvaloniaObject
     {
         get => GetValue(PriorityProperty);
         set => SetValue(PriorityProperty, value);
+    }
+    
+    /// <summary>
+    /// 内容模板
+    /// </summary>
+    public IDataTemplate? ContentTemplate
+    {
+        get => GetValue(ContentTemplateProperty);
+        set => SetValue(ContentTemplateProperty, value);
     }
 
     internal void SetFieldType(CronFieldTypes fieldType)

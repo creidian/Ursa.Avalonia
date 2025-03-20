@@ -443,8 +443,7 @@
                     ItemsPanel="{TemplateBinding ItemsPanel}"
                     ItemsSource="{TemplateBinding ItemsSource}"
                     Padding="{TemplateBinding Padding}"
-                    SelectedItems="{TemplateBinding SelectedItems,
-                                                    Mode=TwoWay}"
+                    SelectedItems="{TemplateBinding SelectedItems}"
                     SelectionMode="Multiple"
                     Theme="{DynamicResource MultiplePureCardCheckGroupListBox}"
                     VerticalAlignment="{TemplateBinding VerticalAlignment}"

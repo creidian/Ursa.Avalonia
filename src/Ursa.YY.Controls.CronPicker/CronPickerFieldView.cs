@@ -1,5 +1,7 @@
+using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -10,8 +12,9 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
 {
     public static readonly RoutedEvent<UsualValueChangedEventArgs<string>> ValueChangedEvent = RoutedEvent.Register<CronPickerFieldView, UsualValueChangedEventArgs<string>>(nameof(ValueChanged), RoutingStrategies.Bubble);
     public static readonly StyledProperty<CronFieldTypes> FieldTypeProperty = AvaloniaProperty.Register<CronPickerFieldView, CronFieldTypes>(nameof(FieldType));
-    public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPickerFieldView, DataTemplates?>(nameof(CronRulerItemDataTemplates));
+    // public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPickerFieldView, DataTemplates?>(nameof(CronRulerItemDataTemplates));
     public static readonly StyledProperty<string> FieldNameProperty = AvaloniaProperty.Register<CronPickerFieldView, string>(nameof(FieldName));
+    public static readonly StyledProperty<IDataTemplate> RulerItemContentTemplateProperty = AvaloniaProperty.Register<CronPickerFieldView, IDataTemplate>(nameof(RulerItemContentTemplate));
     private string _value;
 
     static CronPickerFieldView()
@@ -43,16 +46,22 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
     }
     
     public string Value => _value;
+
+    public IDataTemplate RulerItemContentTemplate
+    {
+        get => GetValue(RulerItemContentTemplateProperty);
+        set => SetValue(RulerItemContentTemplateProperty, value);
+    }
     
-    public DataTemplates? CronRulerItemDataTemplates
+    /*public DataTemplates? CronRulerItemDataTemplates
     {
         get => this.GetValue(CronRulerItemDataTemplatesProperty);
         set => this.SetValue(CronRulerItemDataTemplatesProperty, value);
-    }
-
-    public CronFieldTypes GetFieldType() => this.FieldType;
+    }*/
 
     internal CronPickerRulerSelector? SelectedRuler { get; private set; }
+
+    public CronFieldTypes GetFieldType() => this.FieldType;
 
     public void ParsetoValue(string cronFieldString)
     {
@@ -124,15 +133,20 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
     {
         if (item is CronPickerRuler ruler)
         {
+            object? rulerContent = CreateRulerItemContent(ruler, RulerItemContentTemplate) /*ruler*/;
             return new CronPickerRulerSelector
             {
-                Content = ruler,
-                [!CronPickerRulerSelector.CronRulerItemDataTemplatesProperty] = this[!CronPickerFieldView.CronRulerItemDataTemplatesProperty],
+                Content = rulerContent/*ruler*/ /*RulerItemContentTemplate.Build(ruler)*/ ,
+                // [!CronPickerRulerSelector.CronRulerItemDataTemplatesProperty] = this[!CronPickerFieldView.CronRulerItemDataTemplatesProperty],
                 [!CronPickerRulerSelector.FieldTypeProperty] = ruler[!CronPickerRuler.FieldTypeProperty],
                 [!CronPickerRulerSelector.PriorityProperty] = ruler[!CronPickerRuler.PriorityProperty],
                 [!CronPickerRulerSelector.RulerCodeProperty] = ruler[!CronPickerRuler.CodeProperty],
                 [!CronPickerRulerSelector.StripPlacementProperty] = ruler[!CronPickerRuler.HeaderPlacementProperty],
                 [!CronPickerRulerSelector.SymbolProperty] = ruler[!CronPickerRuler.SymbolProperty],
+                [!CronPickerRulerSelector.HeaderProperty] = ruler[!CronPickerRuler.HeaderProperty],
+                [!CronPickerRulerSelector.RulerNameProperty] = ruler[!CronPickerRuler.RulerNameProperty],
+                // [!CronPickerRulerSelector.ContentTemplateProperty] = ruler[!CronPickerRuler.ContentTemplateProperty],
+                [!CronPickerRulerSelector.ContentTemplateProperty] = this[!RulerItemContentTemplateProperty],
             };
         }
 
@@ -176,6 +190,11 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
             this.SetValue(rulerValue);
             this.SelectedRuler = ruler;
         }
+        else if (this.SelectedIndex < 0)
+        {
+            this.SetValue(string.Empty);
+            this.SelectedRuler = null;
+        }
     }
 
     public void VerifyCurrentCronValue()
@@ -186,7 +205,12 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
             ruler.VerifyCurrentCronValue();
         }
     }
-    
+
+    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        base.LogicalChildrenCollectionChanged(sender, e);
+    }
+
     private IEnumerable<(ICronPickerRulerItem Ruler, CronPickerRulerSelector Selector)> RulerItems()
     {
         CronPickerRulerSelector[] array = this.LogicalChildren.OfType<CronPickerRulerSelector>().ToArray();
@@ -208,5 +232,17 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
             this._value = value;
             this.RaiseEvent(new UsualValueChangedEventArgs<string>(ValueChangedEvent, oldValue, value));
         }
+    }
+    
+    private Control? CreateRulerItemContent(object? content, IDataTemplate? template)
+    {
+        Control? newChild = content as Control;
+        if ((newChild == null && (content != null || template != null)) || (newChild is { } && template is { }))
+        {
+            IDataTemplate dataTemplate = this.FindDataTemplate(content, template)?? FuncDataTemplate.Default;
+            newChild = dataTemplate.Build(content);
+        }
+        
+        return newChild;
     }
 }

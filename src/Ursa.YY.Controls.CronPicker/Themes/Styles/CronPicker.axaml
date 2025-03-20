@@ -6,7 +6,7 @@
     <Design.PreviewWith>
         <Border Padding="20">
             <ScrollViewer>
-                <StackPanel>
+                <StackPanel Height="400" Width="600">
                     <StackPanel.Styles>
                         <Style Selector="u|CronPickerRulerSelector">
                             <!-- <Setter Property="FontSize" Value="18" /> -->
@@ -26,14 +26,411 @@
                     </StackPanel.DataTemplates>
                     <!--  Add Controls for Previewer Here  -->
                     <!-- <u:CronPicker Classes="DefaultCronRulers"> -->
-                    <u:CronPicker Classes="DefaultCronRulers" />
+                    <!-- <u:CronExpressionView Classes="DefaultCronRulers" /> -->
+                    <u:CronPicker Classes="DefaultCronRulers" Width="100" />
                 </StackPanel>
             </ScrollViewer>
         </Border>
     </Design.PreviewWith>
 
     <!--  Add Styles Here  -->
+    <!-- <Style Selector="u|CronPicker.DefaultCronRulers /template/ u|CronExpressionEditor#PART_CronExpressionView"> -->
     <Style Selector="u|CronPicker.DefaultCronRulers">
+        <!--  规则内容配置  -->
+        <Setter Property="CronRulerItemDataTemplates">
+            <DataTemplates>
+                <!--  u:CronPickerRulerSimpleSymbol  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerSimpleSymbol">
+                    <u:OnlySymbolCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        IsNullEnable="{Binding IsNullAllowed}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+                <!--  u:CronPickerRulerIntervalExpression  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerIntervalExpression">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        MaxValueParam1="{Binding MaxStartValue}"
+                        MaxValueParam2="{Binding MaxInterval}"
+                        MinValueParam1="{Binding MinStartValue}"
+                        MinValueParam2="{Binding MinInterval}"
+                        Param1Name="{Binding ParamName_Start}"
+                        Param2Name="{Binding ParamName_Interval}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+                <!--  u:CronPickerRulerRangeExpression  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerRangeExpression">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        IsParamsComparable="True"
+                        LegalOffsetValue="{Binding OffsetValue}"
+                        MaxValueParam1="{Binding MaxStartValue}"
+                        MaxValueParam2="{Binding MaxEndValue}"
+                        MinValueParam1="{Binding MinStartValue}"
+                        MinValueParam2="{Binding MinEndValue}"
+                        Param1Name="{Binding ParamName_Start}"
+                        Param2Name="{Binding ParamName_End}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+                <!--  u:CronPickerRulerListExpression  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerListExpression">
+                    <u:Int32SetCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding ItemsSource}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+                <!--  u:CronPickerRulerWithOneParameterExpression  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerWithOneParameterExpression">
+                    <u:OneInt32ParamCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        MaxValueParam="{Binding MaxValue}"
+                        MinValueParam="{Binding MinValue}"
+                        ParamName="{Binding ParamName}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+                <!--  u:CronPickerRulerSpecialWeekdayExpression  -->
+                <u:RecyclingDataTemplate DataType="u:CronPickerRulerSpecialWeekdayExpression">
+                    <u:TwoInt32ParamsCronPickerRulerBoxItem
+                        FieldType="{Binding FieldType}"
+                        MaxValueParam1="{Binding MaxWeekNo}"
+                        MaxValueParam2="{Binding MaxWeekDay}"
+                        MinValueParam1="{Binding MinWeekNo}"
+                        MinValueParam2="{Binding MinWeekDay}"
+                        Param1Name="{Binding ParamName_WeekNo}"
+                        Param2Name="{Binding ParamName_WeekDay}"
+                        Priority="{Binding Priority}"
+                        RulerCode="{Binding Code}"
+                        Symbol="{Binding Symbol}" />
+                </u:RecyclingDataTemplate>
+            </DataTemplates>
+        </Setter>
+        <!--  规则集合【秒】  -->
+        <Setter Property="SecondsRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_Second}"
+                    RulerName="{DynamicResource CronFieldModeName_All_Second}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_Second}"
+                    MaxEndValue="59"
+                    MaxStartValue="58"
+                    MinEndValue="1"
+                    MinStartValue="0"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_0_Range_Second}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_1_Range_Second}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_Second}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerIntervalExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_INTERVAL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_IntervalExpression}"
+                    Header="{DynamicResource CronFieldModeName_Interval_Second}"
+                    MaxInterval="59"
+                    MaxStartValue="59"
+                    MinInterval="1"
+                    MinStartValue="0"
+                    ParamName_Interval="{DynamicResource CronFieldModeParamName_1_Interval_Second}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Interval_Second}"
+                    RulerName="{DynamicResource CronFieldModeName_Interval_Second}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_INTERVAL}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_Second}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.SecondList}"
+                    RulerName="{DynamicResource CronFieldModeName_List_Second}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【分】  -->
+        <Setter Property="MinutesRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_Minute}"
+                    RulerName="{DynamicResource CronFieldModeName_All_Minute}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_Minute}"
+                    MaxEndValue="59"
+                    MaxStartValue="58"
+                    MinEndValue="1"
+                    MinStartValue="0"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_Minute}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_Minute}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_Minute}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerIntervalExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_INTERVAL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_IntervalExpression}"
+                    Header="{DynamicResource CronFieldModeName_Interval_Minute}"
+                    MaxInterval="59"
+                    MaxStartValue="59"
+                    MinInterval="1"
+                    MinStartValue="0"
+                    ParamName_Interval="{DynamicResource CronFieldModeParamName_1_Interval_Minute}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Interval_Minute}"
+                    RulerName="{DynamicResource CronFieldModeName_Interval_Minute}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_INTERVAL}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_Minute}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.MinuteList}"
+                    RulerName="{DynamicResource CronFieldModeName_List_Minute}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【时】  -->
+        <Setter Property="HoursRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_Hour}"
+                    RulerName="{DynamicResource CronFieldModeName_All_Hour}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_Hour}"
+                    MaxEndValue="23"
+                    MaxStartValue="23"
+                    MinEndValue="1"
+                    MinStartValue="0"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_Hour}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_Hour}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_Hour}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerIntervalExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_INTERVAL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_IntervalExpression}"
+                    Header="{DynamicResource CronFieldModeName_Interval_Hour}"
+                    MaxInterval="23"
+                    MaxStartValue="23"
+                    MinInterval="0"
+                    MinStartValue="0"
+                    ParamName_Interval="{DynamicResource CronFieldModeParamName_1_Interval_Hour}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Interval_Hour}"
+                    RulerName="{DynamicResource CronFieldModeName_Interval_Hour}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_INTERVAL}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_Hour}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.HourList}"
+                    RulerName="{DynamicResource CronFieldModeName_List_Hour}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【日】  -->
+        <Setter Property="DaysOfMonthRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_All_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_PLACEHOLDER}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_NotSet_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_NotSet_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_PLACEHOLDER}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_DayOfMonth}"
+                    MaxEndValue="31"
+                    MaxStartValue="31"
+                    MinEndValue="1"
+                    MinStartValue="1"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_DayOfMonth}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerIntervalExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_INTERVAL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_IntervalExpression}"
+                    Header="{DynamicResource CronFieldModeName_Interval_DayOfMonth}"
+                    MaxInterval="31"
+                    MaxStartValue="31"
+                    MinInterval="1"
+                    MinStartValue="1"
+                    ParamName_Interval="{DynamicResource CronFieldModeParamName_1_Interval_DayOfMonth}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Interval_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_Interval_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_INTERVAL}" />
+                <u:CronPickerRulerWithOneParameterExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RECENTLY_WORKDAY}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_WithOneParameterExpression}"
+                    Header="{DynamicResource CronFieldModeName_SpecialRecentlyWeekday_DayOfMonth}"
+                    MaxValue="31"
+                    MinValue="1"
+                    ParamName="{DynamicResource CronFieldModeParamName_0_SpecialRecentlyWeekday_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_SpecialRecentlyWeekday_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_WORKDAY}" />
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LAST}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_LastDay_DayOfMonth}"
+                    RulerName="{DynamicResource CronFieldModeName_LastDay_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LAST}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_DayOfMonth}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.DayOfMonthList}"
+                    RulerName="{DynamicResource CronFieldModeName_List_DayOfMonth}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【月】  -->
+        <Setter Property="MonthsRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_Month}"
+                    RulerName="{DynamicResource CronFieldModeName_All_Month}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_Month}"
+                    MaxEndValue="12"
+                    MaxStartValue="11"
+                    MinEndValue="2"
+                    MinStartValue="1"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_Month}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_Month}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_Month}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerIntervalExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_INTERVAL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_IntervalExpression}"
+                    Header="{DynamicResource CronFieldModeName_Interval_Month}"
+                    MaxInterval="11"
+                    MaxStartValue="11"
+                    MinInterval="1"
+                    MinStartValue="1"
+                    ParamName_Interval="{DynamicResource CronFieldModeParamName_1_Interval_Month}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Interval_Month}"
+                    RulerName="{DynamicResource CronFieldModeName_Interval_Month}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_INTERVAL}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_Month}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.MonthList}"
+                    RulerName="{DynamicResource CronFieldModeName_List_Month}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【周】  -->
+        <Setter Property="DaysOfWeekRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_DayOfWeek}"
+                    RulerName="{DynamicResource CronFieldModeName_All_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_PLACEHOLDER}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_NotSet_DayOfWeek}"
+                    RulerName="{DynamicResource CronFieldModeName_NotSet_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_PLACEHOLDER}" />
+                <u:CronPickerRulerRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_DayOfWeek}"
+                    MaxEndValue="{DynamicResource MaxEnd_Range_Week_CronPickerRuler}"
+                    MaxStartValue="{DynamicResource MaxStart_Range_Week_CronPickerRuler}"
+                    MinEndValue="{DynamicResource MinEnd_Range_Week_CronPickerRuler}"
+                    MinStartValue="{DynamicResource MinStart_Range_Week_CronPickerRuler}"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_DayOfWeek}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_DayOfWeek}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+                <u:CronPickerRulerSpecialWeekdayExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_SPECIAL_WEEKDAY}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SpecialWeekdayExpression}"
+                    Header="{DynamicResource CronFieldModeName_SpecialWeekAndWeekday_DayOfWeek}"
+                    MaxWeekDay="{DynamicResource MaxWeekday_Specific_CronPickerRuler}"
+                    MaxWeekNo="{DynamicResource MaxWeekNo_Specific_CronPickerRuler}"
+                    MinWeekDay="{DynamicResource MinWeekday_Specific_CronPickerRuler}"
+                    MinWeekNo="{DynamicResource MinWeekNo_Specific_CronPickerRuler}"
+                    ParamName_WeekDay="{DynamicResource CronFieldModeParamName_1_SpecialWeekAndWeekday_DayOfWeek}"
+                    ParamName_WeekNo="{DynamicResource CronFieldModeParamName_0_SpecialWeekAndWeekday_DayOfWeek}"
+                    RulerName="{DynamicResource CronFieldModeName_SpecialWeekAndWeekday_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_WEEKDAY}" />
+                <u:CronPickerRulerWithOneParameterExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LAST}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_WithOneParameterExpression}"
+                    Header="{DynamicResource CronFieldModeName_LastWeekdayOfMonth_DayOfWeek}"
+                    MaxValue="{DynamicResource MaxWeekday_LasWeek_CronPickerRuler}"
+                    MinValue="{DynamicResource MinWeekday_LasWeek_CronPickerRuler}"
+                    ParamName="{DynamicResource CronFieldModeParamName_0_LastWeekdayOfMonth_DayOfWeek}"
+                    RulerName="{DynamicResource CronFieldModeName_LastWeekdayOfMonth_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LAST}" />
+                <u:CronPickerRulerListExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_LISTAND}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_ListExpression}"
+                    Header="{DynamicResource CronFieldModeName_List_DayOfWeek}"
+                    ItemsSource="{x:Static u:DefaultCronPickerRulerDataSupporter.DayOfWeekList_1}"
+                    RulerName="{DynamicResource CronFieldModeName_List_DayOfWeek}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_LIST_AND}" />
+            </u:CronPickerRulers>
+        </Setter>
+        <!--  规则集合【年】  -->
+        <Setter Property="YearsRulerItemsSource">
+            <u:CronPickerRulers>
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_PLACEHOLDER}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_NotSet_Year}"
+                    IsNullAllowed="True"
+                    RulerName="{DynamicResource CronFieldModeName_NotSet_Year}"
+                    Symbol="" />
+                <u:CronPickerRulerSimpleSymbol
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_ALL}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_SimpleSymbol}"
+                    Header="{DynamicResource CronFieldModeName_All_Year}"
+                    RulerName="{DynamicResource CronFieldModeName_All_Year}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_ALL}" />
+                <u:CronPickerRulerDateTimeRangeExpression
+                    Code="{x:Static u:DefaultCronPickerRulerDataSupporter.RULER_TYPE_RANGE}"
+                    ContentTemplate="{StaticResource CronPickerRulerBoxItem_RangeExpression}"
+                    Header="{DynamicResource CronFieldModeName_Range_Year}"
+                    ParamName_End="{DynamicResource CronFieldModeParamName_1_Range_Year}"
+                    ParamName_Start="{DynamicResource CronFieldModeParamName_0_Range_Year}"
+                    RulerName="{DynamicResource CronFieldModeName_Range_Year}"
+                    Symbol="{x:Static u:DefaultCronPickerRulerDataSupporter.FIELD_CHAR_RANGE}" />
+            </u:CronPickerRulers>
+        </Setter>
+    </Style>
+    <Style Selector="u|CronExpressionEditor.DefaultCronRulers">
         <!--  规则内容配置  -->
         <Setter Property="CronRulerItemDataTemplates">
             <DataTemplates>

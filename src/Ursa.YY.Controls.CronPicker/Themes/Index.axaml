@@ -8,6 +8,7 @@
                 <ResourceInclude Source="CronPicker.axaml" />
                 <ResourceInclude Source="Locale/zh-cn.axaml" />
                 <ResourceInclude Source="Shared/CronPicker.axaml" />
+                <ResourceInclude Source="Shared/CronRulerContent.axaml" />
                 <!-- <ResourceInclude Source="CronPickerRulerContent.axaml" /> -->
                 <ResourceInclude Source="CronPickerRulerBoxItem.axaml" />
             </ResourceDictionary.MergedDictionaries>
