@@ -1,7 +1,5 @@
-using System.Collections.Specialized;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -12,14 +10,12 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
 {
     public static readonly RoutedEvent<UsualValueChangedEventArgs<string>> ValueChangedEvent = RoutedEvent.Register<CronPickerFieldView, UsualValueChangedEventArgs<string>>(nameof(ValueChanged), RoutingStrategies.Bubble);
     public static readonly StyledProperty<CronFieldTypes> FieldTypeProperty = AvaloniaProperty.Register<CronPickerFieldView, CronFieldTypes>(nameof(FieldType));
-    // public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPickerFieldView, DataTemplates?>(nameof(CronRulerItemDataTemplates));
     public static readonly StyledProperty<string> FieldNameProperty = AvaloniaProperty.Register<CronPickerFieldView, string>(nameof(FieldName));
     public static readonly StyledProperty<IDataTemplate> RulerItemContentTemplateProperty = AvaloniaProperty.Register<CronPickerFieldView, IDataTemplate>(nameof(RulerItemContentTemplate));
     private string _value;
 
     static CronPickerFieldView()
     {
-        // KeyboardNavigation.TabNavigationProperty.OverrideDefaultValue(typeof (CronPickerFieldView), KeyboardNavigationMode.Once);
     }
 
     public CronPickerFieldView()
@@ -53,12 +49,6 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
         set => SetValue(RulerItemContentTemplateProperty, value);
     }
     
-    /*public DataTemplates? CronRulerItemDataTemplates
-    {
-        get => this.GetValue(CronRulerItemDataTemplatesProperty);
-        set => this.SetValue(CronRulerItemDataTemplatesProperty, value);
-    }*/
-
     internal CronPickerRulerSelector? SelectedRuler { get; private set; }
 
     public CronFieldTypes GetFieldType() => this.FieldType;
@@ -126,17 +116,30 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
     
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
-        return this.NeedsContainer<CronPickerRulerSelector>(item, out recycleKey);
+        if (item is CronPickerRulerSelector)
+        {
+            recycleKey = null;
+            return false;
+        }
+        
+        if (item is ICronRuler ruler && ruler.FieldType == this.FieldType)
+        {
+            recycleKey = null;
+            return true;
+        }
+        
+        recycleKey = DefaultRecycleKey;
+        return true;
     }
 
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
     {
-        if (item is CronPickerRuler ruler)
+        /*if (item is CronPickerRuler ruler)
         {
-            object? rulerContent = CreateRulerItemContent(ruler, RulerItemContentTemplate) /*ruler*/;
+            object? rulerContent = CreateRulerItemContent(ruler, RulerItemContentTemplate) /*ruler#1#;
             return new CronPickerRulerSelector
             {
-                Content = rulerContent/*ruler*/ /*RulerItemContentTemplate.Build(ruler)*/ ,
+                Content = rulerContent/*ruler#1# /*RulerItemContentTemplate.Build(ruler)#1# ,
                 // [!CronPickerRulerSelector.CronRulerItemDataTemplatesProperty] = this[!CronPickerFieldView.CronRulerItemDataTemplatesProperty],
                 [!CronPickerRulerSelector.FieldTypeProperty] = ruler[!CronPickerRuler.FieldTypeProperty],
                 [!CronPickerRulerSelector.PriorityProperty] = ruler[!CronPickerRuler.PriorityProperty],
@@ -148,9 +151,48 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
                 // [!CronPickerRulerSelector.ContentTemplateProperty] = ruler[!CronPickerRuler.ContentTemplateProperty],
                 [!CronPickerRulerSelector.ContentTemplateProperty] = this[!RulerItemContentTemplateProperty],
             };
+        }*/
+        
+        if (item is ICronRuler ruler2)
+        {
+            CronPickerRulerSelector control = new CronPickerRulerSelector
+            {
+                CronRuler = ruler2,
+                [!CronPickerRulerSelector.FieldTypeProperty] = this[!CronPickerFieldView.FieldTypeProperty],
+                [!ContentControl.ContentTemplateProperty] = this[!RulerItemContentTemplateProperty],
+                /*Priority = ruler2.Priority,
+                RulerCode = ruler2.Code,
+                StripPlacement = ruler2.HeaderPlacement,
+                Symbol = ruler2.Symbol,
+                Header = ruler2.Header,
+                RulerName = ruler2.RulerName,*/
+            };
+            /*if (ruler2 is Control)
+            {
+                control.Content = ruler2;
+            }
+            else if (ruler2 is ICornRulerViewModel)
+            {
+                control.DataContext = ruler2;
+            }
+            else
+            {
+                object? rulerContent = CreateRulerItemContent(ruler2, RulerItemContentTemplate);
+                control.Content = rulerContent;
+            }*/
+            return control;
         }
 
         return base.CreateContainerForItemOverride(item, index, recycleKey);
+    }
+
+    protected override void ClearContainerForItemOverride(Control element)
+    {
+        base.ClearContainerForItemOverride(element);
+        if (element is CronPickerRulerSelector selector)
+        {
+            selector.ClearValue(CronPickerRulerSelector.CronRulerProperty);
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -204,11 +246,6 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
         {
             ruler.VerifyCurrentCronValue();
         }
-    }
-
-    protected override void LogicalChildrenCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        base.LogicalChildrenCollectionChanged(sender, e);
     }
 
     private IEnumerable<(ICronPickerRulerItem Ruler, CronPickerRulerSelector Selector)> RulerItems()

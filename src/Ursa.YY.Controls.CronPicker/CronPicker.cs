@@ -37,13 +37,13 @@ public class CronPicker: CronPickerBase, IClearControl
     public static readonly StyledProperty<bool> IsSecondEnabledProperty = AvaloniaProperty.Register<CronPicker, bool>(nameof(IsSecondEnabled), defaultValue: true);
     public static readonly StyledProperty<bool> IsYearEnabledProperty = AvaloniaProperty.Register<CronPicker, bool>(nameof(IsYearEnabled), defaultValue: true);
     public static readonly StyledProperty<ICronExpressionParser?> CronExpressionParserProperty = AvaloniaProperty.Register<CronPicker, ICronExpressionParser?>(nameof(CronExpressionParser));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> SecondsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(SecondsRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MinutesRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(MinutesRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> HoursRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(HoursRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfMonthRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(DaysOfMonthRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MonthsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(MonthsRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(DaysOfWeekRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<CronPickerRuler>?>(nameof(YearsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> SecondsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(SecondsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> MinutesRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(MinutesRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> HoursRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(HoursRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> DaysOfMonthRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(DaysOfMonthRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> MonthsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(MonthsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(DaysOfWeekRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronPicker, IEnumerable<ICronRuler>?>(nameof(YearsRulerItemsSource));
     public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPicker, DataTemplates?>(nameof(CronRulerItemDataTemplates));
     public static readonly StyledProperty<string?> TextProperty = AvaloniaProperty.Register<CronPicker, string>(nameof (Text), defaultBindingMode: BindingMode.TwoWay, enableDataValidation: true);
     public static readonly StyledProperty<CronExpressionInputVerifySteps> VerifyStepsProperty = AvaloniaProperty.Register<CronPicker, CronExpressionInputVerifySteps>(nameof(VerifySteps));
@@ -113,43 +113,43 @@ public class CronPicker: CronPickerBase, IClearControl
         set => SetValue(CronExpressionParserProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? SecondsRulerItemsSource
+    public IEnumerable<ICronRuler>? SecondsRulerItemsSource
     {
         get => GetValue(SecondsRulerItemsSourceProperty);
         set => SetValue(SecondsRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? MinutesRulerItemsSource
+    public IEnumerable<ICronRuler>? MinutesRulerItemsSource
     {
         get => GetValue(MinutesRulerItemsSourceProperty);
         set => SetValue(MinutesRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? HoursRulerItemsSource
+    public IEnumerable<ICronRuler>? HoursRulerItemsSource
     {
         get => GetValue(HoursRulerItemsSourceProperty);
         set => SetValue(HoursRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? DaysOfMonthRulerItemsSource
+    public IEnumerable<ICronRuler>? DaysOfMonthRulerItemsSource
     {
         get => GetValue(DaysOfMonthRulerItemsSourceProperty);
         set => SetValue(DaysOfMonthRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? MonthsRulerItemsSource
+    public IEnumerable<ICronRuler>? MonthsRulerItemsSource
     {
         get => GetValue(MonthsRulerItemsSourceProperty);
         set => SetValue(MonthsRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? DaysOfWeekRulerItemsSource
+    public IEnumerable<ICronRuler>? DaysOfWeekRulerItemsSource
     {
         get => GetValue(DaysOfWeekRulerItemsSourceProperty);
         set => SetValue(DaysOfWeekRulerItemsSourceProperty, value);
     }
     
-    public IEnumerable<CronPickerRuler>? YearsRulerItemsSource
+    public IEnumerable<ICronRuler>? YearsRulerItemsSource
     {
         get => GetValue(YearsRulerItemsSourceProperty);
         set => SetValue(YearsRulerItemsSourceProperty, value);
@@ -164,7 +164,7 @@ public class CronPicker: CronPickerBase, IClearControl
     public CronExpressionInputVerifySteps VerifySteps 
     {
         get => this.GetValue(VerifyStepsProperty);
-        set => this.SetValue(VerifyStepsProperty, value);
+        internal set => this.SetValue(VerifyStepsProperty, value);
     }
     
     public CronExpressionParseResult? CronExpressionCalculationResult
@@ -364,7 +364,7 @@ public class CronPicker: CronPickerBase, IClearControl
         // SetExpressionString(true);
         if (_cronPickerView is not null)
         {
-            if (_cronPickerView.CronExpression == _textBox?.Text && VerifySteps == CronExpressionInputVerifySteps.VerifyToSuccessed)
+            if (_cronPickerView.CronExpression == _textBox?.Text && VerifySteps == CronExpressionInputVerifySteps.VerifyToSuccess)
             {
                 return;
             }
@@ -455,7 +455,7 @@ public class CronPicker: CronPickerBase, IClearControl
                 if (result.Status == NotificationType.Success)
                 {
                     CronExpressionCalculationResult = result;
-                    SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccessed);
+                    SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccess);
                 }
                 else
                 {
@@ -490,7 +490,7 @@ public class CronPicker: CronPickerBase, IClearControl
         if (TryRefreshExpression(_textBox?.Text, out string expressionString))
         {
             SetCurrentValue(ExpressionStringProperty, _textBox?.Text);
-            SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccessed);
+            SetCurrentValue(VerifyStepsProperty, CronExpressionInputVerifySteps.VerifyToSuccess);
         }
         else
         {
@@ -726,6 +726,6 @@ public enum CronExpressionInputVerifySteps
     Input,
     InputToVerifyAllowed,
     Verify,
-    VerifyToSuccessed,
+    VerifyToSuccess,
     VerifyError,
 }

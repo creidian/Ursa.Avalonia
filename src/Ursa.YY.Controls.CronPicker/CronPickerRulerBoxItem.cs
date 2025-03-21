@@ -740,10 +740,6 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
     public static readonly StyledProperty<IAvaloniaStringFormatter?> HasElementOutOfRangeMessageProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, IAvaloniaStringFormatter?>(nameof(HasElementOutOfRangeMessage));
     public static readonly StyledProperty<double?> ItemHeightProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemHeight));
     public static readonly StyledProperty<double?> ItemWidthProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemWidth));
-    /*public static readonly StyledProperty<double?> ItemMinHeightProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemHeight));
-    public static readonly StyledProperty<double?> ItemMaxHeightProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemHeight));
-    public static readonly StyledProperty<double?> ItemMinWidthProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemWidth));
-    public static readonly StyledProperty<double?> ItemMaxWidthProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double?>(nameof(ItemWidth));*/
     public static readonly StyledProperty<Thickness> ItemPaddingProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, Thickness>(nameof(ItemPadding));
     public static readonly StyledProperty<double> ItemsPanelRowSpacingProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double>(nameof(ItemsPanelRowSpacing), 0);
     public static readonly StyledProperty<double> ItemsPanelColumnSpacingProperty = AvaloniaProperty.Register<Int32SetCronPickerRulerBoxItem, double>(nameof(ItemsPanelColumnSpacing), 0);
@@ -799,30 +795,6 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
         set => SetValue(ItemsPanelColumnSpacingProperty, value);
     }
 
-    /*public double? ItemMinHeight
-    {
-        get => GetValue(ItemMinHeightProperty);
-        set => SetValue(ItemMinHeightProperty, value);
-    }
-    
-    public double? ItemMaxHeight
-    {
-        get => GetValue(ItemMaxHeightProperty);
-        set => SetValue(ItemMaxHeightProperty, value);
-    }
-
-    public double? ItemMinWidth
-    {
-        get => GetValue(ItemMinWidthProperty);
-        set => SetValue(ItemMinWidthProperty, value);
-    }
-    
-    public double? ItemMaxWidth
-    {
-        get => GetValue(ItemMaxWidthProperty);
-        set => SetValue(ItemMaxWidthProperty, value);
-    }*/
-    
     public Thickness ItemPadding
     {
         get => GetValue(ItemPaddingProperty);
@@ -902,11 +874,6 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
 
     protected override bool IsSymbolAlwaysContain { get; } = false;
 
-    /*public static IList GetSelectedItems(Int32SetCronPickerRulerBoxItem sender)
-    {
-        return sender._currSelectedItems;
-    }*/
-    
     protected override CronParseResult ParseTo(string[] args)
     {
         if (args.Length < 0)
@@ -982,39 +949,6 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
         }
     }
 
-    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
-    {
-        base.OnPropertyChanged(change);
-        if (change.Property == ValueProperty)
-        {
-            var nv = change.NewValue;
-            var ov = change.OldValue;
-        }
-        /*if (change.Property == SelectedItemsProperty)
-        {
-            this.RefreshCurrentValue();
-            if (change.NewValue is INotifyCollectionChanged notifyCollection)
-            {
-                notifyCollection.CollectionChanged += OnSelectedItemsCollectionChanged;
-            }
-            
-            if (change.OldValue is INotifyCollectionChanged oldNotifyCollection)
-            {
-                oldNotifyCollection.CollectionChanged -= OnSelectedItemsCollectionChanged;
-            }
-        }
-        else*/ if (change.Property == ItemWidthProperty)
-        {
-        }
-        else if (change.Property == ItemHeightProperty)
-        {
-        }
-        /*change.Property == ItemMinWidthProperty 
-            || change.Property == ItemMinHeightProperty 
-            || change.Property == ItemMaxWidthProperty 
-            || change.Property == ItemMaxHeightProperty*/
-    }
-
     protected override void RefreshCurrentValue()
     {
         int[]? arr = SelectedItems?.OfType<int>().ToArray();
@@ -1039,10 +973,5 @@ public class Int32SetCronPickerRulerBoxItem : WithParamsCronPickerRulerBoxItem
                 this.ChangeValue(string.Join(this.Symbol, arr));
             }
         }
-    }
-
-    private void OnSelectedItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        this.RefreshCurrentValue();
     }
 }

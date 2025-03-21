@@ -1,13 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 
 namespace Ursa.Controls;
 
 /// <summary>
 /// Cron 规则内容基类
 /// </summary>
-public abstract class CronPickerRuler : AvaloniaObject
+public abstract class CronPickerRuler : AvaloniaObject, ICronRuler
 {
     public static readonly StyledProperty<int> CodeProperty = AvaloniaProperty.Register<CronPickerRuler, int>(nameof(Code));
     public static readonly StyledProperty<string> SymbolProperty = AvaloniaProperty.Register<CronPickerRuler, string>(nameof(Symbol));
@@ -16,7 +15,6 @@ public abstract class CronPickerRuler : AvaloniaObject
     public static readonly StyledProperty<int> PriorityProperty = AvaloniaProperty.Register<CronPickerRuler, int>(nameof(Priority));
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<CronPickerRuler, object?>(nameof(Header));
     public static readonly StyledProperty<string> RulerNameProperty = AvaloniaProperty.Register<CronPickerRuler, string>(nameof(RulerName));
-    public static readonly StyledProperty<IDataTemplate?> ContentTemplateProperty = AvaloniaProperty.Register<CronPickerRuler, IDataTemplate?>(nameof (ContentTemplate));
     private CronFieldTypes _fieldType;
 
     /// <summary>
@@ -77,17 +75,8 @@ public abstract class CronPickerRuler : AvaloniaObject
         get => GetValue(PriorityProperty);
         set => SetValue(PriorityProperty, value);
     }
-    
-    /// <summary>
-    /// 内容模板
-    /// </summary>
-    public IDataTemplate? ContentTemplate
-    {
-        get => GetValue(ContentTemplateProperty);
-        set => SetValue(ContentTemplateProperty, value);
-    }
 
-    internal void SetFieldType(CronFieldTypes fieldType)
+    public void SetFieldType(CronFieldTypes fieldType)
     {
         this.SetAndRaise(FieldTypeProperty, ref _fieldType, fieldType);
     }

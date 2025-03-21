@@ -1,5 +1,3 @@
-using Avalonia.Metadata;
-
 namespace Ursa.Controls;
 
 /// <summary>

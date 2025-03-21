@@ -94,13 +94,13 @@ public class CronExpressionEditor : TemplatedControl
     public static readonly StyledProperty<CronPickerRulers> MonthsRulerItemsProperty = AvaloniaProperty.Register<CronExpressionEditor, CronPickerRulers>("MonthsRulerItems");
     public static readonly StyledProperty<CronPickerRulers> DaysOfWeekRulerItemsProperty = AvaloniaProperty.Register<CronExpressionEditor, CronPickerRulers>("DaysOfWeekRulerItems");
     public static readonly StyledProperty<CronPickerRulers> YearsRulerItemsProperty = AvaloniaProperty.Register<CronExpressionEditor, CronPickerRulers>("YearsRulerItems");
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> SecondsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(SecondsRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MinutesRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(MinutesRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> HoursRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(HoursRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfMonthRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(DaysOfMonthRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> MonthsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(MonthsRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(DaysOfWeekRulerItemsSource));
-    public static readonly StyledProperty<IEnumerable<CronPickerRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<CronPickerRuler>?>(nameof(YearsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> SecondsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(SecondsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> MinutesRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(MinutesRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> HoursRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(HoursRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> DaysOfMonthRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(DaysOfMonthRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> MonthsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(MonthsRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(DaysOfWeekRulerItemsSource));
+    public static readonly StyledProperty<IEnumerable<ICronRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(YearsRulerItemsSource));
     public static readonly StyledProperty<int> SelectedFieldIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(SelectedFieldIndex), defaultValue: -1);
     public static readonly StyledProperty<int> SecondsSelectedIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(SecondsSelectedIndex), defaultValue: -1);
     public static readonly StyledProperty<int> MinutesSelectedIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(MinutesSelectedIndex), defaultValue: -1);
@@ -213,7 +213,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(SecondsSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? SecondsRulerItemsSource
+    public IEnumerable<ICronRuler>? SecondsRulerItemsSource
     {
         get => GetValue(SecondsRulerItemsSourceProperty);
         set => SetValue(SecondsRulerItemsSourceProperty, value);
@@ -241,7 +241,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(MinutesSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? MinutesRulerItemsSource
+    public IEnumerable<ICronRuler>? MinutesRulerItemsSource
     {
         get => GetValue(MinutesRulerItemsSourceProperty);
         set => SetValue(MinutesRulerItemsSourceProperty, value);
@@ -269,7 +269,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(HoursSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? HoursRulerItemsSource
+    public IEnumerable<ICronRuler>? HoursRulerItemsSource
     {
         get => GetValue(HoursRulerItemsSourceProperty);
         set => SetValue(HoursRulerItemsSourceProperty, value);
@@ -297,7 +297,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(DaysOfMonthSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? DaysOfMonthRulerItemsSource
+    public IEnumerable<ICronRuler>? DaysOfMonthRulerItemsSource
     {
         get => GetValue(DaysOfMonthRulerItemsSourceProperty);
         set => SetValue(DaysOfMonthRulerItemsSourceProperty, value);
@@ -325,7 +325,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(MonthsSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? MonthsRulerItemsSource
+    public IEnumerable<ICronRuler>? MonthsRulerItemsSource
     {
         get => GetValue(MonthsRulerItemsSourceProperty);
         set => SetValue(MonthsRulerItemsSourceProperty, value);
@@ -353,7 +353,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(DaysOfWeekSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? DaysOfWeekRulerItemsSource
+    public IEnumerable<ICronRuler>? DaysOfWeekRulerItemsSource
     {
         get => GetValue(DaysOfWeekRulerItemsSourceProperty);
         set => SetValue(DaysOfWeekRulerItemsSourceProperty, value);
@@ -387,7 +387,7 @@ public class CronExpressionEditor : TemplatedControl
         set => SetValue(YearsSelectedValueProperty, value);
     }
 
-    public IEnumerable<CronPickerRuler>? YearsRulerItemsSource
+    public IEnumerable<ICronRuler>? YearsRulerItemsSource
     {
         get => GetValue(YearsRulerItemsSourceProperty);
         set => SetValue(YearsRulerItemsSourceProperty, value);
@@ -695,12 +695,12 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void ReSetSecondsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetSecondsRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.SecondsField, value, isClear);
     }
 
-    public void AddSecondsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddSecondsRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -708,16 +708,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveSecondsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveSecondsRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.SecondsField.RulerItems.Remove(x));
     }
 
-    public void ReSetMinutesRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetMinutesRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.MinutesField, value, isClear);
     }
-    public void AddMinutesRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddMinutesRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -725,16 +725,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveMinutesRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveMinutesRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.MinutesField.RulerItems.Remove(x));
     }
 
-    public void ReSetHoursRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetHoursRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.HoursField, value, isClear);
     }
-    public void AddHoursRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddHoursRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -742,16 +742,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveHoursRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveHoursRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.HoursField.RulerItems.Remove(x));
     }
 
-    public void ReSetDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetDaysOfMonthRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.DaysOfMonthField, value, isClear);
     }
-    public void AddDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddDaysOfMonthRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -759,16 +759,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveDaysOfMonthRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveDaysOfMonthRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.DaysOfMonthField.RulerItems.Remove(x));
     }
 
-    public void ReSetMonthsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetMonthsRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.MonthsField, value, isClear);
     }
-    public void AddMonthsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddMonthsRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -776,16 +776,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveMonthsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveMonthsRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.MonthsField.RulerItems.Remove(x));
     }
 
-    public void ReSetDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetDaysOfWeekRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.DaysOfWeekField, value, isClear);
     }
-    public void AddDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddDaysOfWeekRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -793,16 +793,16 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveDaysOfWeekRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveDaysOfWeekRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.DaysOfWeekField.RulerItems.Remove(x));
     }
 
-    public void ReSetYearsRulerItems(IEnumerable<CronPickerRuler>? value, bool isClear = true)
+    public void ReSetYearsRulerItems(IEnumerable<ICronRuler>? value, bool isClear = true)
     {
         ResetCronRulerCollection(this.YearsField, value, isClear);
     }
-    public void AddYearsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void AddYearsRulerItems(IEnumerable<ICronRuler>? value)
     {
         if (value is not null)
         {
@@ -810,7 +810,7 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    public void RemoveYearsRulerItems(IEnumerable<CronPickerRuler>? value)
+    public void RemoveYearsRulerItems(IEnumerable<ICronRuler>? value)
     {
         value?.ToList().ForEach(x => this.YearsField.RulerItems.Remove(x));
     }
@@ -984,7 +984,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == SecondsRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveSecondsRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -993,7 +993,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetSecondsRulerItems(rulers, IsInitialized);
                 this.SecondsSelectedIndex = 0;
@@ -1005,7 +1005,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == MinutesRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveMinutesRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1014,7 +1014,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetMinutesRulerItems(rulers, IsInitialized);
                 this.MinutesSelectedIndex = 0;
@@ -1026,7 +1026,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == HoursRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveHoursRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1035,7 +1035,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetHoursRulerItems(rulers, IsInitialized);
                 this.HoursSelectedIndex = 0;
@@ -1047,7 +1047,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == DaysOfMonthRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveDaysOfMonthRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1056,7 +1056,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetDaysOfMonthRulerItems(rulers, IsInitialized);
                 this.DaysOfMonthSelectedIndex = 0;
@@ -1068,7 +1068,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == MonthsRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveMonthsRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1077,7 +1077,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetMonthsRulerItems(rulers, IsInitialized);
                 this.MonthsSelectedIndex = 0;
@@ -1089,7 +1089,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == DaysOfWeekRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveDaysOfWeekRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1098,7 +1098,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetDaysOfWeekRulerItems(rulers, IsInitialized);
                 this.DaysOfWeekSelectedIndex = 0;
@@ -1110,7 +1110,7 @@ public class CronExpressionEditor : TemplatedControl
         }
         else if (change.Property == YearsRulerItemsSourceProperty)
         {
-            if (change.OldValue is IEnumerable<CronPickerRuler> oldRulers)
+            if (change.OldValue is IEnumerable<ICronRuler> oldRulers)
             {
                 this.RemoveYearsRulerItems(oldRulers);
                 if (oldRulers is INotifyCollectionChanged notifyCollection)
@@ -1119,7 +1119,7 @@ public class CronExpressionEditor : TemplatedControl
                 }
             }
 
-            if (change.NewValue is IEnumerable<CronPickerRuler> rulers)
+            if (change.NewValue is IEnumerable<ICronRuler> rulers)
             {
                 this.ReSetYearsRulerItems(rulers, IsInitialized);
                 this.YearsSelectedIndex = 0;
@@ -1167,7 +1167,7 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    private static void ResetCronRulerCollection(CronPickerField field, IEnumerable<CronPickerRuler>? value, bool isClear)
+    private static void ResetCronRulerCollection(CronPickerField field, IEnumerable<ICronRuler>? value, bool isClear)
     {
         if (isClear)
         {
@@ -1215,15 +1215,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddSecondsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddSecondsRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveSecondsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveSecondsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveSecondsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveSecondsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1231,15 +1231,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddMinutesRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddMinutesRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveMinutesRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveMinutesRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveMinutesRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveMinutesRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1247,15 +1247,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddHoursRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddHoursRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveHoursRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveHoursRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveHoursRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveHoursRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1263,15 +1263,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddDaysOfMonthRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddDaysOfMonthRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveDaysOfMonthRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1279,15 +1279,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddMonthsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddMonthsRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveMonthsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveMonthsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveMonthsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveMonthsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1295,15 +1295,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddDaysOfWeekRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddDaysOfWeekRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveDaysOfWeekRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
 
@@ -1311,15 +1311,15 @@ public class CronExpressionEditor : TemplatedControl
     {
         if (e.Action == NotifyCollectionChangedAction.Add)
         {
-            this.AddYearsRulerItems(e.NewItems.Cast<CronPickerRuler>());
+            this.AddYearsRulerItems(e.NewItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Remove)
         {
-            this.RemoveYearsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveYearsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
         else if (e.Action == NotifyCollectionChangedAction.Reset)
         {
-            this.RemoveYearsRulerItems(e.OldItems.Cast<CronPickerRuler>());
+            this.RemoveYearsRulerItems(e.OldItems.Cast<ICronRuler>());
         }
     }
     

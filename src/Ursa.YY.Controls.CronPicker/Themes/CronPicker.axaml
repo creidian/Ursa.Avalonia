@@ -6,28 +6,29 @@
     xmlns:u="https://irihi.tech/ursa"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
-        <TabControl
-            Height="400"
-            Theme="{DynamicResource CronPickerRulerItemTabControl}"
-            Width="900">
+        <!--  Theme="{DynamicResource CronPickerRulerItemTabControl}"  -->
+        <TabControl Height="400" Width="900">
             <TabItem Header="WarpPanelText">
                 <ScrollViewer>
                     <StackPanel>
-                        <u:DatePicker Width="100" />
-                        <u:TimePicker />
-                        <u:TimePicker />
-                        <u:DateTimePicker />
-                        <u:CronPicker VerifySteps="VerifyToSuccessed" Width="180">
+                        <u:DatePicker Width="180" />
+                        <!-- <u:TimePicker /> -->
+                        <!-- <u:TimePicker /> -->
+                        <!-- <u:DateTimePicker /> -->
+                        <u:CronPicker
+                            Classes="DefaultCronRulers"
+                            VerifySteps="VerifyToSuccess"
+                            Width="180">
                             <DataValidationErrors.Error>
                                 <system:Exception />
                             </DataValidationErrors.Error>
                         </u:CronPicker>
-                        <TextBox Width="100">
-                            <!--<DataValidationErrors.Error>
+                        <!--<TextBox Width="100">
+                            ~1~<DataValidationErrors.Error>
                                 <system:Exception />
-                            </DataValidationErrors.Error>-->
-                        </TextBox>
-                        <TextBox
+                            </DataValidationErrors.Error>@1@
+                        </TextBox>-->
+                        <!--<TextBox
                             InnerLeftContent="http://"
                             InnerRightContent=".com"
                             Width="300">
@@ -39,251 +40,13 @@
                             <DataValidationErrors.Error>
                                 <system:Exception />
                             </DataValidationErrors.Error>
-                        </TextBox>
-                        <NumericUpDown Width="300">
+                        </TextBox>-->
+                        <!--<NumericUpDown Width="300">
                             <DataValidationErrors.Error>
                                 <system:Exception />
                             </DataValidationErrors.Error>
-                        </NumericUpDown>
+                        </NumericUpDown>-->
                     </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="ALL">
-                <ScrollViewer>
-                    <u:CronExpressionEditor>
-                        <!--<u:CronPicker.SecondsRulerItems>
-                            <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="*" />
-                            <u:CronPickerRulerSimpleSymbol Code="qqq" Symbol="?" />
-                        </u:CronPicker.SecondsRulerItems>-->
-                        <!--~1~  -秒-  @1@
-                        <u:CronPickerRulerContentSecondCollection>
-                            ~1~  -每秒-  @1@
-                            <u:CronPickerRulerContent RulerName="{DynamicResource CronFieldModeName_All_Second}" Theme="{DynamicResource CronPickerRulerContent_All}" />
-                            ~1~  -周期-  @1@
-                            <u:CronPickerRulerParamsContent
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Range_Second}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Second}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="58"
-                                        Minimum="1"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Second}"
-                                        Position="0"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Second}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Second}"
-                                        Position="1"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Second}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -间隔循环-  @1@
-                            <u:CronPickerRulerParamsContent
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Interval_Second}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Second}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Second}"
-                                        Position="0"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Second}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Second}"
-                                        Position="1"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Second}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -列表选择-  @1@
-                            <u:CronPickerRulerSelectingItemsContent
-                                HeaderPosition="Top"
-                                ItemsSource="{x:Static u:CronPickerRulerContent.SecondList}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                RulerName="{DynamicResource CronFieldModeName_List_Second}">
-                                <u:CronPickerRulerSelectingItemsContent.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </u:CronPickerRulerSelectingItemsContent.Styles>
-                            </u:CronPickerRulerSelectingItemsContent>
-                        </u:CronPickerRulerContentSecondCollection>
-                        ~1~  -分-  @1@
-                        <u:CronPickerRulerContentMinuteCollection>
-                            ~1~  -每分-  @1@
-                            <u:CronPickerRulerContent RulerName="{DynamicResource CronFieldModeName_All_Minute}" Theme="{DynamicResource CronPickerRulerContent_All}" />
-                            ~1~  -周期-  @1@
-                            <u:CronPickerRulerParamsContent
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Range_Minute}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Minute}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="58"
-                                        Minimum="1"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Minute}"
-                                        Position="0"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Minute}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Minute}"
-                                        Position="1"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Minute}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -间隔循环-  @1@
-                            <u:CronPickerRulerParamsContent
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Interval_Minute}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Minute}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Minute}"
-                                        Position="0"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Minute}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="59"
-                                        Minimum="1"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Minute}"
-                                        Position="1"
-                                        Value="1" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Minute}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -列表选择-  @1@
-                            <u:CronPickerRulerSelectingItemsContent
-                                HeaderPosition="Top"
-                                ItemsSource="{x:Static u:CronPickerRulerContent.MinuteList}"
-                                MaxWidth="780"
-                                MinWidth="100"
-                                RulerName="{DynamicResource CronFieldModeName_List_Minute}">
-                                <u:CronPickerRulerSelectingItemsContent.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </u:CronPickerRulerSelectingItemsContent.Styles>
-                            </u:CronPickerRulerSelectingItemsContent>
-                        </u:CronPickerRulerContentMinuteCollection>
-                        ~1~  -时-  @1@
-                        <u:CronPickerRulerContentHourCollection>
-                            ~1~  -每时-  @1@
-                            <u:CronPickerRulerContent
-                                FieldType="Hour"
-                                RulerName="{DynamicResource CronFieldModeName_All_Hour}"
-                                Theme="{DynamicResource CronPickerRulerContent_All}" />
-                            ~1~  -周期-  @1@
-                            <u:CronPickerRulerParamsContent
-                                FieldType="Hour"
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Range_Hour}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Range}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Range_Hour}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="23"
-                                        Minimum="0"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Range_Hour}"
-                                        Position="0"
-                                        Value="0" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Range_Hour}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="23"
-                                        Minimum="0"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Range_Hour}"
-                                        Position="1"
-                                        Value="0" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Range_Hour}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -间隔循环-  @1@
-                            <u:CronPickerRulerParamsContent
-                                FieldType="Hour"
-                                HeaderPosition="Left"
-                                RulerName="{DynamicResource CronFieldModeName_Interval_Hour}"
-                                Theme="{DynamicResource CronPickerRulerParamsContent_Interval}">
-                                <u:CronPickerRulerParamsContent.Items>
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Left_Interval_Hour}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="23"
-                                        Minimum="0"
-                                        ParamKey="startValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_0_Interval_Hour}"
-                                        Position="0"
-                                        Value="0" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Middle_Interval_Hour}" VerticalAlignment="Center" />
-                                    <u:CronPickerRulerParamByte
-                                        Command="{Binding $parent[u:CronPickerRulerParamsContent].OnParamValueChanged}"
-                                        Maximum="23"
-                                        Minimum="0"
-                                        ParamKey="endValue"
-                                        ParamName="{DynamicResource CronFieldModeParamName_1_Interval_Hour}"
-                                        Position="1"
-                                        Value="0" />
-                                    <TextBlock Text="{DynamicResource CronFieldModeElement_Right_Interval_Hour}" VerticalAlignment="Center" />
-                                </u:CronPickerRulerParamsContent.Items>
-                            </u:CronPickerRulerParamsContent>
-                            ~1~  -列表选择-  @1@
-                            <u:CronPickerRulerSelectingItemsContent
-                                FieldType="Hour"
-                                HeaderPosition="Top"
-                                ItemsSource="{x:Static u:CronPickerRulerContent.HourList}"
-                                MaxWidth="600"
-                                MinWidth="100"
-                                RulerName="{DynamicResource CronFieldModeName_List_Hour}">
-                                <u:CronPickerRulerSelectingItemsContent.Styles>
-                                    <Style Selector="ListBoxItem">
-                                        <Setter Property="Width" Value="50" />
-                                        <Setter Property="Height" Value="50" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                </u:CronPickerRulerSelectingItemsContent.Styles>
-                            </u:CronPickerRulerSelectingItemsContent>
-                        </u:CronPickerRulerContentHourCollection>-->
-                    </u:CronExpressionEditor>
                 </ScrollViewer>
             </TabItem>
         </TabControl>
@@ -413,7 +176,7 @@
                                             Spacing="8">
                                             <Button
                                                 Content="{DynamicResource CronPicker_ButtonText_CronExpressionEditor_OK}"
-                                                IsEnabled="{Binding #PART_CronExpressionView.CronExpressionCalculationResult, Mode=OneWay, Converter={x:Static converters:CronPickerConverters.IsParseResultSuccessed}}"
+                                                IsEnabled="{Binding #PART_CronExpressionView.CronExpressionCalculationResult, Mode=OneWay, Converter={x:Static converters:CronPickerConverters.IsParseResultSuccess}}"
                                                 Name="PART_EditorOKButton"
                                                 Theme="{DynamicResource SolidButton}" />
                                             <Button
@@ -430,6 +193,7 @@
             </ControlTemplate>
         </Setter>
 
+        <!--  VerifySteps  -->
         <Style Selector="^[VerifySteps=InputToVerifyAllowed]">
             <Setter Property="ToolTip.IsOpen" Value="False" />
             <Style Selector="^ /template/ Button#EnterButton">
@@ -473,9 +237,9 @@
                 <Setter Property="Margin" Value="0" />
             </Style>
         </Style>
-        <Style Selector="^[VerifySteps=VerifyToSuccessed]">
-            <Setter Property="ToolTip.IsOpen" Value="{Binding $self.CronExpressionCalculationResult, Converter={x:Static ObjectConverters.IsNotNull}}" />
-            <Setter Property="ToolTip.Tip" Value="{Binding $self.CronExpressionCalculationResult, Converter={StaticResource ConverterCronExpressionParseToTimesResult}, ConverterParameter={TemplateBinding DateTimeFormat}}" />
+        <Style Selector="^[VerifySteps=VerifyToSuccess]">
+            <Setter Property="ToolTip.IsOpen" Value="{Binding $self.CronExpressionCalculationResult, Converter={x:Static converters:CronPickerConverters.IsParseResultSuccessAndNotEmpty}}" />
+            <Setter Property="ToolTip.Tip" Value="{Binding $self.CronExpressionCalculationResult, Converter={StaticResource ConverterCronExpressionParseToTimesResult}, ConverterParameter={Binding $self.DateTimeFormat}}" />
             <Style Selector="^ /template/ Button#EnterButton">
                 <Setter Property="IsEnabled" Value="False" />
                 <Setter Property="Content" Value="{DynamicResource CheckBoxCheckGlyph}" />
@@ -488,12 +252,14 @@
             <Setter Property="DefaultExpressionString" Value="* * * * * *" />
         </Style>
 
+        <!--  clearButton  -->
         <Style Selector="^.clearButton, ^.ClearButton">
             <Style Selector="^:pointerover /template/ Button#ClearButton">
                 <Setter Property="IsVisible" Value="{Binding $parent[u:CronPicker].ExpressionString, Converter={x:Static ObjectConverters.IsNotNull}}" />
             </Style>
         </Style>
 
+        <!--  pointerover  -->
         <Style Selector="^:pointerover">
             <Style Selector="^ /template/ Border#Background">
                 <Setter Property="Background" Value="{DynamicResource CalendarDatePickerPointeroverBackground}" />

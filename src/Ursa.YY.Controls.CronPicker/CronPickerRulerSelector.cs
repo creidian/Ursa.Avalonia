@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
@@ -36,6 +37,7 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
     public static readonly StyledProperty<DataTemplates?> CronRulerItemDataTemplatesProperty = AvaloniaProperty.Register<CronPickerRulerSelector, DataTemplates?>(nameof(CronRulerItemDataTemplates));
     public static readonly StyledProperty<IDataTemplate?> HeaderTemplateProperty = AvaloniaProperty.Register<CronPickerRulerSelector, IDataTemplate?>(nameof(HeaderTemplate));
     public static readonly StyledProperty<object?> HeaderProperty = AvaloniaProperty.Register<CronPickerRulerSelector, object?>(nameof(Header));
+    public static readonly DirectProperty<CronPickerRulerSelector, ICronRuler?> CronRulerProperty = AvaloniaProperty.RegisterDirect<CronPickerRulerSelector, ICronRuler?>(nameof(CronRuler), o => o.CronRuler, (o, v) => o.CronRuler = v);
     private Dock _stripPlacement;
     private Border? _selectBorder;
     private static readonly Point s_invalidPoint = new (double.NaN, double.NaN);
@@ -45,6 +47,7 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
     private string _valueString;
     private CronFieldTypes _fieldType;
     private ICronPickerRulerItem? _innerRulerItem;
+    private ICronRuler? _cronRuler;
 
     static CronPickerRulerSelector()
     {
@@ -172,6 +175,12 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         }
     }
 
+    public ICronRuler? CronRuler 
+    {
+        get => _cronRuler;
+        set => this.SetAndRaise(CronRulerProperty, ref _cronRuler, value);
+    }
+
     public string GetExpression() => ValueString;
     
     public void Select(bool isSelected)
@@ -216,6 +225,22 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         {
             this.UpdateCronRulerItemDataTemplates(change.OldValue as DataTemplates, change.NewValue as DataTemplates);
         }
+        else if (change.Property == CronRulerProperty)
+        {
+            this.OnCronRulerChanged(change.GetOldValue<ICronRuler>(), change.GetNewValue<ICronRuler>());
+        }
+        else if (change.Property == ContentTemplateProperty)
+        {
+            this.OnContentTemplateChanged();
+        }
+        /*else if (change.Property == ContentProperty)
+        {
+            this.OnContentChanged(change.OldValue, change.NewValue);
+        }
+        else if (change.Property == DataContextProperty)
+        {
+            this.OnContentChanged(change.OldValue, change.NewValue);
+        }*/
     }
 
     /// <inheritdoc/>
@@ -229,6 +254,116 @@ public class CronPickerRulerSelector : /*HeaderedContentControl*/ ListBoxItem, I
         }
 
         return result;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        OnCronRulerChanged(null, this.CronRuler);
+    }
+
+    private bool _isContentTemplateApplied;
+    private void OnContentTemplateChanged()
+    {
+        ICronRuler? cronRuler = this.CronRuler;
+        IDataTemplate? template = this.ContentTemplate;
+        if (template is { } && cronRuler is { } 
+                                 && cronRuler is not Control 
+                                 && cronRuler is not ICornRulerViewModel)
+        {
+            if (template.Match(cronRuler))
+            {
+                this.Content = template.Build(cronRuler);
+                _isContentTemplateApplied = true;
+            }
+            else if (_isContentTemplateApplied)
+            {
+                RefreshContentUseTemplate(cronRuler);
+            }
+        }
+    }
+
+    private void OnCronRulerChanged(ICronRuler? oldValue, ICronRuler? newValue)
+    {
+        if (oldValue is not null)
+        {
+            oldValue.PropertyChanged -= OnCronRulerPropertyChanged;
+        }
+
+        if (newValue is not null)
+        {
+            Priority = newValue.Priority;
+            RulerCode = newValue.Code;
+            StripPlacement = newValue.HeaderPlacement;
+            Symbol = newValue.Symbol;
+            Header = newValue.Header;
+            RulerName = newValue.RulerName;
+            newValue.PropertyChanged += OnCronRulerPropertyChanged;
+            if (newValue is Control)
+            {
+                this.Content = newValue;
+            }
+            else if (newValue is ICornRulerViewModel)
+            {
+                this.DataContext = newValue;
+            }
+            else
+            {
+                RefreshContentUseTemplate(newValue);
+            }
+        }
+    }
+
+    private void RefreshContentUseTemplate(ICronRuler ruler)
+    {
+        IDataTemplate? template = this.ContentTemplate;
+        object? rulerContent = CreateRulerItemContent(ruler, template, out IDataTemplate? dataTemplateUsed);
+        this.Content = rulerContent;
+        _isContentTemplateApplied =  rulerContent is not null && template is not null && template == dataTemplateUsed;
+    }
+    
+    private Control? CreateRulerItemContent(object? content, IDataTemplate? template, out IDataTemplate? dataTemplateUsed)
+    {
+        dataTemplateUsed = null;
+        Control? newChild = content as Control;
+        if ((newChild == null && (content != null || template != null)) || (newChild is { } && template is { }))
+        {
+            dataTemplateUsed = this.FindDataTemplate(content, template) ?? FuncDataTemplate.Default;
+            newChild = dataTemplateUsed.Build(content);
+        }
+
+        return newChild;
+    }
+    
+    private void OnCronRulerPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (sender is ICronRuler ruler2)
+        {
+            if (e.PropertyName == nameof(ICronRuler.Symbol))
+            {
+                this.Symbol = ruler2.Symbol;
+            }
+            else if (e.PropertyName == nameof(ICronRuler.Header))
+            {
+                this.Header = ruler2.Header;
+            }
+            else if (e.PropertyName == nameof(ICronRuler.HeaderPlacement))
+            {
+                this.StripPlacement = ruler2.HeaderPlacement;
+            }
+            else if (e.PropertyName == nameof(ICronRuler.RulerName))
+            {
+                this.RulerName = ruler2.RulerName;
+            }
+            else if (e.PropertyName == nameof(ICronRuler.Priority))
+            {
+                this.Priority = ruler2.Priority;
+            }
+            else if (e.PropertyName == nameof(ICronRuler.Code))
+            {
+                this.RulerCode = ruler2.Code;
+            }
+        }
     }
 
     private void HeaderChanged(AvaloniaPropertyChangedEventArgs e)

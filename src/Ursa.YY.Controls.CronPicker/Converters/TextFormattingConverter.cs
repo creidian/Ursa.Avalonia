@@ -1,4 +1,5 @@
 using System.Globalization;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Data.Converters;
 using Ursa.Controls;
@@ -171,5 +172,45 @@ public class MonthConverter : IValueConverter
 
 public static class CronPickerConverters
 {
-    public static readonly IValueConverter IsParseResultSuccessed = (IValueConverter) new FuncValueConverter<object, bool>((Func<object, bool>) (x => x != null && x is CronExpressionParseResult result && result.Status == NotificationType.Success));
+    public static readonly IValueConverter IsParseResultSuccess = (IValueConverter) new FuncValueConverter<object, bool>((Func<object, bool>) (x => x != null && x is CronExpressionParseResult result && result.Status == NotificationType.Success));
+    public static readonly IValueConverter IsParseResultSuccessAndNotEmpty = (IValueConverter) new FuncValueConverter<object, bool>((Func<object, bool>) (x => x != null && x is CronExpressionParseResult result && result.Status == NotificationType.Success && ((result is CronExpressionParseToTimesResult timesResult && timesResult.RunTimes.Any()) || string.IsNullOrWhiteSpace(result.Message))));
+
+    public static readonly IValueConverter CronPickerResultSuccessTipSetter = (IValueConverter)new FuncValueConverter<object, bool>((Func<object, bool>)(x =>
+    {
+        if (x is not CronPicker picker)
+        {
+            return false;
+        }
+
+        CronExpressionParseResult? result = picker.CronExpressionCalculationResult;
+        if (result == null)
+        {
+            return false;
+        }
+
+        if (result.Status == NotificationType.Success)
+        {
+            if (result is CronExpressionParseToTimesResult timesResult && timesResult.RunTimes.Any())
+            {
+                ToolTip.SetTip(picker, ConvertToDateTimesText(timesResult.RunTimes, picker.DateTimeFormat));
+                return true;
+            }
+            
+            if (!string.IsNullOrWhiteSpace(result.Message))
+            {
+                ToolTip.SetTip(picker, result.Message);
+                return true;
+            }
+            
+            return false;
+        }
+
+        return false;
+    }));
+
+    private static string ConvertToDateTimesText(IEnumerable<DateTime> dates, string timeFormat)
+    {
+        string format = string.IsNullOrWhiteSpace(timeFormat) ? "yyyy-MM-dd HH:mm:ss dddd" : timeFormat;
+        return string.Join(Environment.NewLine, dates.Select(d => string.IsNullOrWhiteSpace(format) ? d.ToString() : d.ToString(format)));
+    }
 }
