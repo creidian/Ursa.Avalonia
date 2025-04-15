@@ -221,7 +221,7 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
     {
         if (isSelected)
         {
-            this.SetValue(rulerValue);
+            this.InnerSetValue(rulerValue);
         }
     }
 
@@ -229,12 +229,12 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
     {
         if (isSelected)
         {
-            this.SetValue(rulerValue);
+            this.InnerSetValue(rulerValue);
             this.SelectedRuler = ruler;
         }
         else if (this.SelectedIndex < 0)
         {
-            this.SetValue(string.Empty);
+            this.InnerSetValue(string.Empty);
             this.SelectedRuler = null;
         }
     }
@@ -261,7 +261,7 @@ public class CronPickerFieldView : ListBox/*SelectingItemsControl*/, ISelectable
         }
     }
 
-    private void SetValue(string value)
+    private void InnerSetValue(string value)
     {
         if (!string.Equals(value, _value))
         {

@@ -19,6 +19,8 @@
                         Name="TestButton" />
                     <u:CronPicker
                         Classes="DefaultCronRulers"
+                        ExpressionString="0 8 * 1 *"
+                        IsSecondEnabled="False"
                         Name="TestCronPicker"
                         Width="180" />
                     <!--<u:CronExpressionView

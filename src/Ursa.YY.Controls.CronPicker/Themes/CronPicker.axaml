@@ -17,6 +17,8 @@
                         <!-- <u:DateTimePicker /> -->
                         <u:CronPicker
                             Classes="DefaultCronRulers"
+                            ExpressionString="* 8 * 1 *"
+                            IsSecondEnabled="False"
                             VerifySteps="VerifyToSuccess"
                             Width="180">
                             <DataValidationErrors.Error>
@@ -314,26 +316,20 @@
                             Margin="0,0,0,20">
                             <StackPanel>
                                 <u:CronPickerFieldsContainer Name="{x:Static u:CronExpressionEditor.PART_FieldsHost}" SelectedIndex="{TemplateBinding SelectedFieldIndex, Mode=TwoWay}">
-                                    <u:CronPickerFieldTabItem
-                                        FieldType="Second"
-                                        IsVisible="{TemplateBinding IsSecondEnabled}"
-                                        x:Name="TabItem_Second" />
+                                    <!--  SelectedIndex="{TemplateBinding SelectedFieldIndex,Mode=TwoWay}"  -->
+                                    <u:CronPickerFieldTabItem FieldType="Second" x:Name="TabItem_Second" />
                                     <u:CronPickerFieldTabItem FieldType="Minute" x:Name="TabItem_Minute" />
                                     <u:CronPickerFieldTabItem FieldType="Hour" x:Name="TabItem_Hour" />
                                     <u:CronPickerFieldTabItem FieldType="DayOfMonth" x:Name="TabItem_DayOfMonth" />
                                     <u:CronPickerFieldTabItem FieldType="Month" x:Name="TabItem_Month" />
                                     <u:CronPickerFieldTabItem FieldType="DayOfWeek" x:Name="TabItem_DayOfWeek" />
-                                    <u:CronPickerFieldTabItem
-                                        FieldType="Year"
-                                        IsVisible="{TemplateBinding IsYearEnabled}"
-                                        x:Name="TabItem_Year" />
+                                    <u:CronPickerFieldTabItem FieldType="Year" x:Name="TabItem_Year" />
                                 </u:CronPickerFieldsContainer>
                                 <Border Padding="{DynamicResource CronPickerFieldTabItemContentMargin}">
                                     <StackPanel Orientation="Vertical">
                                         <u:CronPickerFieldView
                                             FieldName="{Binding #TabItem_Second.Header}"
                                             FieldType="Second"
-                                            IsVisible="{TemplateBinding IsSecondEnabled}"
                                             Name="{x:Static u:CronExpressionEditor.PART_SecondsField}"
                                             SelectedIndex="{TemplateBinding SecondsSelectedIndex,
                                                                             Mode=TwoWay}"
@@ -394,7 +390,6 @@
                                         <u:CronPickerFieldView
                                             FieldName="{Binding #TabItem_Year.Header}"
                                             FieldType="Year"
-                                            IsVisible="{TemplateBinding IsYearEnabled}"
                                             Name="{x:Static u:CronExpressionEditor.PART_YearsField}"
                                             SelectedIndex="{TemplateBinding YearsSelectedIndex,
                                                                             Mode=TwoWay}"
@@ -421,6 +416,7 @@
                                 <TextBox
                                     InnerRightContent="{DynamicResource CronFieldHeader_Second}"
                                     IsReadOnly="True"
+                                    Name="PART_Seconds"
                                     Text="{TemplateBinding Seconds}" />
                                 <TextBox
                                     InnerRightContent="{DynamicResource CronFieldHeader_Minute}"
@@ -445,6 +441,7 @@
                                 <TextBox
                                     InnerRightContent="{DynamicResource CronFieldHeader_Year}"
                                     IsReadOnly="True"
+                                    Name="PART_Years"
                                     Text="{TemplateBinding Years}" />
                             </StackPanel>
                             <u:Divider
@@ -552,6 +549,57 @@
                 </Border>
             </ControlTemplate>
         </Setter>
+        <!--  part 使能  -->
+        <Style Selector="^[IsSecondEnabled=True]">
+            <Style Selector="^ /template/ u|CronPickerFieldTabItem#TabItem_Second">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBox#PART_Seconds">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^[IsSecondEnabled=False]">
+            <Style Selector="^ /template/ u|CronPickerFieldTabItem#TabItem_Second">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBox#PART_Seconds">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <!--<Style Selector="^[SelectedFieldIndex=0]">
+                <Setter Property="SelectedFieldIndex" Value="1" />
+            </Style>-->
+        </Style>
+        <Style Selector="^[IsYearEnabled=True]">
+            <Style Selector="^ /template/ u|CronPickerFieldTabItem#TabItem_Year">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBox#PART_Years">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </Style>
+        <Style Selector="^[IsYearEnabled=False]">
+            <Style Selector="^ /template/ u|CronPickerFieldTabItem#TabItem_Year">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBox#PART_Years">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <!--<Style Selector="^[SelectedFieldIndex=6]">
+                <Setter Property="SelectedFieldIndex" Value="5" />
+            </Style>-->
+        </Style>
         <!--  选项卡动作  -->
         <Style Selector="^[SelectedFieldIndex=-1]">
             <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
@@ -577,8 +625,15 @@
             </Style>
         </Style>
         <Style Selector="^[SelectedFieldIndex=0]">
-            <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
-                <Setter Property="IsVisible" Value="True" />
+            <Style Selector="^[IsSecondEnabled=True]">
+                <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+            </Style>
+            <Style Selector="^[IsSecondEnabled=False]">
+                <Style Selector="^ /template/ u|CronPickerFieldView#PART_SecondsField">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
             </Style>
             <Style Selector="^ /template/ u|CronPickerFieldView#PART_MinutesField">
                 <Setter Property="IsVisible" Value="True" />
@@ -739,8 +794,15 @@
             <Style Selector="^ /template/ u|CronPickerFieldView#PART_DaysOfWeekField">
                 <Setter Property="IsVisible" Value="False" />
             </Style>
-            <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
-                <Setter Property="IsVisible" Value="True" />
+            <Style Selector="^[IsYearEnabled=True]">
+                <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                    <Setter Property="IsVisible" Value="True" />
+                </Style>
+            </Style>
+            <Style Selector="^[IsYearEnabled=False]">
+                <Style Selector="^ /template/ u|CronPickerFieldView#PART_YearsField">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
             </Style>
         </Style>
         <!--  cron 表达式解析异常错误UI样式  -->

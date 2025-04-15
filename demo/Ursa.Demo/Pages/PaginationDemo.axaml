@@ -1,38 +1,84 @@
 <UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="900"
+    mc:Ignorable="d"
     x:Class="Ursa.Demo.Pages.PaginationDemo"
+    x:DataType="viewModels:PaginationDemoViewModel"
     xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:u="https://irihi.tech/ursa"
     xmlns:viewModels="clr-namespace:Ursa.Demo.ViewModels"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    x:DataType="viewModels:PaginationDemoViewModel"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.DataContext>
         <viewModels:PaginationDemoViewModel />
     </Design.DataContext>
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Current Page: "></TextBlock>
+            <TextBlock Text="Current Page: " />
             <TextBlock Text="{Binding #page.CurrentPage}" />
         </StackPanel>
-        <ToggleSwitch Name="pageSizeSelector" Content="Show Page Size Selector" />
-        <ToggleSwitch Name="quickJumperSelector" Content="Show Quick Jumper"></ToggleSwitch>
+        <ToggleSwitch Content="Show Page Size Selector" Name="pageSizeSelector" />
+        <ToggleSwitch Content="Show Quick Jumper" Name="quickJumperSelector" />
         <u:Pagination
+            Command="{Binding LoadPageCommand}"
+            CommandParameter="{Binding $self.CurrentPage}"
+            CurrentPage="5"
             Name="page"
             PageSizeOptions="10, 20, 50, 100"
-            CurrentPage="5"
-            ShowQuickJump="{Binding #quickJumperSelector.IsChecked}"
             ShowPageSizeSelector="{Binding #pageSizeSelector.IsChecked}"
-			Command="{Binding LoadPageCommand}"
-			CommandParameter="{Binding $self.CurrentPage}"
+            ShowQuickJump="{Binding #quickJumperSelector.IsChecked}"
             TotalCount="600" />
-        
-        <TextBlock Text="Tiny Pagination"/>
-        <u:Pagination Theme="{DynamicResource TinyPagination}" Command="{Binding LoadPageCommand}"
-                      CommandParameter="{Binding $self.CurrentPage}" PageSize="1"   TotalCount="100" />
-        <u:Pagination Classes="ReadOnly" Theme="{DynamicResource TinyPagination}" TotalCount="100" PageSize="1"/>
+        <u:Pagination
+            Height="100"
+            PageSize="1"
+            Theme="{DynamicResource GridScrollPagination}"
+            TotalCount="8">
+            <!--    -->
+            <u:Pagination.Styles>
+                <Style Selector="u|Pagination">
+                    <Style Selector="^ /template/ StackPanel#PART_ButtonPanel">
+                        <Setter Property="Width" Value="400" />
+                        <Setter Property="Spacing" Value="20" />
+                        <Style Selector="^ u|PaginationButton">
+                            <Setter Property="Width" Value="100" />
+                            <Style Selector="^:selected">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Style>
+                        </Style>
+                        <Style Selector="^ u|PaginationButton[Page=1]">
+                            <Setter Property="Template">
+                                <ControlTemplate>
+                                    <Grid>
+                                        <Image
+                                            HorizontalAlignment="Center"
+                                            Source="../Assets/3x.png"
+                                            VerticalAlignment="Center" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter>
+                            <Style Selector="^:pointerover">
+                                <!--    -->
+                            </Style>
+                        </Style>
+                    </Style>
+                </Style>
+            </u:Pagination.Styles>
+        </u:Pagination>
+
+        <TextBlock Text="Tiny Pagination" />
+        <u:Pagination
+            Command="{Binding LoadPageCommand}"
+            CommandParameter="{Binding $self.CurrentPage}"
+            PageSize="1"
+            Theme="{DynamicResource TinyPagination}"
+            TotalCount="100" />
+        <u:Pagination
+            Classes="ReadOnly"
+            PageSize="1"
+            Theme="{DynamicResource TinyPagination}"
+            TotalCount="100" />
     </StackPanel>
 </UserControl>

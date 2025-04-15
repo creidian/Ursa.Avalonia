@@ -102,6 +102,7 @@ public class CronExpressionEditor : TemplatedControl
     public static readonly StyledProperty<IEnumerable<ICronRuler>?> DaysOfWeekRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(DaysOfWeekRulerItemsSource));
     public static readonly StyledProperty<IEnumerable<ICronRuler>?> YearsRulerItemsSourceProperty = AvaloniaProperty.Register<CronExpressionEditor, IEnumerable<ICronRuler>?>(nameof(YearsRulerItemsSource));
     public static readonly StyledProperty<int> SelectedFieldIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(SelectedFieldIndex), defaultValue: -1);
+    public static readonly StyledProperty<object?> SelectedFieldObjectProperty = AvaloniaProperty.Register<CronExpressionEditor, object?>(nameof(SelectedFieldObject));
     public static readonly StyledProperty<int> SecondsSelectedIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(SecondsSelectedIndex), defaultValue: -1);
     public static readonly StyledProperty<int> MinutesSelectedIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(MinutesSelectedIndex), defaultValue: -1);
     public static readonly StyledProperty<int> HoursSelectedIndexProperty = AvaloniaProperty.Register<CronExpressionEditor, int>(nameof(HoursSelectedIndex), defaultValue: -1);
@@ -185,6 +186,12 @@ public class CronExpressionEditor : TemplatedControl
     {
         get => GetValue(SelectedFieldIndexProperty);
         set => SetValue(SelectedFieldIndexProperty, value);
+    }
+
+    public object? SelectedFieldObject
+    {
+        get => GetValue(SelectedFieldObjectProperty);
+        set => SetValue(SelectedFieldObjectProperty, value);
     }
 
     #region ...秒
@@ -817,7 +824,7 @@ public class CronExpressionEditor : TemplatedControl
  
     public CronExpressionParseResult? ParseCronExpressionBy(string? cronExpression)
     {
-        DataValidationErrors.ClearErrors(_tb_cronExpression);
+        this.ClearTextBoxErrorTips();
         this.CronExpressionCalculationResult = null;
         string[] args;
         try
@@ -840,7 +847,7 @@ public class CronExpressionEditor : TemplatedControl
             }
             else if (result.Status == NotificationType.Error)
             {
-                DataValidationErrors.SetErrors(_tb_cronExpression, new List<string> { result.Message });
+                this.SetTextBoxErrorTip(new List<string> { result.Message });
             }
             
             return result;
@@ -936,6 +943,14 @@ public class CronExpressionEditor : TemplatedControl
         Button.ClickEvent.RemoveHandler(CopyPicker, _buttonCopy);
         _buttonCopy = e.NameScope.Find<Button>(PART_CopyButton);
         Button.ClickEvent.AddHandler(CopyPicker, _buttonCopy);
+        if (!this.IsYearEnabled && this.SelectedFieldIndex == 6)
+        {
+            this.SelectedFieldIndex = 5;
+        }
+        if (!this.IsSecondEnabled && this.SelectedFieldIndex == 0)
+        {
+            this.SelectedFieldIndex = 1;
+        }
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
@@ -948,6 +963,14 @@ public class CronExpressionEditor : TemplatedControl
         this.Months = _monthsField!.Value;
         this.DaysOfWeek = _daysOfWeekField!.Value;
         this.Years = _yearsField!.Value;
+        if (!this.IsYearEnabled && this.SelectedFieldIndex == 6)
+        {
+            this.SelectedFieldIndex = 5;
+        }
+        if (!this.IsSecondEnabled && this.SelectedFieldIndex == 0)
+        {
+            this.SelectedFieldIndex = 1;
+        }
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -956,7 +979,7 @@ public class CronExpressionEditor : TemplatedControl
         if (change.Property == SecondsProperty || change.Property == MinutesProperty || change.Property == HoursProperty || change.Property == DaysOfMonthProperty || change.Property == MonthsProperty || change.Property == DaysOfWeekProperty || change.Property == YearsProperty)
         {
             _isPartChangedFlag = true;
-            DataValidationErrors.ClearErrors(_tb_cronExpression);
+            this.ClearTextBoxErrorTips();
             this.RefreshCronExpression();
             if (_isCronExpressionParsed == false)
             {
@@ -972,7 +995,7 @@ public class CronExpressionEditor : TemplatedControl
             }
             else
             {
-                DataValidationErrors.ClearErrors(_tb_cronExpression);
+                this.ClearTextBoxErrorTips();
                 this.CronExpressionCalculationResult = null;
             }
 
@@ -1133,6 +1156,9 @@ public class CronExpressionEditor : TemplatedControl
         {
             this.UpdateCronRulerItemDataTemplates(change.OldValue as DataTemplates, change.NewValue as DataTemplates);
         }
+        else if (change.Property == SelectedFieldIndexProperty)
+        {
+        }
     }
 
     protected void SetCronPartValue(CronFieldTypes type, string? value)
@@ -1180,6 +1206,22 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
+    private void ClearTextBoxErrorTips()
+    {
+        if (_tb_cronExpression != null)
+        {
+            DataValidationErrors.ClearErrors(_tb_cronExpression);
+        }
+    }
+
+    private void SetTextBoxErrorTip(List<string> errors)
+    {
+        if (_tb_cronExpression != null)
+        {
+            DataValidationErrors.SetErrors(_tb_cronExpression, errors);
+        }
+    }
+    
     private void UpdateCronRulerItemDataTemplates(DataTemplates? oldValue, DataTemplates? newValue)
     {
         if (oldValue is not null)
@@ -1199,9 +1241,23 @@ public class CronExpressionEditor : TemplatedControl
         }
     }
 
-    private void OnIsYearEnabledChanged(AvaloniaPropertyChangedEventArgs e) => this.RefreshCronExpression();
+    private void OnIsYearEnabledChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        if (!this.IsYearEnabled && this.SelectedFieldIndex == 6)
+        {
+            this.SelectedFieldIndex = 5;
+        }
+        this.RefreshCronExpression();
+    }
 
-    private void OnIsSecondEnabledChanged(AvaloniaPropertyChangedEventArgs e) => this.RefreshCronExpression();
+    private void OnIsSecondEnabledChanged(AvaloniaPropertyChangedEventArgs e)
+    {
+        if (!this.IsSecondEnabled && this.SelectedFieldIndex == 0)
+        {
+            this.SelectedFieldIndex = 1;
+        }
+        this.RefreshCronExpression();
+    }
 
     private void OnCronFieldRulerValueChanged(object sender, UsualValueChangedEventArgs<string> e)
     {
@@ -1391,7 +1447,7 @@ public class CronExpressionEditor : TemplatedControl
     // 反解析当前 cron 表达式到各项
     private void ParsePicker(object sender, RoutedEventArgs e)
     {
-        DataValidationErrors.ClearErrors(_tb_cronExpression);
+        ClearTextBoxErrorTips();
         CronExpressionParseResult result = InnerParsePicker(this.CronExpression);
         this.ShowOperationResult(result.Status, "", result.Message);
         if (result.Status == NotificationType.Success)

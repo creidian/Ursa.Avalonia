@@ -87,7 +87,7 @@ public abstract class CronPickerRulerBoxItem : /*ContentControl*/ TemplatedContr
 
     protected void OnValueChanged()
     {
-        if (_parent is not null && this.IsLoaded)
+        if (_parent is not null)
         {
             _parent.ValueChanged(this.Value);
         }

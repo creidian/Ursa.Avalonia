@@ -361,7 +361,6 @@ public class CronPicker: CronPickerBase, IClearControl
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        // SetExpressionString(true);
         if (_cronPickerView is not null)
         {
             if (_cronPickerView.CronExpression == _textBox?.Text && VerifySteps == CronExpressionInputVerifySteps.VerifyToSuccess)
@@ -391,12 +390,10 @@ public class CronPicker: CronPickerBase, IClearControl
         if (string.IsNullOrWhiteSpace(expression))
         {
             _textBox?.SetValue(TextBox.TextProperty, null);
-            // _cronPickerView?.Clear();
         }
         else
         {
             _textBox?.SetValue(TextBox.TextProperty, expression);
-            // TryRefreshExpression(expression, out _);
         }
     }
 
@@ -406,12 +403,10 @@ public class CronPicker: CronPickerBase, IClearControl
         if (string.IsNullOrWhiteSpace(text))
         {
             SetCurrentValue(ExpressionStringProperty, null);
-            // _cronPickerView?.Clear();
         }
         else
         {
             SetCurrentValue(ExpressionStringProperty, text);
-            // TryRefreshExpression(text, out _);
         }
     }
 
